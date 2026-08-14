@@ -39,7 +39,7 @@ if (!rawContent) {
 // TODO:添加背景数据和对话历史
 // TODO:添加一些规则,告诉模型在输出中使用段落,并引用网站内容中的引文来回答问题。
 // TODO:添加输出格式,告诉模型只返回摘要,不要任何其他文本。
-const result = await streamText({
+const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>

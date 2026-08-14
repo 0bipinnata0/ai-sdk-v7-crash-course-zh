@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import {
   convertToModelMessages,
-  stepCountIs,
+  isStepCount,
   streamText,
   tool,
   type InferUITools,
@@ -39,14 +39,14 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    system: `
+    instructions: `
       你是一个乐于助人的邮件助手。你可以代表用户发送邮件。
 
       当用户要求你发送邮件时,使用 sendEmail 工具。
       发送前务必确认邮件详情。
     `,
     tools,
-    stopWhen: [stepCountIs(10)],
+    stopWhen: [isStepCount(10)],
   });
 
   return result.toUIMessageStreamResponse();

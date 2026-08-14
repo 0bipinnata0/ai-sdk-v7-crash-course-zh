@@ -12,7 +12,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    onFinish: ({ response }) => {
+    onEnd: ({ response }) => {
       // 'response.messages' 是一个 ToolModelMessage 和 AssistantModelMessage 的数组,
       // 它们是在流式传输过程中生成的模型消息。
       // 如果你不需要 UIMessage,这很有用——适用于更简单的应用。
@@ -24,7 +24,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
   return result.toUIMessageStreamResponse({
     originalMessages: messages,
-    onFinish: ({ messages, responseMessage }) => {
+    onEnd: ({ messages, responseMessage }) => {
       // 'messages' 是完整的消息历史,包括你通过
       // originalMessages 传入的原始消息。
       console.log('toUIMessageStreamResponse.onFinish');

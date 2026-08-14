@@ -3,7 +3,7 @@ import { generateObject } from 'ai';
 import { createScorer } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
-import z from 'zod';
+import { z } from 'zod';
 
 const chainOfThoughtPaper = readFileSync(
   path.join(
@@ -21,7 +21,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
   scorer: async ({ input, output, expected }) => {
     const result = await generateObject({
       model: google('gemini-2.5-flash'),
-      system: `
+      instructions: `
         你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
         你的工作是判断答案是否正确地归因于论文。
@@ -36,6 +36,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
       messages: [
         {
           role: 'user',
+
           content: [
             {
               type: 'file',
@@ -52,7 +53,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
 
             ${input}`,
             },
-          ],
+          ]
         },
       ],
       schema: z.object({

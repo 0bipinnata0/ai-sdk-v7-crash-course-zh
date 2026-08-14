@@ -26,7 +26,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const streamTextResult = streamText({
     model: google('gemini-2.5-flash'),
     messages: modelMessages,
-    system: SYSTEM_PROMPT,
+    instructions: SYSTEM_PROMPT,
   });
 
   const stream = streamTextResult.toUIMessageStream();

@@ -6,7 +6,7 @@ console.log('进程启动中...');
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   prompt: '你好,世界!',
-  onFinish: () => {
+  onEnd: () => {
     console.log('流已完成!');
   },
 });

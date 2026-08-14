@@ -14,7 +14,7 @@ const exemplars = [
   },
 ];
 
-const result = await streamText({
+const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <examples>

@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import {
   convertToModelMessages,
-  stepCountIs,
+  isStepCount,
   streamText,
   type UIMessage,
 } from 'ai';
@@ -38,15 +38,15 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    system: `
+    instructions: `
       你是一个乐于助人的助手,可以使用 GitHub API 与用户的 GitHub 账户交互。
     `,
     tools: await mcpClient.tools(),
-    stopWhen: [stepCountIs(10)],
+    stopWhen: [isStepCount(10)],
   });
 
   return result.toUIMessageStreamResponse({
-    onFinish: async () => {
+    onEnd: async () => {
       await mcpClient.close();
     },
   });

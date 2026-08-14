@@ -23,7 +23,7 @@ export const POST = async (req: Request): Promise<Response> => {
       console.time('Guardrail Time');
       const guardrailResult = await generateText({
         model: google('gemini-2.5-flash-lite'),
-        system: GUARDRAIL_SYSTEM,
+        instructions: GUARDRAIL_SYSTEM,
         messages: modelMessages,
       });
 

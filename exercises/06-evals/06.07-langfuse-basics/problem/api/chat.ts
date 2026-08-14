@@ -62,7 +62,7 @@ export const POST = async (req: Request): Promise<Response> => {
     // - isEnabled: true
     // - functionId: 'your-name-here'
     // - metadata: { langfuseTraceId: trace.id }
-    experimental_telemetry: TODO,
+    telemetry: TODO,
   });
 
   const streamTextResult = streamText({
@@ -72,11 +72,11 @@ export const POST = async (req: Request): Promise<Response> => {
     // - isEnabled: true
     // - functionId: 'your-name-here'
     // - metadata: { langfuseTraceId: trace.id }
-    experimental_telemetry: TODO,
+    telemetry: TODO,
   });
 
   const stream = streamTextResult.toUIMessageStream({
-    onFinish: async () => {
+    onEnd: async () => {
       const title = await titleResult;
 
       console.log('标题: ', title.text);

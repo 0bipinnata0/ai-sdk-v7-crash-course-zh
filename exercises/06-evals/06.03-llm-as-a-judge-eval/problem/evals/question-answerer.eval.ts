@@ -25,12 +25,13 @@ evalite('Chain Of Thought Paper', {
   task: async (input) => {
     const result = await generateText({
       model: google('gemini-2.5-flash'),
-      system: `
+      instructions: `
         你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
       `,
       messages: [
         {
           role: 'user',
+
           content: [
             {
               type: 'text',
@@ -47,7 +48,7 @@ evalite('Chain Of Thought Paper', {
               data: chainOfThoughtPaper,
               mediaType: 'application/pdf',
             },
-          ],
+          ]
         },
       ],
     });

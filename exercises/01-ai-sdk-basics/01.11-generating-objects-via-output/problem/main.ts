@@ -1,6 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
-import z from 'zod';
+import { z } from 'zod';
 
 const model = google('gemini-2.5-flash');
 

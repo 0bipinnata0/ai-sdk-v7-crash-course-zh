@@ -10,7 +10,7 @@ import {
   type UIMessageStreamWriter,
 } from 'ai';
 import { tavily } from '@tavily/core';
-import z, { url } from 'zod';
+import { z } from 'zod';
 
 export type MyMessage = UIMessage<
   unknown,
@@ -25,7 +25,7 @@ const generateQueriesForTavily = (
 ) => {
   const queriesResult = streamObject({
     model: google('gemini-2.5-flash'),
-    system: `
+    instructions: `
       你是一个乐于助人的助手,负责生成用于在网上搜索信息的查询。
 
       <rules>
@@ -128,7 +128,7 @@ const streamFinalSummary = async (
 
   const answerResult = streamText({
     model: google('gemini-2.5-flash'),
-    system: `你是一个乐于助人的助手,基于搜索结果回答问题。
+    instructions: `你是一个乐于助人的助手,基于搜索结果回答问题。
       <rules>
       你应该使用搜索结果来回答问题。
       使用搜索结果中的来源来回答问题。

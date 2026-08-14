@@ -12,7 +12,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    system: `
+    instructions: `
       你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
       你可以使用以下工具:

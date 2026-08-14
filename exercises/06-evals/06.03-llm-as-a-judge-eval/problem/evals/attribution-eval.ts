@@ -3,7 +3,7 @@ import { generateObject } from 'ai';
 import { createScorer } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
-import z from 'zod';
+import { z } from 'zod';
 
 const chainOfThoughtPaper = readFileSync(
   path.join(
@@ -34,7 +34,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
   scorer: async ({ input, output }) => {
     const result = await generateObject({
       model: google('gemini-2.5-flash'),
-      system: ATTRIBUTION_PROMPT,
+      instructions: ATTRIBUTION_PROMPT,
       messages: TODO, // TODO:传入思维链论文、问题和给出的答案
       schema: TODO, // TODO:定义响应的 schema
     });

@@ -57,9 +57,11 @@ export const POST = async (req: Request): Promise<Response> => {
       为这段对话生成一个标题。
       只返回标题。
     `,
-    experimental_telemetry: {
+    telemetry: {
       isEnabled: true,
       functionId: 'title-generation',
+      // @ts-expect-error AI SDK v7 移除了 telemetry.metadata;
+      // langfuse-vercel v3 尚未适配 v7 的遥测机制
       metadata: {
         langfuseTraceId: trace.id,
       },
@@ -69,9 +71,11 @@ export const POST = async (req: Request): Promise<Response> => {
   const streamTextResult = streamText({
     model: google('gemini-2.5-flash'),
     messages: modelMessages,
-    experimental_telemetry: {
+    telemetry: {
       isEnabled: true,
       functionId: 'chat',
+      // @ts-expect-error AI SDK v7 移除了 telemetry.metadata;
+      // langfuse-vercel v3 尚未适配 v7 的遥测机制
       metadata: {
         langfuseTraceId: trace.id,
       },
@@ -79,7 +83,7 @@ export const POST = async (req: Request): Promise<Response> => {
   });
 
   const stream = streamTextResult.toUIMessageStream({
-    onFinish: async () => {
+    onEnd: async () => {
       const title = await titleResult;
 
       console.log('标题: ', title.text);

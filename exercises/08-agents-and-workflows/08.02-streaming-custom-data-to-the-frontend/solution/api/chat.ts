@@ -56,7 +56,7 @@ export const POST = async (req: Request): Promise<Response> => {
       // 写 Slack 消息
       const writeSlackResult = streamText({
         model: google('gemini-2.5-flash'),
-        system: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
+        instructions: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
         prompt: `
           对话历史:
           ${formatMessageHistory(messages)}
@@ -80,7 +80,7 @@ export const POST = async (req: Request): Promise<Response> => {
       // 评估 Slack 消息
       const evaluateSlackResult = streamText({
         model: google('gemini-2.5-flash'),
-        system: EVALUATE_SLACK_MESSAGE_SYSTEM,
+        instructions: EVALUATE_SLACK_MESSAGE_SYSTEM,
         prompt: `
           对话历史:
           ${formatMessageHistory(messages)}
@@ -107,7 +107,7 @@ export const POST = async (req: Request): Promise<Response> => {
       // 写最终版 Slack 消息
       const finalSlackAttempt = streamText({
         model: google('gemini-2.5-flash'),
-        system: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
+        instructions: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
         prompt: `
           对话历史:
           ${formatMessageHistory(messages)}

@@ -2,7 +2,7 @@ import { google } from '@ai-sdk/google';
 import {
   createAgentUIStreamResponse,
   type InferAgentUIMessage,
-  stepCountIs,
+  isStepCount,
   tool,
   ToolLoopAgent,
 } from 'ai';

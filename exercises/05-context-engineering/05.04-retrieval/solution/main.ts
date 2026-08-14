@@ -36,7 +36,7 @@ if (!rawContent) {
   throw new Error('无法抓取该 URL');
 }
 
-const result = await streamText({
+const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>

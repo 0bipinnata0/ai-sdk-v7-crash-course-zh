@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { stepCountIs, streamText, tool } from 'ai';
+import { isStepCount, streamText, tool } from 'ai';
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
 
@@ -9,7 +9,7 @@ const PROMPT = `
 
 const result = streamText({
   model: google('gemini-2.5-flash'),
-  system: `
+  instructions: `
     你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
     你可以使用以下工具:
@@ -112,11 +112,11 @@ const result = streamText({
       },
     }),
   },
-  stopWhen: [stepCountIs(10)],
+  stopWhen: [isStepCount(10)],
 });
 
 const stream = result.toUIMessageStream({
-  onFinish: ({ messages }) => {
+  onEnd: ({ messages }) => {
     console.log('--- ON FINISH ---');
     console.dir(messages, { depth: null });
   },

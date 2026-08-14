@@ -10,7 +10,7 @@ import {
   type UIMessageStreamWriter,
 } from 'ai';
 import { tavily } from '@tavily/core';
-import z from 'zod';
+import { z } from 'zod';
 
 export type MyMessage = UIMessage<
   unknown,

@@ -45,12 +45,19 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'assistant',
-            content: await streamTextResult.text,
+
+            content: [{
+              type: 'text',
+              text: await streamTextResult.text
+            }]
           },
           {
             role: 'user',
-            content:
-              '我接下来应该问什么问题?返回一个建议问题的数组。',
+
+            content: [{
+              type: 'text',
+              text: '我接下来应该问什么问题?返回一个建议问题的数组。'
+            }]
           },
         ],
       });

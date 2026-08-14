@@ -3,7 +3,7 @@ import { generateObject, generateText } from 'ai';
 import { evalite } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
-import z from 'zod';
+import { z } from 'zod';
 import { attributionToChainOfThoughtPaper } from './attribution-eval.ts';
 
 const chainOfThoughtPaper = readFileSync(
@@ -26,7 +26,7 @@ evalite('Chain Of Thought Paper', {
   task: async (input) => {
     const result = await generateText({
       model: google('gemini-2.5-flash'),
-      system: `
+      instructions: `
         你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
         
         回答问题时务必引用论文中的原文。
@@ -34,6 +34,7 @@ evalite('Chain Of Thought Paper', {
       messages: [
         {
           role: 'user',
+
           content: [
             {
               type: 'text',
@@ -44,7 +45,7 @@ evalite('Chain Of Thought Paper', {
               data: chainOfThoughtPaper,
               mediaType: 'application/pdf',
             },
-          ],
+          ]
         },
       ],
     });

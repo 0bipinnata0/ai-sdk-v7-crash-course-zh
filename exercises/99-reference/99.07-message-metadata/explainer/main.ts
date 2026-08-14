@@ -27,7 +27,7 @@ const stream = streamTextResult.toUIMessageStream<MyMessage>({
       };
     }
   },
-  onFinish: ({ responseMessage }) => {
+  onEnd: ({ responseMessage }) => {
     console.log(responseMessage.metadata);
   },
 });

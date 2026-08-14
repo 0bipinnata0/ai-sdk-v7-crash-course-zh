@@ -29,7 +29,7 @@ export const POST = async (req: Request): Promise<Response> => {
       console.time('Model Calculation Time');
       const modelRouterResult = await generateText({
         model: BASIC_MODEL,
-        system: `
+        instructions: `
           你是一个模型路由器。你的工作是判断应该使用高级模型还是基础模型。
 
           你会收到一段对话历史。你需要根据提出的问题,判断应该使用高级模型还是基础模型。

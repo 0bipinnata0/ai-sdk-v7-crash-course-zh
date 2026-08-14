@@ -52,8 +52,11 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'user',
-            content:
-              '根据上面的对话历史,写出故事的第一段。写得短一点。',
+
+            content: [{
+              type: 'text',
+              text: '根据上面的对话历史,写出故事的第一段。写得短一点。'
+            }]
           },
         ],
       });
@@ -76,9 +79,14 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'user',
-            content: `根据上面的对话历史,写出故事的第二段。写得短一点。
-              这是第一段:
-              ${firstParagraph}`,
+
+            content: [{
+              type: 'text',
+
+              text: `根据上面的对话历史,写出故事的第二段。写得短一点。
+                这是第一段:
+                ${firstParagraph}`
+            }]
           },
         ],
       });
@@ -101,11 +109,16 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'user',
-            content: `根据上面的对话历史,写出故事的第三段。写得短一点。
-              这是第一段:
-              ${firstParagraph}
-              这是第二段:
-              ${secondParagraph}`,
+
+            content: [{
+              type: 'text',
+
+              text: `根据上面的对话历史,写出故事的第三段。写得短一点。
+                这是第一段:
+                ${firstParagraph}
+                这是第二段:
+                ${secondParagraph}`
+            }]
           },
         ],
       });
@@ -117,7 +130,7 @@ export const POST = async (req: Request): Promise<Response> => {
         }),
       );
     },
-    onFinish: ({ messages }) => {
+    onEnd: ({ messages }) => {
       console.dir(messages, { depth: null });
     },
   });
