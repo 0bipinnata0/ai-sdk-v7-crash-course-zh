@@ -3,20 +3,20 @@ import { evalite } from 'evalite';
 evalite('Capitals', {
   data: () => [
     {
-      input: 'What is the capital of France?',
-      expected: 'Paris',
+      input: '法国的首都是哪里?',
+      expected: '巴黎',
     },
     {
-      input: 'What is the capital of Germany?',
-      expected: 'Berlin',
+      input: '德国的首都是哪里?',
+      expected: '柏林',
     },
     {
-      input: 'What is the capital of Italy?',
-      expected: 'Rome',
+      input: '意大利的首都是哪里?',
+      expected: '罗马',
     },
   ],
   task: async (input) => {
-    const capitalResult = TODO; // Implement this!
+    const capitalResult = TODO; // 实现这个!
 
     return capitalResult.text;
   },

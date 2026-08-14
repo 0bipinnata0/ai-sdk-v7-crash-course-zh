@@ -44,17 +44,17 @@ const links = [
 evalite('TS Release Notes', {
   data: () => [
     {
-      input: 'Tell me about the TypeScript 5.8 release',
+      input: '给我讲讲 TypeScript 5.8 版本',
     },
     {
-      input: 'Tell me about the TypeScript 5.2 release',
+      input: '给我讲讲 TypeScript 5.2 版本',
     },
   ],
   task: async (input) => {
     const capitalResult = await generateText({
       model: google('gemini-2.5-flash-lite'),
       prompt: `
-        You are a helpful assistant that can answer questions about TypeScript releases.
+        你是一个乐于助人的助手,可以回答关于 TypeScript 版本发布的问题。
 
         <question>
         ${input}
@@ -68,13 +68,13 @@ evalite('TS Release Notes', {
     {
       name: 'Includes Markdown Links',
       scorer: ({ input, output, expected }) => {
-        // TODO: check if the output includes markdown links
+        // TODO:检查输出是否包含 markdown 链接
       },
     },
     {
       name: 'Output length',
       scorer: ({ input, output, expected }) => {
-        // TODO: check if the output is less than 500 characters
+        // TODO:检查输出是否少于 500 个字符
       },
     },
   ],

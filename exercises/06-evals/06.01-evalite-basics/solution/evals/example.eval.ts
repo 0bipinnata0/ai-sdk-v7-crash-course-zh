@@ -5,30 +5,30 @@ import { evalite } from 'evalite';
 evalite('Capitals', {
   data: () => [
     {
-      input: 'What is the capital of France?',
-      expected: 'Paris',
+      input: '法国的首都是哪里?',
+      expected: '巴黎',
     },
     {
-      input: 'What is the capital of Germany?',
-      expected: 'Berlin',
+      input: '德国的首都是哪里?',
+      expected: '柏林',
     },
     {
-      input: 'What is the capital of Italy?',
-      expected: 'Rome',
+      input: '意大利的首都是哪里?',
+      expected: '罗马',
     },
   ],
   task: async (input) => {
     const capitalResult = await generateText({
       model: google('gemini-2.5-flash-lite'),
       prompt: `
-        You are a helpful assistant that can answer questions about the capital of countries.
+        你是一个乐于助人的助手,可以回答关于国家首都的问题。
 
         <question>
         ${input}
         </question>
 
-        Answer the question.
-        Reply only with the capital of the country.
+        回答问题。
+        只回复国家的首都。
       `,
     });
 

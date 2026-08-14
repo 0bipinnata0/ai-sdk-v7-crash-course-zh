@@ -1,45 +1,45 @@
 Input,Output
-Did Google just release their latest smart watch?,Google Watch Release Date
-"What do horses eat? I'm looking to purchase a horse and would need to know information about how much they eat, how often they're fed, and what kinds of food they eat.",Horse Diet Information
-What changes were made in the latest version of React Query?,React Query Recent Changes
-How do I know what type of guitar strings my guitar should use?,Guitar Strings Research
-"Do some research on induction hobs and how I can replace a 100cm wide Aga cooker with an induction range cooker. Which is the cheapest, which is the best? ",Induction Range Cooker Research
-"I'm thinking about switching to an electric car. What are the pros and cons, and which models have the best range for long distance driving?",Electric Car Comparison
-My houseplant's leaves are turning yellow and dropping. I water it once a week and it sits by a south-facing window. What could be wrong?,Houseplant Care Troubleshooting
-What's the difference between TypeScript and JavaScript? Should I learn TypeScript first or JavaScript?,TypeScript vs JavaScript Comparison
-I want to start investing but I'm a complete beginner. What are the safest options for someone with $5000 to invest?,Beginner Investment Options
-How do I prepare for a technical interview at a FAANG company? What kinds of questions should I expect?,FAANG Technical Interview Prep
-"I'm planning a trip to Japan in spring. What cities should I visit, and do I need to book accommodations far in advance?",Japan Spring Travel Guide
-What are the best practices for training a rescue dog that seems anxious around strangers?,Rescue Dog Training Methods
-My laptop is running really slowly lately. It's 3 years old and has 8GB RAM. Should I upgrade the hardware or buy a new one?,Laptop Upgrade Options
-How do I negotiate salary during a job interview without seeming pushy or entitled?,Salary Negotiation Strategies
-"I want to learn photography as a hobby. What camera should a beginner buy, and do I really need expensive equipment to start?",Beginner Photography Equipment
-What's the most effective way to learn Spanish if I can only dedicate 30 minutes per day to studying?,Spanish Learning Methods
-My garden gets very little sunlight due to tall trees. What vegetables or flowers can I grow in mostly shaded conditions?,Shade Garden Plants
-How do I backup all my photos and important files safely? I'm worried about losing everything if my computer crashes.,Data Backup Solutions
-I keep procrastinating on important tasks and leaving everything until the last minute. What strategies actually work to overcome this?,Help With Procrastination
-What are the key differences between various types of mortgages? Which one would be best for a first-time homebuyer?,Mortgage Types For First-Time Buyers
-"I'm considering getting a standing desk for my home office. Are they actually better for your health, and what features should I look for?",Standing Desk Health Benefits
-My teenager wants to learn to drive but I'm nervous about teaching them myself. Should I hire a professional instructor or do it myself?,Teen Driving Instruction Options
-What's the best way to clean and maintain leather furniture? My couch is starting to look worn and I want to restore it.,Leather Furniture Care Guide
-I've been having trouble sleeping lately - tossing and turning for hours. What are some natural remedies that might help without medication?,Natural Sleep Remedies
-How do I start a small vegetable garden in my backyard? I have about 10x10 feet of space and live in a temperate climate.,Small Backyard Garden Setup
-My phone battery drains really quickly now. Is it worth replacing the battery or should I just get a new phone?,Phone Battery Replacement vs New Phone
-What are the most important things to know before adopting a cat from a shelter? I've never had a pet before.,First-Time Cat Adoption Guide
-I want to improve my public speaking skills for work presentations. What are the most effective practice methods?,Public Speaking Skill Development
-How do I choose the right running shoes? I'm just starting to run regularly and my feet hurt after longer runs.,Running Shoe Selection Guide
-My washing machine is making weird noises during the spin cycle. Should I try to fix it myself or call a repair service?,Washing Machine Troubleshooting
-What's the difference between various types of coffee brewing methods? I want to make better coffee at home.,Coffee Brewing Methods Comparison
-I'm thinking about freelancing part-time while keeping my day job. What are the tax implications and legal things I should know?,Freelancing Tax and Legal Basics
-How do I prepare my home for winter to save on heating costs? What are the most cost-effective winterization steps?,Home Winter Preparation Tips
-My child is struggling with math homework and getting frustrated. How can I help them without doing the work for them?,Math Homework Support Strategies
-What are the pros and cons of different internet providers in my area? I need faster speeds for working from home.,Internet Provider Comparison Guide
-I want to start meal prepping to save time and money. What are some beginner-friendly recipes and storage tips?,Meal Prep Beginner Guide
-How do I know if I need to see a therapist? What's the difference between different types of mental health professionals?,Mental Health Professional Guide
-"My car is making a grinding noise when I brake. How urgent is this, and roughly how much should I expect to pay for repairs?",Car Brake Repair Costs
-What are the best strategies for paying off credit card debt quickly? I have balances on multiple cards with different interest rates.,Credit Card Debt Payoff Strategies
-"I'm interested in learning to play piano as an adult. Should I get an acoustic piano, digital piano, or keyboard to start?",Piano Learning Equipment
-How do I create a budget that actually works? I've tried before but always end up overspending on unnecessary things.,Personal Budgeting Methods
-"My neighbor's tree is dropping leaves and branches into my yard. What are my rights, and how should I approach this diplomatically?",Neighbor Tree Dispute Resolution
-What are the essential tools every homeowner should have? I just bought my first house and want to be prepared for basic repairs.,Essential Homeowner Tools List
-I want to switch careers but I'm worried about taking a pay cut. How do I make a career transition while maintaining financial stability?,Career Change Financial Planning
+谷歌刚刚发布了他们最新的智能手表吗?,谷歌手表发布日期
+"马吃什么?我想买一匹马,需要了解它们吃多少、多久喂一次、吃什么种类的食物。",马的饮食信息
+最新版本的 React Query 有哪些变化?,React Query 近期变化
+我怎么知道我的吉他应该用哪种琴弦?,吉他琴弦调研
+"帮我调研一下电磁灶,以及我该如何把一台 100cm 宽的 AGA 炉灶换成电磁集成灶。哪款最便宜,哪款最好?",电磁集成灶调研
+"我在考虑换一辆电动车。有什么优缺点,哪些车型续航里程最适合长途驾驶?",电动车对比
+我家绿植的叶子发黄掉落。我每周浇一次水,它放在朝南的窗边。可能是什么原因?,绿植养护故障排查
+"TypeScript 和 JavaScript 有什么区别?我应该先学 TypeScript 还是 JavaScript?",TypeScript 与 JavaScript 对比
+"我想开始投资,但完全是新手。对于一个有 5000 元可投资的人来说,最安全的选择是什么?",新手投资选择
+如何准备 FAANG 公司的技术面试?我应该预期什么样的问题?,FAANG 技术面试准备
+"我计划春天去日本旅行。应该去哪些城市,需要提前很久预订住宿吗?",日本春季旅行指南
+训练一只对陌生人感到焦虑的救助犬,有哪些最佳实践?,救助犬训练方法
+我的笔记本最近运行很慢。它用了 3 年,内存 8GB。我应该升级硬件还是买台新的?,笔记本升级选择
+如何在面试中谈薪资而不显得咄咄逼人或自以为是?,薪资谈判策略
+"我想把摄影作为爱好来学习。新手应该买什么相机,入门真的需要昂贵的设备吗?",新手摄影器材
+如果我每天只能抽出 30 分钟学习,学西班牙语最有效的方法是什么?,西班牙语学习方法
+我的花园因为高大的树木阳光很少。在大部分遮阴的条件下可以种什么蔬菜或花卉?,耐阴花园植物
+如何安全地备份我所有的照片和重要文件?我担心电脑崩溃会丢失一切。,数据备份方案
+我总是在重要任务上拖延,把所有事情拖到最后一刻。有哪些真正有效的策略可以克服这个问题?,克服拖延症
+各种类型的房贷之间有哪些关键区别?哪种最适合首次购房者?,首次购房者房贷类型
+"我在考虑为家庭办公室买一张升降桌。它们真的对健康更好吗,应该关注哪些功能?",升降桌健康益处
+我十几岁的孩子想学开车,但我对自己教他们很紧张。我应该请专业教练还是自己教?,青少年学车选择
+清洁和保养皮沙发最好的方法是什么?我的沙发开始显得陈旧,我想修复它。,皮具家具保养指南
+我最近睡眠不好——辗转反侧好几个小时。有哪些不用药物的天然疗法可能有帮助?,天然助眠方法
+如何在我的后院开辟一个小菜园?我有大约 10 平方米的空间,住在温带气候区。,小型后院菜园搭建
+我的手机电池现在掉电很快。换电池值得吗,还是应该直接换新手机?,手机换电池还是换新机
+从收容所领养猫咪之前,最重要的事情有哪些?我以前从未养过宠物。,首次领养猫咪指南
+我想提升工作演讲的公众表达能力。最有效的练习方法有哪些?,公众演讲能力提升
+如何选择合适的跑鞋?我刚开始规律跑步,长跑后脚会疼。,跑鞋选购指南
+我的洗衣机在脱水时发出奇怪的声音。我应该自己修还是叫维修服务?,洗衣机故障排查
+各种咖啡冲煮方法之间有什么区别?我想在家做出更好的咖啡。,咖啡冲煮方法对比
+我想在保留本职工作的同时兼职做自由职业。我应该了解哪些税务和法律问题?,自由职业税务与法律基础
+如何为房屋做冬季保暖以节省取暖费用?最经济实惠的防寒步骤是什么?,房屋冬季保暖技巧
+我的孩子在数学作业上遇到困难,感到很沮丧。我怎样才能帮他们而不代劳?,数学作业辅导策略
+我所在地区不同网络运营商各有什么优缺点?我在家办公需要更快的网速。,网络运营商对比指南
+我想开始做备餐(meal prep)来节省时间和金钱。有哪些适合新手的食谱和储存技巧?,备餐新手指南
+我怎么知道自己是否需要看心理咨询师?不同类型的心理健康专业人士之间有什么区别?,心理健康专业人士指南
+"我的车刹车时有刺耳的摩擦声。这有多紧急,维修大概需要多少钱?",汽车刹车维修费用
+快速还清信用卡债务的最佳策略是什么?我在多张卡上都有欠款,利率各不相同。,信用卡债务还清策略
+"我有兴趣作为成年人学钢琴。入门应该买原声钢琴、电钢琴还是键盘?",钢琴学习器材
+如何制定一个真正有效的预算?我以前试过,但总是不知不觉在不必要的东西上超支。,个人预算制定方法
+"邻居家的树把落叶和树枝掉到我院子里。我有哪些权利,应该如何圆滑地处理这件事?",邻里树木纠纷处理
+每个房主都应该拥有哪些必备工具?我刚买了第一套房,想为基本维修做好准备。,房主必备工具清单
+我想转行,但担心降薪。如何在保持财务稳定的同时完成职业转型?,转行财务规划

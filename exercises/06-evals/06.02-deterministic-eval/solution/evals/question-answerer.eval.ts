@@ -44,17 +44,17 @@ const links = [
 evalite('TS Release Notes', {
   data: () => [
     {
-      input: 'Tell me about the TypeScript 5.8 release',
+      input: '给我讲讲 TypeScript 5.8 版本',
     },
     {
-      input: 'Tell me about the TypeScript 5.2 release',
+      input: '给我讲讲 TypeScript 5.2 版本',
     },
   ],
   task: async (input) => {
     const capitalResult = await generateText({
       model: google('gemini-2.5-flash-lite'),
       prompt: `
-        You are a helpful assistant that can answer questions about TypeScript releases.
+        你是一个乐于助人的助手,可以回答关于 TypeScript 版本发布的问题。
 
         <question>
         ${input}
@@ -64,18 +64,18 @@ evalite('TS Release Notes', {
         ${links.map((link) => `<link>${link.title}: ${link.url}</link>`).join('\n')}
         </links>
 
-        Answer the question extremely succinctly.
-        ALWAYS include relevant links in your answer.
-        Format markdown links inline:
+        极其简洁地回答问题。
+        始终在你的回答中包含相关链接。
+        将 markdown 链接内联格式化:
           <markdown-link-example>
-          I really like [this website about cakes](https://www.cakes.com).
+          我真的很喜欢[这个关于蛋糕的网站](https://www.cakes.com)。
           </markdown-link-example>
           <markdown-link-example>
-          For more information, check out [this piece of reference material](https://www.cakes.com).
+          更多信息,请查看[这份参考资料](https://www.cakes.com)。
           </markdown-link-example>
 
-        Answer the question, with relevant links.
-        Reply only with the answer.
+        回答问题,并附上相关链接。
+        只回复答案。
       `,
     });
 

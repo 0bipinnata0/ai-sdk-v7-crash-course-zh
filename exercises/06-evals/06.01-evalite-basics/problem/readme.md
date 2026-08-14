@@ -1,63 +1,63 @@
-Okay, now we understand a little bit about how to implement AI-powered applications. We really need to know how to test them. For folks who are used to writing deterministic code, you're probably used to writing unit tests for your applications.
+好了，现在我们知道了如何实现 AI 驱动的应用。我们真的需要知道如何测试它们。对于习惯了编写确定性代码的同学来说，你可能习惯了为你的应用编写单元测试。
 
-Well, in the AI world, these look like evals. These are programs that you can run which will evaluate your AI output to see if it matches certain criteria.
+而在 AI 世界里，对应的东西叫做 eval（评估）。这些是你可以运行的程序，用来评估你的 AI 输出是否符合特定标准。
 
-Unlike unit tests where you get a pass-fail score, these will give you a score. They will give you a grade out of zero to a hundred on how good your AI application is at certain tasks.
+与单元测试给你通过/失败的结果不同，eval 会给你一个分数。它会给你一个 0 到 100 的评分，衡量你的 AI 应用在某些任务上表现有多好。
 
 ## Evalite
 
-There are plenty of options out there for different tools you can use to run evals like [Braintrust](https://www.braintrust.dev/) or [Langfuse](https://langfuse.com/). We're going to use one called [Evalite](https://evalite.dev), which you can run completely locally and doesn't cost you anything on top of the AI costs.
+市面上有很多可以用来运行 eval 的工具，比如 [Braintrust](https://www.braintrust.dev/) 或 [Langfuse](https://langfuse.com/)。我们要用的是 [Evalite](https://evalite.dev)，它可以完全在本地运行，除了 AI 费用之外不花你一分钱。
 
-We're going to go into [`example.eval.ts`](./evals/example.eval.ts) and we'll see that Evalite is being called here with a title of "Capitals". This is the name of the eval that we're going to run.
+我们打开 [`example.eval.ts`](./evals/example.eval.ts)，会看到 Evalite 在这里被调用，标题为 "Capitals"（首都）。这是我们要运行的 eval 的名称。
 
 ```ts
 import { evalite } from 'evalite';
 
 evalite('Capitals', {
-  // Configuration goes here
+  // 配置写在这里
 });
 ```
 
-You have some data here, which is a list of different tasks you're going to get the LLM to perform, as well as some expected outputs:
+这里有一些数据，是你要让 LLM 执行的不同任务的列表，以及一些预期输出：
 
 ```ts
 evalite('Capitals', {
   data: () => [
     {
-      input: 'What is the capital of France?',
-      expected: 'Paris',
+      input: '法国的首都是哪里?',
+      expected: '巴黎',
     },
     {
-      input: 'What is the capital of Germany?',
-      expected: 'Berlin',
+      input: '德国的首都是哪里?',
+      expected: '柏林',
     },
     {
-      input: 'What is the capital of Italy?',
-      expected: 'Rome',
+      input: '意大利的首都是哪里?',
+      expected: '罗马',
     },
   ],
-  // ...other properties
+  // ...其他属性
 });
 ```
 
-You'll need to implement the task function, which performs the actual AI call:
+你需要实现 task 函数，它执行实际的 AI 调用：
 
 ```ts
 evalite('Capitals', {
-  // ...other properties
+  // ...其他属性
   task: async (input) => {
-    const capitalResult = TODO; // Implement this!
+    const capitalResult = TODO; // 实现这个!
 
     return capitalResult.text;
   },
 });
 ```
 
-The scorer is going to evaluate whether the LLM did a decent job:
+scorer（评分器）将评估 LLM 是否干得不错：
 
 ```ts
 evalite('Capitals', {
-  // ...other properties
+  // ...其他属性
   scorers: [
     {
       name: 'includes',
@@ -69,41 +69,41 @@ evalite('Capitals', {
 });
 ```
 
-In this case, we're going to look at the output of the LLM and see if it includes the thing that we expect to be in the string. For example, we expect that it will answer something to do with Rome when replying to "What is the capital of Italy?"
+在这个例子中，我们会检查 LLM 的输出，看它是否包含我们期望出现在字符串中的内容。比如，我们期望它在回答"意大利的首都是哪里？"时会给出与罗马有关的答案。
 
-If it does, then it will give a one, which indicates 100% or zero, if it doesn't, indicating 0%.
+如果包含，就得 1 分，表示 100%；如果不包含，就得 0 分，表示 0%。
 
-## Your Task
+## 你的任务
 
-All you need to do is implement the task function, and this is going to be a pretty simple AI SDK call to ask the LLM to return some sort of capital result.
+你需要做的就是实现 task 函数，这将是一个相当简单的 AI SDK 调用，让 LLM 返回某个首都结果。
 
-By running the exercise, you'll then see the Evalite output and also open a local dev server at [localhost:3006](http://localhost:3006) to investigate the outputs.
+运行练习后，你会看到 Evalite 的输出，并且可以在 [localhost:3006](http://localhost:3006) 打开一个本地开发服务器来查看输出。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Import the necessary AI SDK components at the top of your file
+- [ ] 在文件顶部导入必要的 AI SDK 组件
 
   ```ts
   import { google } from '@ai-sdk/google';
   import { generateText } from 'ai';
   ```
 
-- [ ] Implement the `task` function to use the AI SDK to generate a response about capitals
+- [ ] 实现 `task` 函数，使用 AI SDK 生成关于首都的回答
 
   ```ts
   task: async (input) => {
-    const capitalResult = // Call generateText with appropriate model and prompt
+    const capitalResult = // 用适当的 model 和 prompt 调用 generateText
 
     return capitalResult.text;
   },
   ```
 
-- [ ] Your prompt should instruct the model to answer questions about capitals of countries
+- [ ] 你的提示词应该指示模型回答关于国家首都的问题
 
-- [ ] Run the exercise to see the evaluation results
+- [ ] 运行练习，查看评估结果
 
-- [ ] Check that your implementation scores well on the test cases (France/Paris, Germany/Berlin, Italy/Rome)
+- [ ] 检查你的实现在测试用例（法国/巴黎、德国/柏林、意大利/罗马）上是否得分良好
 
-- [ ] Read the [Evalite docs](https://evalite.dev) to get an overview of Evalite's features
+- [ ] 阅读 [Evalite 文档](https://evalite.dev)，概览 Evalite 的功能

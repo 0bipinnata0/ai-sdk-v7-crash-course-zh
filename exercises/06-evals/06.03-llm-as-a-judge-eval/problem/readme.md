@@ -1,42 +1,42 @@
-There are some situations where deterministic evals simply won't cut it. What if you want to measure how good an answer is from an LLM? Well, what does "good" mean as a metric?
+有些情况下，确定性评估就是不够用。如果你想衡量一个 LLM 的答案有多"好"呢？那么，"好"作为指标意味着什么？
 
-Do we want the answer to be:
+我们希望答案是：
 
-- Humorous?
-- Accurate?
-- Factual?
-- Well-attributed?
+- 幽默的？
+- 准确的？
+- 符合事实的？
+- 引用得当的？
 
-For these kind of questions, you'll often be thinking, "I wish I just had an assistant I could use to go through all these responses and grade them."
+对于这类问题，你经常会想："要是我有个助手能帮我过一遍所有这些回答并给它们打分就好了。"
 
-When you have that desire, it might be time to reach for an LLM-as-a-judge eval.
+当你有这种想法时，也许就该用上 LLM 作为裁判（LLM-as-a-judge）的评估了。
 
-Turns out that LLMs are really good at evaluating the output of other LLMs. Instead of having to rely on a hypothetical assistant to evaluate everything, you can pass that job to an LLM itself.
+事实证明，LLM 真的很擅长评估其他 LLM 的输出。你不需要依赖一个假想中的助手来评估一切，而是可以把这份工作交给 LLM 自己。
 
-## The Setup
+## 设置
 
-We're inside the [`question-answerer.eval.ts`](./evals/question-answerer.eval.ts) function. We've created a task here that takes in a PDF.
+我们在 [`question-answerer.eval.ts`](./evals/question-answerer.eval.ts) 文件中。我们在这里创建了一个接收 PDF 的任务。
 
-The PDF I've picked is the chain of thought prompting paper. It's the first paper that defined the idea of chain of thought prompting.
+我选的 PDF 是思维链提示（chain of thought prompting）论文。这是第一篇定义思维链提示概念的论文。
 
 ```ts
 evalite('Chain Of Thought Paper', {
   data: () => [
     {
-      input: 'What is chain of thought prompting?',
+      input: '什么是思维链提示?',
     },
     {
       input:
-        'Why do the authors of the paper think that chain of thought prompting produces improvements?',
+        '论文作者为什么认为思维链提示能带来改进?',
     },
   ],
   task: async (input) => {
     const result = await generateText({
       model: google('gemini-2.5-flash'),
       system: `
-        You are a helpful assistant that can answer questions about the chain of thought prompting paper.
+        你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
-        ALWAYS use quotes from the paper when answering the question.
+        回答问题时务必引用论文中的原文。
       `,
       messages: [
         {
@@ -58,14 +58,14 @@ evalite('Chain Of Thought Paper', {
 
     return result.text;
   },
-  // Scorers are below...
+  // scorer 在下面...
 ```
 
-## The Scorers
+## Scorer
 
-We're going to take those inputs and pass them to a `generateText` call with a system prompt instructing the AI to always use quotes from the paper when answering.
+我们将接收这些输入，并把它们传给一个 `generateText` 调用，其系统提示词指示 AI 在回答时始终引用论文原文。
 
-We have two evaluators at the bottom of our `evalite` configuration:
+我们的 `evalite` 配置底部有两个评估器：
 
 ```ts
   scorers: [
@@ -82,12 +82,12 @@ We have two evaluators at the bottom of our `evalite` configuration:
 });
 ```
 
-1. A simple evaluator that checks whether the output includes quotes - this is a deterministic eval
-2. Another scorer - `attributionToChainOfThoughtPaper`. This is where we'll be doing most of our work.
+1. 一个简单的评估器，检查输出是否包含引文——这是一个确定性评估
+2. 另一个 scorer——`attributionToChainOfThoughtPaper`。我们大部分工作将在这里进行。
 
-## The Attribution Scorer
+## 归因 Scorer
 
-Inside the [`attribution-eval.ts`](./evals/attribution-eval.ts) evaluator, we're calling `createScorer`, which is the way you create scorers in separate files:
+在 [`attribution-eval.ts`](./evals/attribution-eval.ts) 评估器内部，我们调用 `createScorer`，这是在单独文件中创建 scorer 的方式：
 
 ```ts
 export const attributionToChainOfThoughtPaper = createScorer<
@@ -99,16 +99,15 @@ export const attributionToChainOfThoughtPaper = createScorer<
     const result = await generateObject({
       model: google('gemini-2.5-flash'),
       system: ATTRIBUTION_PROMPT,
-      messages: TODO, // TODO: Pass the chain of thought paper, the question and the answer given
-      schema: TODO, // TODO: Define the schema for the response
+      messages: TODO, // TODO:传入思维链论文、问题和给出的答案
+      schema: TODO, // TODO:定义响应的 schema
     });
 
-    // NOTE: it's important to use a string-based score for the
-    // LLM, since LLM's are notorious for being biased towards
-    // different numbers.
+    // 注意:对 LLM 使用基于字符串的分数很重要,
+    // 因为 LLM 出了名的对不同数字有偏好。
 
-    // So, we get the LLM to return a string score, and then
-    // we map it to a number.
+    // 所以,我们让 LLM 返回一个字符串分数,然后
+    // 把它映射到一个数字。
     const scoreMap = {
       A: 1,
       B: 0.5,
@@ -124,35 +123,35 @@ export const attributionToChainOfThoughtPaper = createScorer<
 });
 ```
 
-This evaluator takes in the input (question), the output (answer), and evaluates whether the quotes pulled from the paper accurately represent the intention of the paper and cite sources properly.
+这个评估器接收输入（问题）和输出（答案），评估从论文中提取的引文是否准确代表了论文的意图、是否正确地标注了来源。
 
-We're using a specific attribution prompt:
+我们使用一个特定的归因提示词：
 
 ```ts
 const ATTRIBUTION_PROMPT = `
-You are a helpful assistant that can answer questions about the chain of thought prompting paper.
+你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
-Your job is to work out if the answer has been properly attributed to the paper.
+你的工作是判断答案是否正确地归因于论文。
 
-Reply with a score of A, B, C or D.
+用 A、B、C 或 D 的评分回复。
 
-A: The answer is backed up by the contents of the paper, and cites sources accurately.
-B: The answer is somewhat backed up by the contents of the paper, or sources are misattributed or inaccurate.
-C: The answer misconstrues the intention of the paper.
-D: The answer does not provide sources from the paper.
+A:答案有论文内容作为支撑,并且准确地引用了来源。
+B:答案在一定程度上得到论文内容支撑,或者来源标注有误或不准确。
+C:答案曲解了论文的意图。
+D:答案没有提供来自论文的来源。
 `;
 ```
 
-## The Task
+## 任务
 
-For the implementation, we need to complete two TODOs:
+在实现上，我们需要完成两个 TODO:
 
-1. Pass in the chain of thought paper, the question, and the answer to the `messages` object
-2. Define the schema for the response
+1. 把思维链论文、问题和答案传给 `messages` 对象
+2. 定义响应的 schema
 
-There's an intriguing note about using string-based scores (A, B, C, D) instead of numeric scores with LLMs, since LLMs can be biased toward certain numbers. We then map these string scores to numeric values.
+有一个有趣的说明：对 LLM 使用基于字符串的分数（A、B、C、D）而不是数字分数，因为 LLM 可能对某些数字有偏好。然后我们把这些字符串分数映射为数值。
 
-With LLM-as-judge evals, you really want them to explain what they're doing and why they gave a certain score, which is why we're returning both the score and metadata (feedback/reasoning):
+对于 LLM 作为裁判的评估，你真的希望它们解释自己在做什么、为什么给出某个分数，这就是我们同时返回 score 和 metadata（反馈/推理）的原因：
 
 ```ts
 return {
@@ -161,20 +160,20 @@ return {
 };
 ```
 
-Once all that's set up, you can add more data points to test if the system can be broken or to experiment with it.
+一切设置好之后，你可以添加更多数据点来测试系统能否被攻破，或者用它做实验。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Pass the chain of thought paper, the question, and the answer to the `messages` object in the [`attributionToChainOfThoughtPaper`](./evals/attribution-eval.ts) scorer
+- [ ] 在 [`attributionToChainOfThoughtPaper`](./evals/attribution-eval.ts) scorer 中，把思维链论文、问题和答案传给 `messages` 对象
 
-- [ ] Define the schema for the LLM response using zod, which should include a feedback string and a score enum ('A', 'B', 'C', 'D')
+- [ ] 使用 zod 定义 LLM 响应的 schema，应包含一个 feedback 字符串和一个 score 枚举（'A'、'B'、'C'、'D')
 
-- [ ] Optional: Add more test cases to the `data` function in [`question-answerer.eval.ts`](./evals/question-answerer.eval.ts) to further test the system
+- [ ] 可选：在 [`question-answerer.eval.ts`](./evals/question-answerer.eval.ts) 的 `data` 函数中添加更多测试用例，进一步测试系统
 
-- [ ] Run the exercise to see if your implementation correctly evaluates the LLM's responses about the Chain of Thought paper
+- [ ] 运行练习，看看你的实现是否正确评估了 LLM 关于思维链论文的回答
 
-- [ ] Look at the metadata returned by the LLM judge evaluator (by clicking on the test case and looking in the right-hand panel)
+- [ ] 查看 LLM 裁判评估器返回的 metadata（点击测试用例，查看右侧面板）
 
-- [ ] Debug any issues by checking the metadata (feedback) returned by the LLM judge evaluator
+- [ ] 通过检查 LLM 裁判评估器返回的 metadata（反馈）来调试任何问题

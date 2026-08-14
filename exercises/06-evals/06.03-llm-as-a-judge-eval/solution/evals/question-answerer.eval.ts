@@ -16,20 +16,20 @@ const chainOfThoughtPaper = readFileSync(
 evalite('Chain Of Thought Paper', {
   data: () => [
     {
-      input: 'What is chain of thought prompting?',
+      input: '什么是思维链提示?',
     },
     {
       input:
-        'Why do the authors of the paper think that chain of thought prompting produces improvements?',
+        '论文作者为什么认为思维链提示能带来改进?',
     },
   ],
   task: async (input) => {
     const result = await generateText({
       model: google('gemini-2.5-flash'),
       system: `
-        You are a helpful assistant that can answer questions about the chain of thought prompting paper.
+        你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
         
-        ALWAYS use quotes from the paper when answering the question.
+        回答问题时务必引用论文中的原文。
       `,
       messages: [
         {

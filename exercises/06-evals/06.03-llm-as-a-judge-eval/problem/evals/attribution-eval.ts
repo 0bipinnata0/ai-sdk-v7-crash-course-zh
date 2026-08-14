@@ -13,16 +13,16 @@ const chainOfThoughtPaper = readFileSync(
 );
 
 const ATTRIBUTION_PROMPT = `
-You are a helpful assistant that can answer questions about the chain of thought prompting paper.
+你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
-Your job is to work out if the answer has been properly attributed to the paper.
+你的工作是判断答案是否正确地归因于论文。
 
-Reply with a score of A, B, C or D.
+用 A、B、C 或 D 的评分回复。
 
-A: The answer is backed up by the contents of the paper, and cites sources accurately.
-B: The answer is somewhat backed up by the contents of the paper, or sources are misattributed or inaccurate.
-C: The answer misconstrues the intention of the paper.
-D: The answer does not provide sources from the paper.
+A:答案有论文内容作为支撑,并且准确地引用了来源。
+B:答案在一定程度上得到论文内容支撑,或者来源标注有误或不准确。
+C:答案曲解了论文的意图。
+D:答案没有提供来自论文的来源。
 `;
 
 export const attributionToChainOfThoughtPaper = createScorer<
@@ -35,16 +35,15 @@ export const attributionToChainOfThoughtPaper = createScorer<
     const result = await generateObject({
       model: google('gemini-2.5-flash'),
       system: ATTRIBUTION_PROMPT,
-      messages: TODO, // TODO: Pass the chain of thought paper, the question and the answer given
-      schema: TODO, // TODO: Define the schema for the response
+      messages: TODO, // TODO:传入思维链论文、问题和给出的答案
+      schema: TODO, // TODO:定义响应的 schema
     });
 
-    // NOTE: it's important to use a string-based score for the
-    // LLM, since LLM's are notorious for being biased towards
-    // different numbers.
+    // 注意:对 LLM 使用基于字符串的分数很重要,
+    // 因为 LLM 出了名的对不同数字有偏好。
 
-    // So, we get the LLM to return a string score, and then
-    // we map it to a number.
+    // 所以,我们让 LLM 返回一个字符串分数,然后
+    // 把它映射到一个数字。
     const scoreMap = {
       A: 1,
       B: 0.5,

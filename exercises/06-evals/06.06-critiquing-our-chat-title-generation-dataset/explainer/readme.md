@@ -1,64 +1,64 @@
-I wanted to take a minute and critique our titles dataset a little bit. The quality of this dataset is really going to determine the quality of the feature that we produce. Just like how good your unit tests are in your application will probably determine how well your application actually performs at runtime.
+我想花点时间批评一下我们的标题数据集。这个数据集的质量将真正决定我们做出来的功能的质量。就像你应用中单元测试的好坏，很可能决定你的应用在运行时的实际表现一样。
 
-To start this exercise, I recommend you take the [CSV in the repo](./titles-dataset.csv) and import it into a spreadsheet like Google Sheets. Once that's done, you can have a look at the data and manually assess it.
+开始这个练习时，我建议你把[仓库中的 CSV](./titles-dataset.csv) 导入到 Google Sheets 这样的电子表格中。完成后，你可以查看数据并手动评估它。
 
-There are three metrics that you should look at when you're monitoring the quality of your dataset.
+在监控数据集质量时，你应该关注三个指标。
 
-## Data Quantity
+## 数据数量
 
-The first is quantity, how much data do you actually have?
+第一个是数量：你实际上有多少数据？
 
-In this case, we have 44 input-output pairs. That's a pretty solid amount. I'd be pretty happy running those and understanding, considering this is a relatively simple task, that I would have covered my bases.
+在这个例子中，我们有 44 个输入-输出对。这是相当扎实的数量。考虑到这是一个相对简单的任务，我会很乐意运行它们，并认为我已经覆盖了各种基本情况。
 
-## Data Quality
+## 数据质量
 
-If quantity is how much data you have, quality is how _good_ that data is. You've probably heard of the phrase garbage in, garbage out, right? Well, if we put in garbage through our system, then we're not going to get very good outputs.
+如果说数量是你有多少数据，那么质量就是这些数据的_好坏_。你可能听过"垃圾进，垃圾出"这句话，对吧？如果我们往系统里放垃圾，就不会得到很好的输出。
 
-Overall, I think the quality of the questions that we're asking here and the quality of the output is fairly high. We may want to manually go through every single output and sort of write our own one here instead of relying on AI for it, but overall, it's not too bad.
+总的来说，我认为我们问的问题质量和输出质量都相当高。我们也许应该手动过一遍每一个输出并自己重写，而不是依赖 AI 生成，但总体来说，不算太差。
 
-## Coverage Concerns
+## 覆盖率的担忧
 
-The third metric, though, is the one that has me a little bit concerned about this dataset, which is the coverage of the dataset.
+不过，第三个指标让我对这个数据集有点担心，那就是数据集的覆盖率。
 
-What we notice here is:
+我们注意到：
 
-- The inputs are pretty much always the same length. They pretty much always run to two lines in the Google Sheet I have.
-- They are all in English
-- They're all written with very good punctuation as well, with perfect capitalization.
-- They're written with good intent - there are no malicious inputs.
+- 输入的长度几乎总是一样的。在我的 Google Sheet 中，它们几乎总是占两行。
+- 它们都是中文的
+- 它们的标点也都非常好，大小写完美。
+- 它们都是带着善意写的——没有恶意输入。
 
-This leaves us with a lot of questions about our system:
+这给我们的系统留下了很多疑问：
 
-- What would happen if we asked it to write a title with a malicious input - a conversation discussing bomb making?
-- How would it respond if we query it in a different language?
-- How would it respond if we query it with a very long piece of text?
-- What about an extremely short piece of text or a vague piece of text, like "yo"?
+- 如果我们让它为恶意输入写标题——比如一段讨论制作炸弹的对话——会发生什么？
+- 如果我们用不同的语言查询，它会怎么回应？
+- 如果我们用一段非常长的文本查询，它会怎么回应？
+- 一段极短或含糊的文本呢，比如"喂"？
 
-So while our dataset is high quality, it's not very diverse.
+所以，虽然我们的数据集质量很高，但多样性不足。
 
-## The Plan
+## 计划
 
-To improve our dataset, we should consider adding:
+为了改进我们的数据集，我们应该考虑添加：
 
-- Malicious inputs to test system boundaries
-- Non-English queries
-- Very long pieces of text
-- Extremely short or vague inputs (e.g., "yo")
-- Inputs with poor grammar or spelling
-- Inputs without proper capitalization or punctuation
+- 恶意输入，用于测试系统边界
+- 非中文的查询
+- 非常长的文本
+- 极短或含糊的输入（例如"喂")
+- 语法或拼写糟糕的输入
+- 没有适当大小写或标点的输入
 
-Let's go back to our [Chat Title Generation Playground](/exercises/06-evals/06.05-chat-title-generation/problem/readme.md) and try some of those inputs out.
+让我们回到[聊天标题生成练习](/exercises/06-evals/06.05-chat-title-generation/problem/readme.md)，试试其中一些输入。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Go back to the [chat title generation exercise](/exercises/06-evals/06.05-chat-title-generation/problem/readme.md) and add some more data to the dataset.
-  - Add some malicious inputs to test system boundaries.
-  - Add some non-English queries.
-  - Add some very long pieces of text.
-  - Add some extremely short or vague inputs (e.g., "yo" or "ey up chuck").
-  - Add some inputs with poor grammar or spelling.
-  - Add some inputs without proper capitalization or punctuation.
+- [ ] 回到[聊天标题生成练习](/exercises/06-evals/06.05-chat-title-generation/problem/readme.md)，往数据集中添加更多数据。
+  - 添加一些恶意输入来测试系统边界。
+  - 添加一些非中文的查询。
+  - 添加一些非常长的文本。
+  - 添加一些极短或含糊的输入（例如"喂"或"在吗")。
+  - 添加一些语法或拼写糟糕的输入。
+  - 添加一些没有适当大小写或标点的输入。
 
-- [ ] Run the evals with the new dataset and see how they perform.
+- [ ] 用新数据集运行 eval，看看它们的表现。
 
-- [ ] Reflect on the results and see if you can improve the dataset further.
+- [ ] 反思结果，看看能否进一步改进数据集。

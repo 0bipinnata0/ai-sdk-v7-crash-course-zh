@@ -33,22 +33,22 @@ evalite('Chat Title Generation', {
     const result = await generateText({
       model: google('gemini-2.5-flash-lite'),
       prompt: `
-        You are a helpful assistant that can generate titles for conversations. The title will be used for organizing conversations in a chat application.
+        你是一个乐于助人的助手,可以为对话生成标题。标题将用于在聊天应用中组织对话。
 
         <conversation-history>
         ${input}
         </conversation-history>
-        
-        Find the most concise title that captures the essence of the conversation.
-        Titles should be at most 30 characters.
-        Titles should be formatted in sentence case, with capital letters at the start of each word. Do not provide a period at the end.
-        Use no punctuation or emojis.
-        If there are acronyms used in the conversation, use them in the title.
-        Use formal language in the title, like 'troubleshooting', 'discussion', 'support', 'options', 'research', etc.
-        Since all items in the list are conversations, do not use the word 'chat', 'conversation' or 'discussion' in the title - it's implied by the UI.
-        
-        Generate a title for the conversation.
-        Return only the title.
+
+        找到能抓住对话精髓的最简洁标题。
+        标题最多 30 个字符。
+        标题使用书面语风格。结尾不要句号。
+        不要使用标点符号或表情符号。
+        如果对话中使用了缩写词,在标题中使用它们。
+        在标题中使用正式的措辞,比如“故障排查”、“讨论”、“支持”、“选择”、“调研”等。
+        由于列表中的所有条目都是对话,标题中不要使用“聊天”、“对话”或“讨论”这些词——UI 已经隐含了这一点。
+
+        为这段对话生成一个标题。
+        只返回标题。
       `,
     });
 

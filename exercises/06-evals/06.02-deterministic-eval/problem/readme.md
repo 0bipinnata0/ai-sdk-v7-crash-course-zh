@@ -1,12 +1,12 @@
-There are two main ways that you can write scorers for your evaluations. We're gonna examine the first one here, which are deterministic scorers. These are scorers that you write in code to check something deterministically about the output that the LLM contains.
+编写评估 scorer（评分器）主要有两种方式。我们先来看第一种：确定性 scorer（deterministic scorer)。这些是你用代码编写的 scorer，用来确定性地检查 LLM 输出中的某些内容。
 
-These act kind of like unit tests - they're deterministic, they're fast, and they're easy to write.
+它们的行为有点像单元测试——确定性的、快速的、容易编写。
 
-The other kind of scorers are LLM as a judge scorers. In other words, probabilistic scorers that might return one score or another. Those are useful for other kind of metrics that deterministic scorers can't handle. We'll look at those in a minute - for now, we'll focus on what you can do in code.
+另一种 scorer 是"LLM 作为裁判"(LLM as a judge）的 scorer。换句话说，就是概率性的 scorer，可能返回这样或那样的分数。它们适用于确定性 scorer 无法处理的其他类型的指标。我们稍后会讲——现在先关注你能用代码做什么。
 
-## The Data
+## 数据
 
-I've set up a question answerer function here. We've given it a set of links here, TypeScript 5.8 release notes, 5.5, 5.6, et cetera. And we're asking the LLM a couple of questions.
+我在这里设置了一个问答函数。我们给了它一组链接：TypeScript 5.8 发布说明、5.5、5.6 等等。然后我们要问 LLM 几个问题。
 
 ```ts
 const links = [
@@ -14,86 +14,86 @@ const links = [
     title: 'TypeScript 5.8',
     url: 'https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-8.html',
   },
-  // more links...
+  // 更多链接...
 ];
 
 evalite('Capitals', {
   data: () => [
     {
-      input: 'Tell me about the TypeScript 5.8 release',
+      input: '给我讲讲 TypeScript 5.8 版本',
     },
     {
-      input: 'Tell me about the TypeScript 5.2 release',
+      input: '给我讲讲 TypeScript 5.2 版本',
     },
   ],
   // ...
 });
 ```
 
-## The Scorers
+## Scorer
 
-Now we want to check this on two separate metrics. We want to check whether the output includes some kind of markdown link:
+现在我们想从两个独立的指标来检查输出。我们想检查输出是否包含某种 markdown 链接：
 
 ```ts
 {
     name: 'Includes Markdown Links',
     scorer: ({ input, output, expected }) => {
-      // TODO: check if the output includes markdown links
+      // TODO:检查输出是否包含 markdown 链接
     },
   },
 ```
 
-This is a really good metric to check because it makes sure that the LLM is using up-to-date sources and sources which kind of back up its point.
+这是一个非常好的检查指标，因为它确保 LLM 在使用最新的、能支撑其论点的来源。
 
-We also want the output to be extremely concise too. So we want to check if the output is less than 500 characters.
+我们还希望输出极其简洁。所以我们想检查输出是否少于 500 个字符。
 
 ```ts
 {
     name: 'Output length',
     scorer: ({ input, output, expected }) => {
-      // TODO: check if the output is less than 500 characters
+      // TODO:检查输出是否少于 500 个字符
     },
   },
 ```
 
-## The Task
+## 任务
 
-Your job here is to do a little bit of eval-driven development. You are going to write the scorers here based on the example in the previous exercise.
+你的任务是来做一点评估驱动开发（eval-driven development)。你将参照上一个练习中的例子来编写这里的 scorer。
 
-Then, you're going to update the system prompt in [`evals/question-answerer.eval.ts`](./evals/question-answerer.eval.ts) to pass the links in here:
+然后，你要更新 [`evals/question-answerer.eval.ts`](./evals/question-answerer.eval.ts) 中的系统提示词，把链接传进去：
 
 ```ts
 prompt: `
-  You are a helpful assistant that can answer questions about TypeScript releases.
+  你是一个乐于助人的助手,可以回答关于 TypeScript 版本发布的问题。
 
-  Question:
+  问题:
   ${input}
 `,
 ```
 
-You'll also need to design the system prompt so that it always includes markdown links and that it answers the question very, very succinctly.
+你还需要设计系统提示词，让它总是包含 markdown 链接，并且非常、非常简洁地回答问题。
 
-You can then use Evalite to make sure that these two deterministic evals eventually pass.
+然后你可以用 Evalite 来确保这两个确定性评估最终通过。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Complete the "Includes Markdown Links" scorer
-  - Implement logic to check if the output contains markdown links using a regular expression (your LLM will be able to help you with this)
-  - Return `1` if links are found, `0` if not
+- [ ] 完成 "Includes Markdown Links" scorer
+  - 实现用正则表达式检查输出是否包含 markdown 链接的逻辑（你的 LLM 可以帮你完成）
+  - 找到链接返回 `1`，否则返回 `0`
 
-- [ ] Complete the "Output length" scorer
-  - Implement logic to check if the output is less than 500 characters
-  - Return `1` if it's concise enough, `0` if not
+- [ ] 完成 "Output length" scorer
+  - 实现检查输出是否少于 500 个字符的逻辑
+  - 足够简洁返回 `1`，否则返回 `0`
 
-- [ ] Run the exercise to see the evaluation results
+- [ ] 运行练习，查看评估结果
 
-- [ ] Update the system prompt to:
-  - Pass the links data to the model
-  - Explicitly instruct the model to include markdown links
-  - Direct the model to be extremely succinct in its answers
-  - Provide examples of properly formatted markdown links
+- [ ] 更新系统提示词：
+  - 把链接数据传给模型
+  - 明确指示模型包含 markdown 链接
+  - 指导模型回答要极其简洁
+  - 提供格式正确的 markdown 链接示例
 
-- [ ] Run the evaluation using Evalite and check if both scorers pass
-  - If they don't pass, refine your prompt until they do
+- [ ] 使用 Evalite 运行评估，检查两个 scorer 是否都通过
+  - 如果没通过，优化你的提示词直到通过为止

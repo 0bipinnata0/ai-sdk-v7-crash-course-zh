@@ -1,36 +1,36 @@
-Now we understand the basics about evals and how you can use LLM as a judge, scorers, and deterministic scorers. I want to put you in a situation where you can do some eval-driven development. We're going to redo an exercise that we did before: generating titles from a chat history.
+现在我们了解了 eval 的基础知识，以及如何使用 LLM 作为裁判的 scorer 和确定性 scorer。我想让你处在一个能做评估驱动开发（eval-driven development）的场景中。我们要重做一个之前做过的练习：从聊天历史生成标题。
 
-## The Eval
+## 评估
 
-We have an eval here called chat title generation that simply calls `generateText` passing in `google('gemini-2.5-flash-lite')` and says "generate me a title based on an input.":
+我们这里有一个叫做聊天标题生成的 eval，它只是调用 `generateText`，传入 `google('gemini-2.5-flash-lite')`，并说"根据输入给我生成一个标题":
 
 ```typescript
 const result = await generateText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
-    Generate me a title:
+    给我生成一个标题:
     ${input}
   `,
 });
 ```
 
-Your job, and it is a pretty free-form job, is to improve this prompt by leveraging a dataset that I have prepared for you.
+你的任务——一个相当自由发挥的任务——是利用我为你准备的数据集来改进这个提示词。
 
-## The Dataset
+## 数据集
 
-We have a `titles-dataset.csv` which has two columns: an input and a desired output. Here are some examples from the dataset:
+我们有一个 `titles-dataset.csv`，它有两列：输入和期望输出。以下是数据集中的一些例子：
 
-| Input                                                   | Output                       |
-| ------------------------------------------------------- | ---------------------------- |
-| Did Google just release their latest smartwatch?        | Google watch release date    |
-| How do I set up authentication in Next.js?              | Next.js authentication setup |
-| What are some recent changes to React Query?            | React Query recent changes   |
-| Is there a way to optimize my Tailwind CSS bundle size? | Tailwind CSS optimization    |
-| When is the next Apple iPhone event?                    | Apple iPhone event schedule  |
+| 输入                                          | 输出               |
+| --------------------------------------------- | ------------------ |
+| 谷歌刚刚发布了他们最新的智能手表吗？          | 谷歌手表发布日期   |
+| 如何在 Next.js 中设置身份验证？               | Next.js 身份验证设置 |
+| React Query 最近有哪些变化？                  | React Query 近期变化 |
+| 有没有办法优化我的 Tailwind CSS 打包体积？    | Tailwind CSS 优化  |
+| 下一次苹果 iPhone 发布会是什么时候？          | 苹果 iPhone 发布会日程 |
 
-I manually wrote the first 5-10 entries and then I got an LLM to generate the rest.
+我手动写了前 5-10 条，然后让 LLM 生成了其余的。
 
-In the eval, I'm reading the CSV file and parsing it into an array with input and output. Then I'm slicing off only the first five of the dataset and mapping that into a format that Evalite expects:
+在 eval 中，我读取 CSV 文件并把它解析成包含输入和输出的数组。然后我只取数据集的前五条，并把它映射成 Evalite 期望的格式：
 
 ```typescript
 const EVAL_DATA_SIZE = 5;
@@ -43,58 +43,58 @@ const dataForEvalite = data.data
   }));
 ```
 
-## The Plan
+## 计划
 
-Here's how I recommend you complete this exercise:
+以下是我推荐你完成这个练习的方式：
 
-1. Run these evals without any scorers just to get a kind of baseline of what's happening. You can use an `EVAL_DATA_SIZE` of 5 just to start with.
-2. From there, iterate on the prompts just to get the first five working. You can use the prompt template that we talked about in our [previous exercises](/exercises/05-context-engineering/05.01-the-template/explainer/readme.md). Right now, the prompt is very basic:
+1. 先在没有任何 scorer 的情况下运行这些 eval，了解一下基线情况。开始时可以把 `EVAL_DATA_SIZE` 设为 5。
+2. 然后，迭代提示词，先把前五条跑通。你可以使用我们在[之前的练习](/exercises/05-context-engineering/05.01-the-template/explainer/readme.md)中讨论过的提示词模板。现在，提示词非常简单：
 
 ```typescript
 const result = await generateText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
-    Generate me a title:
+    给我生成一个标题:
     ${input}
   `,
 });
 ```
 
-3. Once you've got the first five working, expand the dataset to let's say 15. The way you're going to evaluate this is by hand: comparing the output from your system to what is expected from the dataset.
+3. 当前五条跑通后，把数据集扩大到比如 15 条。你的评估方式是手动进行：把你系统的输出与数据集中的期望输出进行对比。
 
-For instance, in the dataset it might say "react query recent changes" but in your output it might say "react query latest updates." Initially, you can just visually check between the golden output and your output to see if they're good enough.
+比如，数据集中可能写着"React Query 近期变化"，而你的输出可能是"React Query 最新动态"。一开始，你可以只用肉眼对比黄金输出和你的输出，看看它们是否足够好。
 
-4. Once that phase is over, consider adding a deterministic scorer once you get a sense for what you want your outputs to be. One example would be to check if the output is over a certain length.
+4. 这个阶段结束后，一旦你对想要的输出有了感觉，考虑添加一个确定性 scorer。一个例子是检查输出是否超过某个长度。
 
-At this point, the scorer will act more like an assistant - giving you extra feedback while you're manually evaluating the outputs.
+在这个阶段，scorer 会更像一个助手——在你手动评估输出时给你额外的反馈。
 
-5. Finally, you may consider using an llm-as-a-judge scorer. For that, you could take the input, the desired output, and the actual output of your system, and ask the LLM to say whether the output is comparable in quality to the expected output.
+5. 最后，你可以考虑使用 LLM 作为裁判的 scorer。为此，你可以把输入、期望输出和你系统的实际输出交给 LLM，让它判断输出与期望输出的质量是否相当。
 
-They don't have to be exactly the same, but if they're comparable in quality then you can say yes, that's a win.
+它们不必完全相同，但如果质量相当，你就可以说，好，这算通过。
 
-Consider this your chance to experiment with evals, trying to do some eval-driven development in a very free-form way. Good luck!
+把这次当作你试验 eval 的机会，以一种非常自由的方式尝试评估驱动开发。祝你好运！
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Run the evals without any scorers to get a baseline
-  - Set `EVAL_DATA_SIZE` to 5
-  - Observe the current outputs vs expected outputs
+- [ ] 在没有任何 scorer 的情况下运行 eval，获得基线
+  - 把 `EVAL_DATA_SIZE` 设为 5
+  - 观察当前输出与期望输出的对比
 
-- [ ] Improve the prompt template
-  - Use techniques from previous exercises
-  - Modify the prompt to better generate titles that match the expected output
+- [ ] 改进提示词模板
+  - 使用之前练习中的技巧
+  - 修改提示词，生成更接近期望输出的标题
 
-- [ ] Test with first 5 entries until you get good results
-  - Compare your outputs visually against the expected outputs
+- [ ] 用前 5 条数据测试，直到获得好的结果
+  - 用肉眼对比你的输出和期望输出
 
-- [ ] Expand the dataset size
-  - Change `EVAL_DATA_SIZE` to 15
-  - Test your prompt with more examples
+- [ ] 扩大数据集规模
+  - 把 `EVAL_DATA_SIZE` 改为 15
+  - 用更多例子测试你的提示词
 
-- [ ] Add a deterministic scorer
-  - Create a scorer that checks for output length
-  - Add it to the `scorers` array in the eval
+- [ ] 添加一个确定性 scorer
+  - 创建一个检查输出长度的 scorer
+  - 把它添加到 eval 的 `scorers` 数组中
 
-- [ ] Implement an LLM-as-judge scorer
-  - Create a scorer that compares the quality of your output to the expected output
-  - Add it to the `scorers` array in the eval
+- [ ] 实现一个 LLM 作为裁判的 scorer
+  - 创建一个比较你的输出与期望输出质量的 scorer
+  - 把它添加到 eval 的 `scorers` 数组中

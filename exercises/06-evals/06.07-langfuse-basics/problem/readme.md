@@ -1,16 +1,16 @@
-Probably the single most important thing you can do with any AI powered application in order to improve it is to observe it in production.
+对于任何 AI 驱动的应用来说，改进它的最重要的一件事，可能就是观察它在生产环境中的表现。
 
-The reason for that is that the data you get from users using your app is always good quality - since it matches exactly how people are _using_ it.
+原因是：你从用户使用你的应用中得到的数据总是高质量的——因为它精确地反映了人们实际_使用_它的方式。
 
-You can also use it to help your data coverage - by discovering new edge cases that you might not have thought of otherwise. That user data can then be directly used in your evals to improve them.
+你还可以用它来帮助你的数据覆盖率——通过发现你可能想都没想过的新的边界情况。这些用户数据随后可以直接用在你的 eval 中，帮助改进它们。
 
-Not only that, but observability is absolutely key when we're relying so heavily on a paid service. We need to understand how much we're spending as well as look for ways to optimize our token use across prompts.
+不仅如此，当我们如此重度地依赖付费服务时，可观测性绝对是关键。我们需要了解自己花了多少钱，并寻找在提示词之间优化 token 使用的方法。
 
 ## LangFuse
 
-There are many custom built tools for LLM observability, but the one I'm going to show you how to use is [LangFuse](https://langfuse.com/). LangFuse is really interesting because they have a cloud service, but they _also_ allow you to run the entire thing locally on Docker.
+有很多专为 LLM 可观测性打造的工具，但我要向你展示的是 [LangFuse](https://langfuse.com/)。LangFuse 很有意思，因为他们有云服务，但_也_允许你用 Docker 在本地运行整个系统。
 
-For simplicity, I recommend that you sign up to their free trial on their [cloud service](https://cloud.langfuse.com/). Once you've done that, you'll need three environment variables in your `.env` file:
+为了简单起见，我建议你注册他们[云服务](https://cloud.langfuse.com/)的免费试用。完成后，你需要在 `.env` 文件中配置三个环境变量：
 
 ```
 LANGFUSE_PUBLIC_KEY=your_public_key
@@ -18,38 +18,38 @@ LANGFUSE_SECRET_KEY=your_secret_key
 LANGFUSE_BASE_URL=https://cloud.langfuse.com
 ```
 
-You'll be introduced to these as part of the onboarding process.
+你会在入门引导流程中接触到它们。
 
-## The Setup
+## 设置
 
-In this exercise, we're going to be taking the chat title generation system that we created before and instrumenting it, allowing us to observe what's happening with it in production.
+在本练习中，我们将把之前创建的聊天标题生成系统接入监控，让我们能够观察它在生产环境中的运行情况。
 
-In this implementation, we're going to run the title generation in parallel to the chat. This means that if we were persisting the chat, we would be able to persist it with the generated title immediately.
+在这个实现中，我们将让标题生成与聊天并行运行。这意味着如果我们要持久化聊天，就能立即把生成的标题一起持久化。
 
-Our first job is to go into the [`langfuse.ts`](./api/langfuse.ts) file and do a little bit of admin. Inside the `otelSDK` variable, we're going to be instantiating a `NodeSDK` class from the `@opentelemetry/sdk-node` package. We're then going to pass it the `LangfuseExporter` instance from the `langfuse-vercel` package as the `traceExporter` property.
+我们的第一项任务是打开 [`langfuse.ts`](./api/langfuse.ts) 文件做一些配置。在 `otelSDK` 变量中，我们将实例化来自 `@opentelemetry/sdk-node` 包的 `NodeSDK` 类。然后我们把来自 `langfuse-vercel` 包的 `LangfuseExporter` 实例作为 `traceExporter` 属性传给它。
 
-The `TODO` for `otelSDK` looks like this:
+`otelSDK` 的 `TODO` 看起来像这样：
 
 ```ts
 // langfuse.ts
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { LangfuseExporter } from 'langfuse-vercel';
 
-// TODO: declare the otelSDK variable using the NodeSDK class
-// from the @opentelemetry/sdk-node package,
-// and pass it the LangfuseExporter instance
-// from the langfuse-vercel package as the traceExporter
+// TODO:使用 @opentelemetry/sdk-node 包中的 NodeSDK 类
+// 声明 otelSDK 变量,
+// 并把 langfuse-vercel 包中的 LangfuseExporter 实例
+// 作为 traceExporter 传给它
 export const otelSDK = TODO;
 ```
 
-Secondly, down the bottom, we're going to instantiate the `langfuse` variable using the `Langfuse` class from the `langfuse` package and pass it the following properties: `environment`, `publicKey`, `secretKey` and `baseUrl`:
+其次，在文件底部，我们将使用 `langfuse` 包中的 `Langfuse` 类实例化 `langfuse` 变量，并传入以下属性：`environment`、`publicKey`、`secretKey` 和 `baseUrl`:
 
 ```ts
 // langfuse.ts
 import { Langfuse } from 'langfuse';
 
-// TODO: declare the langfuse variable using the Langfuse class
-// from the langfuse package, and pass it the following arguments:
+// TODO:使用 langfuse 包中的 Langfuse 类
+// 声明 langfuse 变量,并传入以下参数:
 // - environment: process.env.NODE_ENV
 // - publicKey: process.env.LANGFUSE_PUBLIC_KEY
 // - secretKey: process.env.LANGFUSE_SECRET_KEY
@@ -57,29 +57,29 @@ import { Langfuse } from 'langfuse';
 export const langfuse = TODO;
 ```
 
-## Tracing The Code
+## 追踪代码
 
-Once that's done, we can get into the interesting stuff of actually tracing our code. Our first job is inside the `POST` route in [`chat.ts`](./api/chat.ts). We're going to declare a trace using the `langfuse.trace` method:
+完成这些之后，我们就可以进入有趣的部分：真正追踪我们的代码。我们的第一项工作在 [`chat.ts`](./api/chat.ts) 的 `POST` 路由中。我们将使用 `langfuse.trace` 方法声明一个 trace:
 
 ```ts
-// Replace this:
+// 把这个:
 const trace = TODO;
 
-// With something like:
+// 替换成类似这样的:
 const trace = langfuse.trace({
   sessionId: body.id,
 });
 ```
 
-We can then pass it the `sessionId` property, which is the ID of the chat.
+然后我们可以传入 `sessionId` 属性，也就是聊天的 ID。
 
-### Traces and Spans
+### Trace 和 Span
 
-LangFuse is based on [OpenTelemetry](https://opentelemetry.io/), which means it works with traces and spans.
+LangFuse 基于 [OpenTelemetry](https://opentelemetry.io/)，这意味着它使用 trace 和 span 的概念。
 
-You can think of a span as like a unit of work. So for instance, a single function call might be a span. In our case, our `streamText` calls are going to be our spans. Our first span is to write the chat message and the second one is to generate the title.
+你可以把 span 想象成一个工作单元。比如，一次函数调用可能就是一个 span。在我们的例子中，`streamText` 调用就是我们的 span。第一个 span 是写聊天消息，第二个是生成标题。
 
-A trace is like a container for some spans. It's like the whole story of what happened.
+trace 则像是一个装 span 的容器。它像是整个事情经过的完整故事。
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -87,23 +87,22 @@ A trace is like a container for some spans. It's like the whole story of what ha
 ├──────────────────────────────────────────────┤
 │  ┌─────────────────┐    ┌─────────────────┐  │
 │  │     SPAN 1      │    │     SPAN 2      │  │
-│  │  Write Chat     │    │    Generate     │  │
-│  │    Message      │    │    Title        │  │
+│  │  写聊天消息     │    │    生成标题     │  │
 │  └─────────────────┘    └─────────────────┘  │
 └──────────────────────────────────────────────┘
 ```
 
-### Passing `telemetry` to the `streamText` & `generateText` calls
+### 给 `streamText` 和 `generateText` 调用传入 `telemetry`
 
-Once the trace has been created, we should then go down into the `streamText` call and the `generateText` call and look at the `experimental_telemetry` property.
+创建 trace 之后，我们应该进入 `streamText` 调用和 `generateText` 调用，查看 `experimental_telemetry` 属性。
 
-The AI SDK has built-in support for telemetry. We just need to replace this `TODO` with an object that has an `isEnabled` property, a `functionId` property, and some metadata to link it to the `langfuse.trace.id`.
+AI SDK 内置了对 telemetry 的支持。我们只需要把这个 `TODO` 替换成一个带有 `isEnabled` 属性、`functionId` 属性，以及一些用于关联到 `langfuse.trace.id` 的 metadata 的对象。
 
 ```ts
-// Replace this:
+// 把这个:
 experimental_telemetry: TODO,
 
-// With something like:
+// 替换成类似这样的:
 experimental_telemetry: {
   isEnabled: true,
   functionId: 'your-name-here',
@@ -113,35 +112,35 @@ experimental_telemetry: {
 },
 ```
 
-The `functionId` should be used to describe the action that is being performed.
+`functionId` 应该用来描述正在执行的动作。
 
-### Flushing the traces
+### 刷新 trace
 
-And once that's done, we can go right to the end of the code all the way down into `onFinish` here.
+完成之后，我们可以一直到代码末尾的 `onFinish`。
 
-In `onFinish`, we need to flush the LangFuse traces using the `langfuse.flushAsync` method. 'Flush' here just means send the traces off to LangFuse so that we can view them in its cloud viewer.
+在 `onFinish` 中，我们需要使用 `langfuse.flushAsync` 方法刷新 LangFuse 的 trace。这里的"刷新"意思是把 trace 发送给 LangFuse，这样我们就能在它的云端查看器中查看它们。
 
 ```ts
 onFinish: async () => {
-  // TODO: flush the langfuse traces using the langfuse.flushAsync method
-  // and await the result
+  // TODO:使用 langfuse.flushAsync 方法刷新 langfuse 的 trace,
+  // 并 await 结果
   TODO;
 };
 ```
 
-### Testing
+### 测试
 
-Once all of these to-dos are done, you can try testing out your application, making sure again that your environment variables are all set up correctly.
+完成所有这些 TODO 之后，你可以试着测试你的应用，再次确认你的环境变量都已正确配置。
 
-You can go into the traces section of the LangFuse dashboard and see your traces coming in. You'll be able to see the title generation and the chat message writing in a single trace.
+你可以进入 LangFuse 仪表盘的 traces 部分，看到你的 trace 不断进来。你将能在单个 trace 中看到标题生成和聊天消息写入。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Sign up for a free [LangFuse](https://langfuse.com) account to get your API keys
+- [ ] 注册一个免费的 [LangFuse](https://langfuse.com) 账户，获取你的 API 密钥
 
-- [ ] Add three environment variables to your `.env` file:
+- [ ] 在你的 `.env` 文件中添加三个环境变量：
 
   ```
   LANGFUSE_PUBLIC_KEY=your_public_key
@@ -149,18 +148,18 @@ Good luck, and I'll see you in the solution.
   LANGFUSE_BASE_URL=https://cloud.langfuse.com
   ```
 
-- [ ] Implement the `otelSDK` in [`langfuse.ts`](./api/langfuse.ts)
+- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中实现 `otelSDK`
 
-- [ ] Implement the `langfuse` instance in [`langfuse.ts`](./api/langfuse.ts)
+- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中实现 `langfuse` 实例
 
-- [ ] In [`chat.ts`](./api/chat.ts), implement the trace variable:
+- [ ] 在 [`chat.ts`](./api/chat.ts) 中实现 trace 变量
 
-- [ ] Add `experimental_telemetry` to the `streamText` call and the `generateText` call in [`chat.ts`](./api/chat.ts)
+- [ ] 给 [`chat.ts`](./api/chat.ts) 中的 `streamText` 调用和 `generateText` 调用添加 `experimental_telemetry`
 
-- [ ] Implement the `langfuse.flushAsync()` call in the `onFinish` handler
+- [ ] 在 `onFinish` 处理器中实现 `langfuse.flushAsync()` 调用
 
-- [ ] Test your application by running the local dev server
+- [ ] 通过运行本地开发服务器测试你的应用
 
-- [ ] Check the LangFuse dashboard to see if traces are being recorded
+- [ ] 检查 LangFuse 仪表盘，看看 trace 是否被记录
 
-- [ ] Try different prompts to see how they appear in the traces view
+- [ ] 尝试不同的提示词，看看它们在 trace 视图中如何呈现

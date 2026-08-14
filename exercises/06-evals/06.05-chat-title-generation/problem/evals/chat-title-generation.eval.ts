@@ -33,7 +33,7 @@ evalite('Chat Title Generation', {
     const result = await generateText({
       model: google('gemini-2.5-flash-lite'),
       prompt: `
-        Generate me a title:
+        给我生成一个标题:
         ${input}
       `,
     });

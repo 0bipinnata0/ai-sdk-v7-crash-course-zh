@@ -22,16 +22,16 @@ export const attributionToChainOfThoughtPaper = createScorer<
     const result = await generateObject({
       model: google('gemini-2.5-flash'),
       system: `
-        You are a helpful assistant that can answer questions about the chain of thought prompting paper.
+        你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
-        Your job is to work out if the answer has been properly attributed to the paper.
+        你的工作是判断答案是否正确地归因于论文。
 
-        Reply with a score of A, B, C or D.
+        用 A、B、C 或 D 的评分回复。
 
-        A: The answer is backed up by the contents of the paper, and cites sources accurately.
-        B: The answer is somewhat backed up by the contents of the paper, or sources are misattributed or inaccurate.
-        C: The answer misconstrues the intention of the paper.
-        D: The answer does not provide sources from the paper.
+        A:答案有论文内容作为支撑,并且准确地引用了来源。
+        B:答案在一定程度上得到论文内容支撑,或者来源标注有误或不准确。
+        C:答案曲解了论文的意图。
+        D:答案没有提供来自论文的来源。
       `,
       messages: [
         {
@@ -44,11 +44,11 @@ export const attributionToChainOfThoughtPaper = createScorer<
             },
             {
               type: 'text',
-              text: `The answer you are evaluating is:
+              text: `你正在评估的答案是:
 
             ${output}
 
-            The original question posed was:
+            最初提出的问题是:
 
             ${input}`,
             },
@@ -59,7 +59,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
         feedback: z
           .string()
           .describe(
-            'A short feedback message about the answer.',
+            '关于答案的简短反馈信息。',
           ),
         score: z.enum(['A', 'B', 'C', 'D']),
       }),

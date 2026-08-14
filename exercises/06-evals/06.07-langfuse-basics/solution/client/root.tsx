@@ -8,7 +8,7 @@ const App = () => {
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    `When is the next React Query release?`,
+    `下一个 React Query 版本什么时候发布?`,
   );
 
   return (

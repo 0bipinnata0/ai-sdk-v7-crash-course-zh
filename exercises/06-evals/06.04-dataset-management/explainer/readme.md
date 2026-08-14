@@ -1,45 +1,45 @@
-There are three main types of datasets to consider when working with evals.
+在使用 eval 时，有三种主要类型的数据集需要考虑。
 
-## Dev Dataset
+## 开发数据集（Dev Dataset)
 
-The first is your dev dataset, which contains the evals you run with every local change. Keep this dataset small to ensure your dev evals run quickly.
+第一种是你的开发数据集，包含你在每次本地修改时运行的 eval。保持这个数据集小巧，以确保你的开发 eval 运行快速。
 
-Your dev setup should focus on the most challenging evals or those you're currently prioritizing. Aim for about 5-10 evals in this dataset.
+你的开发设置应该聚焦于最具挑战性的 eval，或者你当前优先处理的部分。这个数据集里大约放 5-10 个 eval。
 
-## CI Dataset
+## CI 数据集
 
-Next is your CI dataset, which ensures that merged code continues to pass evals. This runs less frequently than the dev setup but still executes with every commit.
+接下来是你的 CI 数据集，它确保合并的代码继续通过 eval。它比开发设置运行得少一些，但仍然会在每次提交时执行。
 
-This dataset should be more comprehensive but not overwhelming. It shouldn't take more than 15 minutes to run.
+这个数据集应该更全面，但也不要过于庞大。它的运行时间不应超过 15 分钟。
 
-Include evals that have been in your dev dataset over the past few weeks, plus some "golden" test cases to verify your system is working as expected.
+包含过去几周里出现在你开发数据集中的 eval，外加一些"黄金"测试用例，以验证你的系统按预期工作。
 
-## Regression Dataset
+## 回归数据集（Regression Dataset)
 
-Finally, there's the regression dataset. This is your largest dataset, containing all the evals you want to track over time.
+最后是回归数据集。这是你最大的数据集，包含你想长期追踪的所有 eval。
 
-This might include 500 to 1,000 evals. Run these on a schedule - perhaps daily or every few days - to provide benchmarks for tracking whether your application is improving over time.
+它可能包含 500 到 1000 个 eval。按计划运行它们——也许每天或每几天一次——为追踪你的应用是否在随时间改进提供基准。
 
-Here's a table to help you visualize this:
+下面这张表可以帮你直观地理解：
 
-| Dataset Type | Size                     | Frequency                | Purpose                                                                                 |
-| ------------ | ------------------------ | ------------------------ | --------------------------------------------------------------------------------------- |
-| Dev          | Small (5-10 evals)       | Every local change       | Focus on hardest problems or current priorities                                         |
-| CI           | Medium                   | Every commit             | Ensure merged code maintains quality, includes recent dev evals and "golden" test cases |
-| Regression   | Large (500-1,000+ evals) | Scheduled (daily/weekly) | Track long-term performance, comprehensive testing                                      |
+| 数据集类型 | 大小                     | 频率                 | 用途                                                            |
+| ---------- | ------------------------ | -------------------- | --------------------------------------------------------------- |
+| 开发       | 小(5-10 个 eval)      | 每次本地修改         | 聚焦最难的问题或当前优先事项                                    |
+| CI         | 中                       | 每次提交             | 确保合并的代码保持质量,包含最近的开发 eval 和"黄金"测试用例     |
+| 回归       | 大(500-1000+ 个 eval) | 按计划(每天/每周)   | 追踪长期表现,全面测试                                           |
 
-## Moving Between Datasets
+## 在数据集之间移动
 
-Evals can move between these different zones as needed. An eval might start in dev, then move to CI where it remains for a while.
+Eval 可以根据需要在这些不同的区域之间移动。一个 eval 可能从开发数据集开始，然后移到 CI 数据集并停留一段时间。
 
-When an eval consistently passes, you might move it to regression for less frequent testing - perhaps daily or weekly.
+当一个 eval 持续通过时，你可以把它移到回归数据集，以更低的频率测试——也许每天或每周。
 
-Or if an eval in the regression set starts failing frequently, you might move it back to dev to focus on fixing it.
+或者，如果回归数据集中的一个 eval 开始频繁失败，你可以把它移回开发数据集，集中精力修复它。
 
-This is how you should think about datasets when working with evals: dev, CI, and regression.
+这就是你在使用 eval 时应该有的数据集思维：开发、CI 和回归。
 
-Thank you for watching, and I will see you in the next one.
+感谢观看，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-Nothing to do here! For further reading, check out [this article](https://www.aihero.dev/what-are-evals) on AI Hero.
+这里没有要做的！想进一步阅读，可以查看 AI Hero 上的[这篇文章](https://www.aihero.dev/what-are-evals)。
