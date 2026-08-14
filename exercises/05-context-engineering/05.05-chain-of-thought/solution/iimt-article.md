@@ -1,8 +1,8 @@
-Since I first got into advanced TypeScript, I've been in love with a particular pattern. It formed the basis for one of my first-ever TypeScript tips, and it's been extraordinarily useful to me ever since.
+自从我最初接触高级 TypeScript 以来，我就爱上了一个特别的模式。它构成了我最早的 TypeScript 技巧之一的基础，从那以后一直对我极其有用。
 
-I call it the **IIMT** (rhymes with 'limped'): the **Immediately Indexed Mapped Type**.
+我称它为 **IIMT**（与 'limped' 押韵）:**Immediately Indexed Mapped Type**（立即索引映射类型）。
 
-Here's what it looks like:
+它是这个样子的：
 
 ```typescript
 type SomeObject = {
@@ -25,7 +25,7 @@ export type Example = {
 }[keyof SomeObject];
 ```
 
-Before we discuss what's happening, let's look at the structure. We first create a mapped type:
+在讨论发生了什么之前，我们先看看结构。我们首先创建一个映射类型：
 
 ```typescript
 /**
@@ -45,9 +45,9 @@ export type Example = {
 };
 ```
 
-This mapped type iterates over the keys of `SomeObject` and creates a new object type for each key. In this example, we're creating a new object type with a single property, `key`, whose value is the key of the object.
+这个映射类型遍历 `SomeObject` 的键，并为每个键创建一个新的对象类型。在这个例子中，我们创建的新对象类型只有一个属性 `key`，它的值就是对象的键。
 
-We then immediately index into this mapped type with `keyof SomeObject`, which is `a | b`. This means that the resulting type is the union of all the *values* of the mapped type.
+然后我们立即用 `keyof SomeObject`（即 `a | b`）对这个映射类型进行索引。这意味着最终类型是映射类型所有*值*的联合。
 
 ```typescript
 /**
@@ -65,11 +65,11 @@ export type Example = {
 }[keyof SomeObject];
 ```
 
-There you have it - we first create the mapped type, then immediately index into it: an IIMT.
+就是这样——我们先创建映射类型，然后立即对它索引：这就是一个 IIMT。
 
-## Iterating over unions
+## 遍历联合类型
 
-IIMTs give us a really clear model for iterating over members of a union while *also* preserving the context of the entire union. Let's say we want to create a discriminated union based on a union of strings:
+IIMT 为我们提供了一个非常清晰的模型，用来遍历联合类型的成员，同时*还*保留整个联合类型的上下文。假设我们想基于一个字符串联合类型创建一个可辨识联合（discriminated union):
 
 ```typescript
 type Fruit = 'apple' | 'banana' | 'orange';
@@ -96,9 +96,9 @@ export type FruitInfo = {
 }[Fruit];
 ```
 
-We can see that the resulting type is a union of three objects, each with a `thisFruit` property and an `allFruit` property. The `thisFruit` property is the *specific* member of the union, and the `allFruit` property is the *entire* union.
+可以看到，最终类型是三个对象的联合，每个对象都有一个 `thisFruit` 属性和一个 `allFruit` 属性。`thisFruit` 属性是联合中的*特定*成员，而 `allFruit` 属性是*整个*联合。
 
-This lets us do really smart things within the scope where `F` is defined. What if we wanted to capture the *other* fruit?
+这让我们能在 `F` 定义的作用域内做非常聪明的事情。如果我们想捕获*其他*水果呢？
 
 ```typescript
 /**
@@ -123,11 +123,11 @@ export type FruitInfo = {
 }[Fruit];
 ```
 
-Because `F` and `Fruit` are available in the same closure, we can use `Exclude` to remove the current fruit from the union. Very nice - and once you're used to the IIMT structure, pretty clear to read.
+因为 `F` 和 `Fruit` 在同一个闭包中都可用，我们可以用 `Exclude` 把当前水果从联合中移除。非常漂亮——而且一旦你习惯了 IIMT 的结构，读起来也很清晰。
 
-## Transforming unions of objects
+## 转换对象联合类型
 
-IIMTs are also useful for transforming unions of objects. Let's say we have a union of objects, and we want to change a property to each object:
+IIMT 也适用于转换对象联合类型。假设我们有一个对象联合，想给每个对象修改一个属性：
 
 ```typescript
 type Event =
@@ -142,22 +142,22 @@ type Event =
     };
 ```
 
-This might look like it doesn't fit our IIMT model. If we try to create a mapped type with `Event`, we'll get an error:
+这看起来似乎不符合我们的 IIMT 模型。如果我们试着用 `Event` 创建一个映射类型，会得到一个错误：
 
 ```typescript
 type Example = {
-  // Type 'Event' is not assignable to
-  // type 'string | number | symbol'.
+  // 类型 'Event' 不能赋值给
+  // 类型 'string | number | symbol'。
   [E in Event]: {};
 };
 ```
 
-That's because we can't create a mapped type out of something that isn't a key. But, fortunately, we can use `as` inside our mapped type to make it work:
+这是因为我们无法从一个不是键的东西创建映射类型。但幸运的是，我们可以在映射类型内部使用 `as` 来让它工作：
 
 ```typescript
 /**
- * PrefixType takes an object with a 'type' property
- * and prefixes the type with 'PREFIX_'.
+ * PrefixType 接收一个带有 'type' 属性的对象,
+ * 并给 type 加上 'PREFIX_' 前缀。
  */
 type PrefixType<E extends { type: string }> = {
   type: `PREFIX_${E['type']}`;
@@ -179,15 +179,15 @@ type Example = {
 }[Event['type']];
 ```
 
-Here, we insert the `as E['type']` to remap the key to the type we want. We then use `PrefixType` to prefix the `type` property of each object.
+这里，我们插入 `as E['type']` 来把键重映射到我们想要的类型。然后用 `PrefixType` 给每个对象的 `type` 属性加上前缀。
 
-Finally, we immediately index into the mapped type using `Event['type']`, which is `click | hover` - so we end up with a union of the prefixed objects.
+最后，我们用 `Event['type']`（即 `click | hover`）立即对映射类型索引——于是我们最终得到一个加前缀后的对象联合。
 
-## Examples
+## 示例
 
-Let's tie this off by looking at a couple of examples:
+让我们看几个例子来收尾：
 
-### Object of CSS Units
+### CSS 单位对象
 
 ```typescript
 type CSSUnits = 'px' | 'em' | 'rem' | 'vw' | 'vh';
@@ -222,7 +222,7 @@ export type CSSLength = {
 }[CSSUnits];
 ```
 
-### HTTP Response Codes
+### HTTP 响应码
 
 ```typescript
 type SuccessResponseCode = 200;

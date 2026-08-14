@@ -14,8 +14,8 @@ const App = () => {
 
   const latestMessage = messages[messages.length - 1];
 
-  // NOTE: This checks to see if the latest message is awaiting
-  // a response. If it is, we want to disable the input field.
+  // 注意:这检查最新消息是否正在等待
+  // 响应。如果是,我们要禁用输入框。
   const latestMessageIsAwaitingResponse =
     latestMessage?.role === 'assistant' &&
     latestMessage.parts.some(

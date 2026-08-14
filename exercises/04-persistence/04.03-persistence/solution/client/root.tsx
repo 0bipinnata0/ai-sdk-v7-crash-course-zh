@@ -68,7 +68,7 @@ const App = () => {
 
             setSearchParams({ chatId: backupChatId });
 
-            // Refresh the backup chat id
+            // 刷新备用 chat id
             setBackupChatId(crypto.randomUUID());
           });
         }}

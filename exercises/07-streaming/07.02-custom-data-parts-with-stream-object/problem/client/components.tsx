@@ -45,8 +45,8 @@ export const ChatInput = ({
   input: string;
   onChange: (text: string) => void;
   onSubmit: (e: React.FormEvent) => void;
-  // NOTE: I've updated this to an array of strings
-  // since we'll be returning multiple suggestions
+  // 注意:我把它改成了字符串数组,
+  // 因为我们会返回多条建议
   suggestions: string[] | undefined;
 }) => (
   <form

@@ -117,7 +117,7 @@ export const mapUIMessagePartsToDBParts = (
           // 不需要持久化 loading 变量 -> 在下面的映射中设为 false
         };
       default:
-        throw new Error(`Unsupported part type: ${part}`);
+        throw new Error(`不支持的部件类型:${part}`);
     }
   });
 };
@@ -253,6 +253,6 @@ export const mapDBPartToUIMessagePart = (
         id: part.data_weather_id!,
       };
     default:
-      throw new Error(`Unsupported part type: ${part.type}`);
+      throw new Error(`不支持的部件类型:${part.type}`);
   }
 };

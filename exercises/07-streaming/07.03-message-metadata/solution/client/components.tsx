@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { MyUIMessage } from '../api/chat.ts';
 
-// Utility function to format duration in human-readable format
+// 以人类可读格式格式化持续时间的工具函数
 const formatDuration = (ms: number): string => {
   if (ms < 60000) {
     return `${(ms / 1000).toFixed(1)}s`;

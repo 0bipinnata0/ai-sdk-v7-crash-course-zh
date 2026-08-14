@@ -30,7 +30,7 @@ const App = () => {
           messages.length === 0
             ? [
                 '法国的首都是哪里?',
-                'What is the capital of Germany?',
+                '德国的首都是哪里?',
               ]
             : latestSuggestions
         }

@@ -138,7 +138,7 @@ export const POST = async (req: Request): Promise<Response> => {
         }
 
         if (!finalEvaluationObject.feedback) {
-          throw new Error('No feedback provided by the LLM.');
+          throw new Error('LLM 没有提供反馈。');
         }
 
         mostRecentFeedback = finalEvaluationObject.feedback;
