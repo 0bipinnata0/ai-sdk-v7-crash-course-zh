@@ -25,7 +25,7 @@ export const Message = ({
         return (
           <div key={part.id} className="mb-4">
             <h2 className="text-gray-300 text-sm mb-1">
-              First draft
+              初稿
             </h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
@@ -36,7 +36,7 @@ export const Message = ({
         return (
           <div key={part.id} className="mb-4">
             <h2 className="text-gray-300 text-sm mb-1">
-              Feedback
+              反馈
             </h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
@@ -47,7 +47,7 @@ export const Message = ({
     })}
 
     <ReactMarkdown>
-      {(role === 'user' ? 'User: ' : 'AI: ') +
+      {(role === 'user' ? '用户: ' : 'AI: ') +
         parts
           .map((part) => {
             if (part.type === 'text') {
@@ -79,8 +79,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

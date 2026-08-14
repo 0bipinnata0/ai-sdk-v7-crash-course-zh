@@ -5,11 +5,11 @@ import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 
 const App = () => {
-  // TODO: pass MyMessage to the useChat hook: useChat<MyMessage>({})
+  // TODO:把 MyMessage 传给 useChat hook:useChat<MyMessage>({})
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    `Write a Slack message to your boss complaining about a colleague's hygiene.`,
+    `给你的老板写一条 Slack 消息,抱怨一位同事的卫生问题。`,
   );
 
   console.log(messages);

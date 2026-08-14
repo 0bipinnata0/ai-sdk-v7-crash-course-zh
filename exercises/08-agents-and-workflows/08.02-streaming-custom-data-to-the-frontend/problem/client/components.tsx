@@ -12,8 +12,8 @@ export const Wrapper = (props: {
   );
 };
 
-// TODO: use this component to handle the custom data parts
-// you have created in the api/chat.ts file
+// TODO:使用这个组件来处理你在
+// api/chat.ts 文件中创建的自定义数据部件
 export const Message = ({
   role,
   parts,
@@ -23,15 +23,15 @@ export const Message = ({
 }) => (
   <div className="my-4">
     {parts.map((part) => {
-      // TODO: use this component to handle the custom data parts
-      // you have created in the api/chat.ts file
+      // TODO:使用这个组件来处理你在
+      // api/chat.ts 文件中创建的自定义数据部件
       TODO;
 
       if (part.type === 'text') {
         return (
           <div className="mb-4 text-white">
             <ReactMarkdown>
-              {(role === 'user' ? 'User: ' : 'AI: ') + part.text}
+              {(role === 'user' ? '用户: ' : 'AI: ') + part.text}
             </ReactMarkdown>
           </div>
         );
@@ -61,8 +61,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

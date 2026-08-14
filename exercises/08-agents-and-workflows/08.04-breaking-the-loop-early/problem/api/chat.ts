@@ -30,12 +30,12 @@ const formatMessageHistory = (messages: UIMessage[]) => {
     .join('\n');
 };
 
-const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `You are writing a Slack message for a user based on the conversation history. Only return the Slack message, no other text.`;
-const EVALUATE_SLACK_MESSAGE_SYSTEM = `You are evaluating the Slack message produced by the user.
+const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `你正在根据对话历史为用户写一条 Slack 消息。只返回 Slack 消息,不要其他文本。`;
+const EVALUATE_SLACK_MESSAGE_SYSTEM = `你正在评估用户产出的 Slack 消息。
 
-  Evaluation criteria:
-  - The Slack message should be written in a way that is easy to understand.
-  - It should be appropriate for a professional Slack conversation.
+  评估标准:
+  - Slack 消息应该写得易于理解。
+  - 它应该适合专业的 Slack 对话场景。
 `;
 
 export const POST = async (req: Request): Promise<Response> => {
@@ -53,18 +53,18 @@ export const POST = async (req: Request): Promise<Response> => {
       let mostRecentFeedback = '';
 
       while (step < 2) {
-        // Write Slack message
+        // 写 Slack 消息
         const writeSlackResult = streamText({
           model: google('gemini-2.5-flash'),
           system: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
           prompt: `
-          Conversation history:
+          对话历史:
           ${formatMessageHistory(messages)}
 
           Previous draft (if any):
           ${mostRecentDraft}
 
-          Previous feedback (if any):
+          之前的反馈(如有):
           ${mostRecentFeedback}
         `,
         });
@@ -85,20 +85,20 @@ export const POST = async (req: Request): Promise<Response> => {
 
         mostRecentDraft = draft;
 
-        // TODO: change this to streamObject, and get it to return
-        // the feedback as a string, as well as whether we should
-        // break the loop early (that the message is good enough)
+        // TODO:把它改为 streamObject,让它返回
+        // 字符串形式的反馈,以及我们是否应该
+        // 提前跳出循环(即消息是否足够好)
         const evaluateSlackResult = streamText({
           model: google('gemini-2.5-flash'),
           system: EVALUATE_SLACK_MESSAGE_SYSTEM,
           prompt: `
-            Conversation history:
+            对话历史:
             ${formatMessageHistory(messages)}
 
             Most recent draft:
             ${mostRecentDraft}
 
-            Previous feedback (if any):
+            之前的反馈(如有):
             ${mostRecentFeedback}
           `,
         });

@@ -1,120 +1,120 @@
-Our workflow is working pretty nicely. We're getting some decent outputs, but the user is not seeing anything on the screen for a considerable length of time. That's because we are using `generateText` instead of `streamText`.
+我们的工作流运行得相当不错。我们得到了一些不错的输出，但用户在相当长的一段时间内屏幕上看不到任何东西。这是因为我们使用的是 `generateText` 而不是 `streamText`。
 
-We're going to change this to use `streamText`, and we're also going to get some practice in doing some custom data parts.
+我们要把它改成使用 `streamText`，同时也借此机会练习一下自定义数据部件。
 
-We want to:
+我们想要：
 
-1. Stream the first draft to the front end
-2. Stream the evaluation separately
-3. Display these distinct from each other in the front end
+1. 把初稿流式传输到前端
+2. 把评估单独流式传输
+3. 在前端把它们区分开来显示
 
-## The Setup
+## 设置
 
-I've added some necessary scaffolding inside [./api/chat](./api/chat.ts):
+我已经在 [./api/chat](./api/chat.ts) 中添加了一些必要的脚手架：
 
-- Created a `createUIMessageStream` with a `MyMessage` type
-- Set up a way to turn that stream into a `UIMessageStreamResponse`
+- 创建了一个带有 `MyMessage` 类型的 `createUIMessageStream`
+- 设置了把那个流变成 `UIMessageStreamResponse` 的方式
 
-## Declare Custom Data Parts
+## 声明自定义数据部件
 
-Your first job is to declare custom data parts:
+你的第一项任务是声明自定义数据部件：
 
 ```typescript
 export type MyMessage = UIMessage<
   unknown,
   {
-    // TODO: declare custom data parts here
+    // TODO:在这里声明自定义数据部件
   }
 >;
 ```
 
-I recommend one part for the evaluation and one for the first draft. The final draft we can stream down as normal text parts.
+我建议一个部件用于评估，一个部件用于初稿。最终稿我们可以作为普通的文本部件流式传输。
 
-You'll need to replace all instances of `UIMessage` with `MyMessage` in this folder.
+你需要把这个文件夹中所有的 `UIMessage` 实例替换为 `MyMessage`。
 
-## Switch from `generateText` to `streamText`
+## 从 `generateText` 切换到 `streamText`
 
-Next, we need to strip out the `generateText` calls inside the execute function:
+接下来，我们需要去掉 execute 函数内部的 `generateText` 调用：
 
 ```typescript
-// TODO - change to streamText and write to the stream as custom data parts
+// TODO - 改为 streamText,并作为自定义数据部件写入流
 const writeSlackResult = await generateText({
   model: google('gemini-2.5-flash'),
   system: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
   prompt: `
-    Conversation history:
+    对话历史:
     ${formatMessageHistory(messages)}
   `,
 });
 
-// TODO - change to streamText and write to the stream as custom data parts
+// TODO - 改为 streamText,并作为自定义数据部件写入流
 const evaluateSlackResult = await generateText({
   model: google('gemini-2.5-flash'),
   system: EVALUATE_SLACK_MESSAGE_SYSTEM,
   prompt: `
-    Conversation history:
+    对话历史:
     ${formatMessageHistory(messages)}
 
-    Slack message:
+    Slack 消息:
     ${writeSlackResult.text}
   `,
 });
 ```
 
-Change each of these `generateText` calls into a `streamText`. Watch the text stream and as it happens, stream that to the frontend as that data part.
+把这两个 `generateText` 调用都改成 `streamText`。观察文本流，并在流式传输的同时把它作为数据部件流式传输到前端。
 
-Make sure you use the ID trick so you update the same data part over time. I've got some [reference material](/exercises/99-reference/99.06-custom-data-parts-id-reconciliation/explainer/readme.md) that explains this in more detail.
+确保你使用了 ID 技巧，这样你就能随时间更新同一个数据部件。我有一些[参考资料](/exercises/99-reference/99.06-custom-data-parts-id-reconciliation/explainer/readme.md)更详细地解释了这一点。
 
-## Handling the Stream Text Call
+## 处理流式文本调用
 
-The final Slack attempt is already streaming, which is good:
+最终版 Slack 消息已经在流式传输了，这很好：
 
 ```typescript
 const finalSlackAttempt = streamText({
   model: google('gemini-2.5-flash'),
   system: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
   prompt: `
-    Conversation history:
+    对话历史:
     ${formatMessageHistory(messages)}
 
-    First draft:
+    初稿:
     ${writeSlackResult.text}
 
-    Previous feedback:
+    之前的反馈:
     ${evaluateSlackResult.text}
   `,
 });
 
-// TODO: merge the final slack attempt into the stream,
-// sending sendStart: false
+// TODO:把最终版 Slack 消息合并到流中,
+// 传入 sendStart: false
 writer.TODO;
 ```
 
-We need to merge it into the writer. When we merge it, we need to pass `sendStart: false`.
+我们需要把它合并到 writer 中。合并时，我们需要传入 `sendStart: false`。
 
-By default, when you merge a `UIMessageStream` into another `UIMessageStream`, it will send the start and finish parts. But because we've already begun the message up above, we don't want it to send the start part again.
+默认情况下，当你把一个 `UIMessageStream` 合并到另一个 `UIMessageStream` 时，它会发送 start 和 finish 部件。但因为我们在上面已经开始了消息，我们不希望它再次发送 start 部件。
 
-In fact, we want to manually start it ourselves, by following the `TODO` at the top of the `execute` function:
+事实上，我们想手动开始它，按照 `execute` 函数顶部的 `TODO`:
 
 ```typescript
-// TODO: write a { type: 'start' } message via writer.write
+// TODO:通过 writer.write 写入一个 { type: 'start' } 消息
 TODO;
 ```
 
-I've got some [reference material](/exercises/99-reference/99.09-start-and-finish-parts/explainer/readme.md) that explains this in more detail.
+我有一些[参考资料](/exercises/99-reference/99.09-start-and-finish-parts/explainer/readme.md)更详细地解释了这一点。
 
-## Frontend Changes
+## 前端修改
 
-Once the backend is done, we need to go to the frontend.
+后端完成后，我们需要去前端。
 
-First, pass our `MyMessage` type to the `useChat` hook:
+首先，把我们的 `MyMessage` 类型传给 `useChat` hook:
 
 ```typescript
-// TODO: pass MyMessage to the useChat hook: useChat<MyMessage>({})
+// TODO:把 MyMessage 传给 useChat hook:useChat<MyMessage>({})
 const { messages, sendMessage } = useChat({});
 ```
 
-Then, we'll need to adjust the message component:
+然后，我们需要调整消息组件：
 
 ```tsx
 export const Message = ({
@@ -126,8 +126,8 @@ export const Message = ({
 }) => (
   <div className="my-4">
     {parts.map((part) => {
-      // TODO: use this component to handle the custom data parts
-      // you have created in the api/chat.ts file
+      // TODO:使用这个组件来处理你在
+      // api/chat.ts 文件中创建的自定义数据部件
       TODO;
 
       if (part.type === 'text') {
@@ -135,7 +135,7 @@ export const Message = ({
           <div className="mb-4">
             <p className="text-gray-400 text-xs">
               <ReactMarkdown>
-                {(role === 'user' ? 'User: ' : 'AI: ') +
+                {(role === 'user' ? '用户: ' : 'AI: ') +
                   part.text}
               </ReactMarkdown>
             </p>
@@ -149,36 +149,36 @@ export const Message = ({
 );
 ```
 
-We'll need to render some UI to render the custom parts to the frontend.
+我们需要渲染一些 UI，把自定义部件渲染到前端。
 
-## Testing
+## 测试
 
-Once all these changes are done, you should see each part of the workflow streaming to the frontend. This will:
+完成所有这些修改后，你应该能看到工作流的每个部分都流式传输到前端。这将：
 
-1. Massively improve our time to first token
-2. Give the user full awareness over every single part of the workflow
+1. 大幅改善我们的首 token 时间（time to first token)
+2. 让用户完全了解工作流的每一个部分
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Declare custom data parts in `MyMessage` type in api/chat.ts
-  - One for evaluation
-  - One for first draft
-  - Final draft can use normal text parts
+- [ ] 在 api/chat.ts 的 `MyMessage` 类型中声明自定义数据部件
+  - 一个用于评估
+  - 一个用于初稿
+  - 最终稿可以使用普通的文本部件
 
-- [ ] Replace all instances of `UIMessage` with `MyMessage` in the code
+- [ ] 把代码中所有的 `UIMessage` 实例替换为 `MyMessage`
 
-- [ ] Update the execute function in api/chat.ts
-  - Add code to write a `{ type: 'start' }` message via writer.write. Check out the [reference material](/exercises/99-reference/99.09-start-and-finish-parts/explainer/readme.md) to understand why we do this.
-  - Change both `generateText` calls to `streamText` and stream to frontend as custom data parts. Check out the [reference material](/exercises/99-reference/99.06-custom-data-parts-id-reconciliation/explainer/readme.md) to understand how to do this.
+- [ ] 更新 api/chat.ts 中的 execute 函数
+  - 添加通过 writer.write 写入 `{ type: 'start' }` 消息的代码。查看[参考资料](/exercises/99-reference/99.09-start-and-finish-parts/explainer/readme.md)理解我们为什么这样做。
+  - 把两个 `generateText` 调用都改为 `streamText`，并作为自定义数据部件流式传输到前端。查看[参考资料](/exercises/99-reference/99.06-custom-data-parts-id-reconciliation/explainer/readme.md)了解如何做。
 
-- [ ] Handle the final Slack attempt stream
-  - Merge the `finalSlackAttempt` into the writer with `sendStart: false`
+- [ ] 处理最终版 Slack 消息的流
+  - 把 `finalSlackAttempt` 合并到 writer 中，传入 `sendStart: false`
 
-- [ ] Update the frontend components
-  - Pass `MyMessage` to the `useChat` hook in client/root.tsx
-  - Update the Message component in client/components.tsx to handle custom data parts
+- [ ] 更新前端组件
+  - 在 client/root.tsx 中把 `MyMessage` 传给 `useChat` hook
+  - 更新 client/components.tsx 中的 Message 组件来处理自定义数据部件
 
-- [ ] Test your implementation
-  - Run the dev server with `pnpm run dev`
-  - Check localhost:3000 in your browser
-  - Confirm you can see all parts streaming separately to the frontend
+- [ ] 测试你的实现
+  - 用 `pnpm run dev` 运行开发服务器
+  - 在浏览器中查看 localhost:3000
+  - 确认你能看到所有部分分别流式传输到前端

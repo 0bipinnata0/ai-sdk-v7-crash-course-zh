@@ -1,59 +1,59 @@
-So far, we've mostly been dealing with agents as a setup. An agent is where you've hand full control of your control flow of your application to an LLM. In other words, you give the LLM a bunch of tools and the LLM goes, right, I'll call this tool, then maybe call another tool, and that can produce some mixed results.
+到目前为止，我们主要把智能体作为一种设置来对待。智能体是指你把应用控制流的完全控制权交给 LLM 的模式。换句话说，你给 LLM 一堆工具，然后 LLM 自己去决定：好，我先调用这个工具，然后再调用另一个工具——这可能产生好坏参半的结果。
 
-It can be extremely good for open-ended tasks, but less good for tasks where you know that one step should always follow another step.
+它对于开放式任务来说非常好用，但对于那些你知道某一步应该总是跟在另一步之后的任务来说，就没那么合适了。
 
-## Generator-Evaluator Workflow
+## 生成器-评估器工作流
 
-The goal of this exercise is to show you what you can do with a deterministic workflow setup. We're going to use a generator-evaluator workflow where we:
+本练习的目标是向你展示用确定性工作流设置能做什么。我们将使用一个生成器-评估器（generator-evaluator）工作流，其中：
 
-1. Have one LLM create a Slack message for us
-2. Get another LLM to evaluate it
-3. Produce a final draft and stream that to the user
+1. 让一个 LLM 为我们写一条 Slack 消息
+2. 让另一个 LLM 来评估它
+3. 产出最终稿并把它流式传输给用户
 
-This should give us a better output than just generating a message with a single LLM call.
+这应该能给我们比单次 LLM 调用生成消息更好的输出。
 
-## The Code
+## 代码
 
-Here's the structure of the code we'll be working with:
+下面是我们将要处理的代码结构：
 
 ```ts
 export const POST = async (req: Request): Promise<Response> => {
   const body: { messages: UIMessage[] } = await req.json();
   const { messages } = body;
 
-  const writeSlackResult = TODO; // Write Slack message
+  const writeSlackResult = TODO; // 写 Slack 消息
 
-  const evaluateSlackResult = TODO; // Evaluate Slack message
+  const evaluateSlackResult = TODO; // 评估 Slack 消息
 
-  const finalSlackAttempt = TODO; // Write final Slack message
+  const finalSlackAttempt = TODO; // 写最终版 Slack 消息
 
   return finalSlackAttempt.toUIMessageStreamResponse();
 };
 ```
 
-All the code you're gonna be writing is inside this POST request. We have an initial `writeSlackResult` up here, then an `evaluateSlackResult` where we're gonna take the message from this first one and pass it to the second one, and then finally we have a `finalSlackAttempt`.
+你要写的所有代码都在这个 POST 请求里。我们上面有一个初始的 `writeSlackResult`，然后是一个 `evaluateSlackResult`——我们会把第一步产生的消息传给第二步——最后我们有一个 `finalSlackAttempt`。
 
-## Helper Functions and Prompts
+## 辅助函数和提示词
 
-We've been provided with useful system prompts for each step:
+我们已为每个步骤提供了有用的系统提示词：
 
 ```ts
-const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `You are writing a Slack message for a user based on the conversation history. Only return the Slack message, no other text.`;
+const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `你正在根据对话历史为用户写一条 Slack 消息。只返回 Slack 消息,不要其他文本。`;
 
-const EVALUATE_SLACK_MESSAGE_SYSTEM = `You are evaluating the Slack message produced by the user.
+const EVALUATE_SLACK_MESSAGE_SYSTEM = `你正在评估用户产出的 Slack 消息。
 
-  Evaluation criteria:
-  - The Slack message should be written in a way that is easy to understand.
-  - It should be appropriate for a professional Slack conversation.
+  评估标准:
+  - Slack 消息应该写得易于理解。
+  - 它应该适合专业的 Slack 对话场景。
 `;
 
-const WRITE_SLACK_MESSAGE_FINAL_SYSTEM = `You are writing a Slack message based on the conversation history, a first draft, and some feedback given about that draft.
+const WRITE_SLACK_MESSAGE_FINAL_SYSTEM = `你正在根据对话历史、初稿以及针对该初稿的反馈来写一条 Slack 消息。
 
-  Return only the final Slack message, no other text.
+  只返回最终的 Slack 消息,不要其他文本。
 `;
 ```
 
-We also have a helper function to format the message history:
+我们还有一个格式化消息历史的辅助函数：
 
 ```ts
 const formatMessageHistory = (messages: UIMessage[]) => {
@@ -73,18 +73,18 @@ const formatMessageHistory = (messages: UIMessage[]) => {
 };
 ```
 
-The final draft will be streamed directly to the frontend, so the user will only see the best attempt so far.
+最终稿将被直接流式传输到前端，所以用户只会看到目前最好的版本。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Implement the first `writeSlackResult` function to generate the initial Slack message draft using the Google Gemini model with the provided system prompt. You'll need to use [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md) here.
+- [ ] 实现第一个 `writeSlackResult` 函数，使用 Google Gemini 模型和提供的系统提示词生成 Slack 消息初稿。你需要在这里使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
 
-- [ ] Implement the `evaluateSlackResult` function to evaluate the first draft using another LLM call with the evaluation system prompt - again, with [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md).
+- [ ] 实现 `evaluateSlackResult` 函数，用评估系统提示词进行另一次 LLM 调用来评估初稿——同样使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
 
-- [ ] Implement the `finalSlackAttempt` function to stream the final Slack message based on the conversation, first draft, and feedback. You'll need to use [`streamText`](/exercises/01-ai-sdk-basics/01.06-stream-text-to-terminal/problem/readme.md) here and then [`.toUIMessageStreamResponse()`](/exercises/01-ai-sdk-basics/01.08-stream-text-to-ui/problem/readme.md) to pass the final response.
+- [ ] 实现 `finalSlackAttempt` 函数，基于对话、初稿和反馈流式输出最终 Slack 消息。你需要在这里使用 [`streamText`](/exercises/01-ai-sdk-basics/01.06-stream-text-to-terminal/problem/readme.md)，然后用 [`.toUIMessageStreamResponse()`](/exercises/01-ai-sdk-basics/01.08-stream-text-to-ui/problem/readme.md) 传递最终响应。
 
-- [ ] Test your implementation by running the local dev server and submitting the pre-filled prompt in the UI. While you won't see the initial draft or evaluation, you should see the final result.
+- [ ] 通过运行本地开发服务器并在 UI 中提交预填的提示词来测试你的实现。虽然你看不到初稿或评估过程，但你应该能看到最终结果。
 
-- [ ] Observe whether the three-step process produces a better result than a single LLM call would, checking the final streamed response in the UI.
+- [ ] 观察三步流程是否比单次 LLM 调用产出了更好的结果，检查 UI 中最终流式传输的响应。

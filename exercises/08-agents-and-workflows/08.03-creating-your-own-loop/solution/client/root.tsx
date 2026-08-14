@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    `Write a Slack message to your boss complaining about a colleague's hygiene.`,
+    `给你的老板写一条 Slack 消息,抱怨一位同事的卫生问题。`,
   );
 
   console.log(messages);

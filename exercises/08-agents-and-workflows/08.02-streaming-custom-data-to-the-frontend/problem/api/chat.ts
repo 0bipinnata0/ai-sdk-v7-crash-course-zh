@@ -7,11 +7,11 @@ import {
   type UIMessage,
 } from 'ai';
 
-// TODO: replace all instances of UIMessage with MyMessage
+// TODO:把所有 UIMessage 实例替换为 MyMessage
 export type MyMessage = UIMessage<
   unknown,
   {
-    // TODO: declare custom data parts here
+    // TODO:在这里声明自定义数据部件
   }
 >;
 
@@ -31,47 +31,47 @@ const formatMessageHistory = (messages: UIMessage[]) => {
     .join('\n');
 };
 
-const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `You are writing a Slack message for a user based on the conversation history. Only return the Slack message, no other text.`;
-const EVALUATE_SLACK_MESSAGE_SYSTEM = `You are evaluating the Slack message produced by the user.
+const WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM = `你正在根据对话历史为用户写一条 Slack 消息。只返回 Slack 消息,不要其他文本。`;
+const EVALUATE_SLACK_MESSAGE_SYSTEM = `你正在评估用户产出的 Slack 消息。
 
-  Evaluation criteria:
-  - The Slack message should be written in a way that is easy to understand.
-  - It should be appropriate for a professional Slack conversation.
+  评估标准:
+  - Slack 消息应该写得易于理解。
+  - 它应该适合专业的 Slack 对话场景。
 `;
-const WRITE_SLACK_MESSAGE_FINAL_SYSTEM = `You are writing a Slack message based on the conversation history, a first draft, and some feedback given about that draft.
+const WRITE_SLACK_MESSAGE_FINAL_SYSTEM = `你正在根据对话历史、初稿以及针对该初稿的反馈来写一条 Slack 消息。
 
-  Return only the final Slack message, no other text.
+  只返回最终的 Slack 消息,不要其他文本。
 `;
 
 export const POST = async (req: Request): Promise<Response> => {
-  // TODO: change to MyMessage[]
+  // TODO:改为 MyMessage[]
   const body: { messages: UIMessage[] } = await req.json();
   const { messages } = body;
 
   const stream = createUIMessageStream<MyMessage>({
     execute: async ({ writer }) => {
-      // TODO: write a { type: 'start' } message via writer.write
+      // TODO:通过 writer.write 写入一个 { type: 'start' } 消息
       TODO;
 
-      // TODO - change to streamText and write to the stream as custom data parts
+      // TODO - 改为 streamText,并作为自定义数据部件写入流
       const writeSlackResult = await generateText({
         model: google('gemini-2.5-flash'),
         system: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
         prompt: `
-          Conversation history:
+          对话历史:
           ${formatMessageHistory(messages)}
         `,
       });
 
-      // TODO - change to streamText and write to the stream as custom data parts
+      // TODO - 改为 streamText,并作为自定义数据部件写入流
       const evaluateSlackResult = await generateText({
         model: google('gemini-2.5-flash'),
         system: EVALUATE_SLACK_MESSAGE_SYSTEM,
         prompt: `
-          Conversation history:
+          对话历史:
           ${formatMessageHistory(messages)}
 
-          Slack message:
+          Slack 消息:
           ${writeSlackResult.text}
         `,
       });
@@ -80,19 +80,19 @@ export const POST = async (req: Request): Promise<Response> => {
         model: google('gemini-2.5-flash'),
         system: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
         prompt: `
-          Conversation history:
+          对话历史:
           ${formatMessageHistory(messages)}
 
-          First draft:
+          初稿:
           ${writeSlackResult.text}
 
-          Previous feedback:
+          之前的反馈:
           ${evaluateSlackResult.text}
         `,
       });
 
-      // TODO: merge the final slack attempt into the stream,
-      // sending sendStart: false
+      // TODO:把最终版 Slack 消息合并到流中,
+      // 传入 sendStart: false
       writer.TODO;
     },
   });
