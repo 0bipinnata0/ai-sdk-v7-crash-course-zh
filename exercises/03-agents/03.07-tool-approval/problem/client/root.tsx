@@ -6,12 +6,12 @@ import './tailwind.css';
 import type { MyUIMessage } from '../api/chat.ts';
 
 const App = () => {
-  // TODO: Get addToolApprovalResponse from useChat
-  // TODO: Add sendAutomaticallyWhen option using lastAssistantMessageIsCompleteWithApprovalResponses
+  // TODO:从 useChat 获取 addToolApprovalResponse
+  // TODO:使用 lastAssistantMessageIsCompleteWithApprovalResponses 添加 sendAutomaticallyWhen 选项
   const { messages, sendMessage } = useChat<MyUIMessage>({});
 
   const [input, setInput] = useState(
-    'Send an email to bob@example.com saying hello',
+    '给 bob@example.com 发一封邮件,说声你好',
   );
 
   return (
@@ -21,7 +21,7 @@ const App = () => {
           key={message.id}
           role={message.role}
           parts={message.parts}
-          // TODO: Pass addToolApprovalResponse to Message
+          // TODO:把 addToolApprovalResponse 传给 Message
         />
       ))}
       <ChatInput

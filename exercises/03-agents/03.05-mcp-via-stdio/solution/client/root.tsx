@@ -8,7 +8,7 @@ const App = () => {
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    'Give me the latest issues on the mattpocock/ts-reset repo.',
+    '给我 mattpocock/ts-reset 仓库的最新 issue。',
   );
 
   return (

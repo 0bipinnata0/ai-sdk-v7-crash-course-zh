@@ -15,14 +15,14 @@ export const Wrapper = (props: {
 export const Message = ({
   role,
   parts,
-}: // TODO: Add addToolApprovalResponse prop, a function which takes in:
+}: // TODO:添加 addToolApprovalResponse 属性,一个接受以下参数的函数:
 // - id: string
 // - approved: boolean
 {
   role: string;
   parts: MyUIMessage['parts'];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -40,9 +40,9 @@ export const Message = ({
       </div>
       {parts.map((part, index) => {
         if (part.type === 'tool-sendEmail') {
-          // TODO: Check if part.state === 'approval-requested'
-          // If so, render the email preview with approve/reject buttons
-          // Use addToolApprovalResponse({ id: part.approval.id, approved: true/false })
+          // TODO:检查 part.state === 'approval-requested'
+          // 如果是,渲染邮件预览和批准/拒绝按钮
+          // 使用 addToolApprovalResponse({ id: part.approval.id, approved: true/false })
 
           if (part.state === 'output-available') {
             return (
@@ -51,10 +51,10 @@ export const Message = ({
                 className="bg-green-900/20 border border-green-700 rounded p-3 text-sm"
               >
                 <div className="font-semibold text-green-300 mb-1">
-                  Email Sent
+                  邮件已发送
                 </div>
                 <div className="text-green-200">
-                  To: {part.input.to}
+                  收件人:{part.input.to}
                 </div>
               </div>
             );
@@ -85,8 +85,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyUIMessage>({});
 
   const [input, setInput] = useState(
-    'Tell me what todo items I have today.',
+    '告诉我今天有哪些待办事项。',
   );
 
   return (

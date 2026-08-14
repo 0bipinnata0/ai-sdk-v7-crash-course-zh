@@ -1,33 +1,33 @@
-One way that you can provide tool sets to your agent is via MCP.
+为你的智能体提供工具集的一种方式是通过 MCP。
 
-MCP, or the [Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro), is a protocol you can use to connect your client (which in our case is the application that we're building) to an MCP server.
+MCP，即[模型上下文协议](https://modelcontextprotocol.io/docs/getting-started/intro)(Model Context Protocol)，是一个协议，你可以用它把你的客户端（在我们的例子中就是我们正在构建的应用）连接到 MCP 服务器。
 
-MCP servers can expose tool sets, in other words, functions that you can call as the client, to do things in the real world.
+MCP 服务器可以暴露工具集——换句话说，就是作为客户端的你可以调用的函数，用来在现实世界中做事。
 
-For instance, the [GitHub MCP server](https://github.com/github/github-mcp-server), which is what we're going to be using, lets you create repositories, find text files, close issues, open pull requests, and all sorts of other useful GitHub actions.
+比如，我们将要使用的 [GitHub MCP 服务器](https://github.com/github/github-mcp-server)，可以让你创建仓库、查找文本文件、关闭 issue、发起 pull request，以及各种其他有用的 GitHub 操作。
 
-By taking these pre-built tools and plugging them into our system, we're going to be on the fast track to making something really useful.
+通过把这些预构建的工具接入我们的系统，我们将走上做出真正有用的东西的快速通道。
 
-Luckily, the AI SDK has a few functions that help you do that.
+幸运的是，AI SDK 有几个函数可以帮助你做到这一点。
 
-## The Exercise
+## 练习
 
-In this exercise, we'll be working in the [`POST`](./api/chat.ts) route only.
+在本练习中，我们将只在 [`POST`](./api/chat.ts) 路由中工作。
 
-We're first going to look at a couple of imported functions from [`@ai-sdk/mcp`](./api/chat.ts). These are experimental, of course, because everything in MCP is experimental, and we're going to use them just below in our code.
+我们首先会看几个从 [`@ai-sdk/mcp`](./api/chat.ts) 导入的函数。它们当然是实验性的，因为 MCP 里的一切都是实验性的，我们将在下面的代码中使用它们。
 
-Before we start streaming, we need to initiate an MCP client. This will use the [`StdioMCPTransport`](./api/chat.ts) from `@ai-sdk/mcp/mcp-stdio`.
+在开始流式传输之前，我们需要初始化一个 MCP 客户端。这将使用来自 `@ai-sdk/mcp/mcp-stdio` 的 [`StdioMCPTransport`](./api/chat.ts)。
 
 ```ts
 import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport as StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 ```
 
-What this is going to do is run a process locally and monitor its `stdin` and `stdout` in order to communicate with it.
+这将在本地运行一个进程，并监控它的 `stdin` 和 `stdout`，以便与它通信。
 
-You'll need to run the GitHub MCP server in a Docker container. That's how they recommend you do it.
+你需要在 Docker 容器中运行 GitHub MCP 服务器。这是他们推荐的方式。
 
-To save you the pain I went through integrating this, here's the code for how to set it up:
+为了让你免去我集成时经历的痛苦，这里是设置代码：
 
 ```ts
 const myTransport = new StdioMCPTransport({
@@ -47,35 +47,35 @@ const myTransport = new StdioMCPTransport({
 });
 ```
 
-For those who don't have Docker yet, you'll need to download [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you don't already have it installed. You'll also need to acquire a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+对于还没有 Docker 的同学，如果你还没安装，需要下载 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。你还需要获取一个 GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)(个人访问令牌)。
 
-Give your token some basic access and put that in your `.env` file in the root of the repository:
+给你的令牌一些基本权限，然后把它放进仓库根目录的 `.env` 文件中：
 
 ```
 GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
 ```
 
-Once the MCP client has been set up, you then need to acquire its tools and pass those tools into [`streamText`](./api/chat.ts). The MCP client will have a `tools` method that you can call to get them.
+MCP 客户端设置好之后，你需要获取它的工具，并把这些工具传给 [`streamText`](./api/chat.ts)。MCP 客户端会有一个 `tools` 方法，你可以调用它来获取工具。
 
-## Closing the MCP Client
+## 关闭 MCP 客户端
 
-Finally, because we're running the MCP server ourselves (that's what the `StdioMCPTransport` does - it kicks off the MCP server), we will need to manually close it when we're done.
+最后，因为我们自己运行 MCP 服务器（这就是 `StdioMCPTransport` 所做的事情——它启动 MCP 服务器），我们需要在完成后手动关闭它。
 
-So in the [`onFinish`](./api/chat.ts) callback, we're going to close the stream by calling `mcpClient.close()`.
+所以在 [`onFinish`](./api/chat.ts) 回调中，我们要通过调用 `mcpClient.close()` 来关闭连接。
 
-For us, this means we're going to kick off the GitHub MCP server when our request is made. And when our request finishes, we're going to close it down. This might not be the most desirable approach, but for now it's going to work.
+对我们来说，这意味着当请求发出时，我们启动 GitHub MCP 服务器；当请求完成时，我们把它关掉。这可能不是最理想的方式，但目前是可行的。
 
-Once that's all set up and working, you should be able to communicate with your own GitHub account via a tool that you've built yourself.
+一旦这一切设置好并正常工作，你就能通过自己构建的工具与你自己的 GitHub 账户交互了。
 
-Why not get it to list some issues on a repository that you know, or even ask it to investigate a repository that you don't know well. Good luck!
+为什么不让它列出你熟悉的某个仓库的 issue，甚至让它调查一个你不太了解的仓库呢？祝你好运！
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Get a [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and add it to your `.env` file
+- [ ] 获取一个 [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) 并把它添加到你的 `.env` 文件
 
-- [ ] Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you don't have it already
+- [ ] 如果你还没有安装，安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-- [ ] Create an MCP client using the `createMCPClient` function and the `StdioMCPTransport` class to connect to the GitHub MCP server. As a reminder, here's how to set up the transport. Check [these docs](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client) for more information.
+- [ ] 使用 `createMCPClient` 函数和 `StdioMCPTransport` 类创建一个 MCP 客户端，连接到 GitHub MCP 服务器。提醒一下，这是设置 transport 的方式。查看[这些文档](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client)了解更多信息。
 
 ```ts
 const myTransport = new StdioMCPTransport({
@@ -95,14 +95,14 @@ const myTransport = new StdioMCPTransport({
 });
 ```
 
-- [ ] Use the `mcpClient.tools()` method to get the tools and pass them to the `streamText` function.
+- [ ] 使用 `mcpClient.tools()` 方法获取工具，并把它们传给 `streamText` 函数。
 
-- [ ] Implement the `onFinish` callback to close the MCP client when the stream is finished
+- [ ] 实现 `onFinish` 回调，在流结束时关闭 MCP 客户端
 
 ```ts
 onFinish: async () => {
-  // Close the MCP client
+  // 关闭 MCP 客户端
 },
 ```
 
-- [ ] Test your implementation by running the local dev server and asking the agent to interact with GitHub, such as fetching issues from a repository
+- [ ] 通过运行本地开发服务器并让智能体与 GitHub 交互（比如获取某个仓库的 issue）来测试你的实现

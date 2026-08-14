@@ -1,54 +1,54 @@
-The AI SDK v6 introduced a new way to construct agents - the [`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) class. This approach separates agent definition from agent invocation, making your code more modular and easier to distribute.
+AI SDK v6 引入了一种构建智能体的新方式——[`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 类。这种方式将智能体的定义与调用分离开来，让你的代码更模块化、更易于分发。
 
-Instead of calling [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) directly with tools, you create an agent instance first, then use [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response) to invoke it. This might seem like extra steps, but it opens up possibilities for sharing agents across your codebase or even publishing them as packages.
+你不再直接带着工具调用 [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)，而是先创建一个智能体实例，然后使用 [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response) 来调用它。这看起来像是多了几步，但它开启了在整个代码库中共享智能体、甚至将它们发布为包的可能性。
 
-Let's explore how this new syntax works and compare it to the traditional approach.
+让我们探索一下这种新语法的工作方式，并与传统方式进行比较。
 
-## Key Differences from `streamText()`
+## 与 `streamText()` 的主要区别
 
-### System Prompt Changes
+### 系统提示词的变化
 
-The `system` parameter has been renamed to `instructions`. This aligns better with OpenAI's terminology.
+`system` 参数已更名为 `instructions`。这与 OpenAI 的术语更加一致。
 
-Additionally, `instructions` can accept an array of message parts, allowing you to structure your system prompt with different roles:
+此外，`instructions` 可以接受消息部件数组，让你可以用不同的角色来组织系统提示词：
 
 ```ts
 instructions: [
   {
     role: 'system',
-    content: 'You are a helpful assistant...',
+    content: '你是一个乐于助人的助手...',
   },
 ],
 ```
 
-### Default Step Count
+### 默认步数
 
-The default stopping condition has changed significantly.
+默认停止条件发生了显著变化。
 
-| Approach        | Default `stepCount` |
-| --------------- | ------------------- |
-| `streamText()`  | 1                   |
-| `ToolLoopAgent` | 20                  |
+| 方式            | 默认 `stepCount` |
+| --------------- | ---------------- |
+| `streamText()`  | 1                |
+| `ToolLoopAgent` | 20               |
 
-By default, `ToolLoopAgent` acts more like a true agent, running up to 20 steps before stopping. You can customize this with the [`stopWhen`](https://ai-sdk.dev/docs/agents/loop-control) parameter.
+默认情况下，`ToolLoopAgent` 表现得更像一个真正的智能体，最多运行 20 步才停止。你可以用 [`stopWhen`](https://ai-sdk.dev/docs/agents/loop-control) 参数来自定义这个行为。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Observe how the agent is constructed at the top of `api/chat.ts`
+- [ ] 观察智能体在 `api/chat.ts` 顶部是如何构建的
 
-Notice the [`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) instance that creates the agent once, passing in the model, `instructions`, and `tools`.
+注意创建智能体的 [`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 实例，它只创建一次，传入模型、`instructions` 和 `tools`。
 
-- [ ] See how the new type helper works
+- [ ] 看看新的类型辅助工具是如何工作的
 
-The [`InferAgentUIMessage`](https://ai-sdk.dev/docs/agents/building-agents) type extracts message types directly from the agent instance, so you don't need to manually build the type from your tools.
+[`InferAgentUIMessage`](https://ai-sdk.dev/docs/agents/building-agents) 类型直接从智能体实例中提取消息类型，所以你不需要从工具手动构建类型。
 
 ```ts
 export type MyAgentUIMessage = InferAgentUIMessage<typeof agent>;
 ```
 
-- [ ] Observe the agent being invoked in the POST handler
+- [ ] 观察智能体在 POST 处理器中是如何被调用的
 
-The agent is passed to [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response), which handles streaming the agent's responses back to the client.
+智能体被传给 [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response)，它负责把智能体的响应流式传输回客户端。
 
 ```ts
 export const POST = async (req: Request): Promise<Response> => {
@@ -63,18 +63,18 @@ export const POST = async (req: Request): Promise<Response> => {
 };
 ```
 
-- [ ] Notice how the component uses the inferred type
+- [ ] 注意组件是如何使用推断出的类型的
 
-In `client/root.tsx`, the `useChat` hook is typed with the inferred `MyAgentUIMessage` type, maintaining the same ergonomics as the traditional approach.
+在 `client/root.tsx` 中，`useChat` hook 用推断出的 `MyAgentUIMessage` 类型标注，保持了与传统方式相同的人体工学体验。
 
 ```ts
 const { messages, sendMessage } = useChat<MyAgentUIMessage>({});
 ```
 
-- [ ] See the agent being called programmatically
+- [ ] 看看如何以编程方式调用智能体
 
-If you wanted to invoke the agent outside of a POST request, you could use [`agent.generate()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) for one-shot text generation or [`agent.stream()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) for streaming responses.
+如果你想在 POST 请求之外调用智能体，可以使用 [`agent.generate()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 进行一次性文本生成，或使用 [`agent.stream()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 进行流式响应。
 
-- [ ] Test the agent locally by running `pnpm run dev`
+- [ ] 通过运行 `pnpm run dev` 在本地测试智能体
 
-Open your browser to `localhost:3000` and try interacting with the agent. Try requesting something like "Create a todo.md file with three items for today" and watch as the agent uses its file system tools to fulfill the request. You'll see the tool calls displayed in the UI, showing exactly which tools the agent is using.
+在浏览器中打开 `localhost:3000`，试着与智能体交互。试着提出类似"创建一个包含今天三项待办事项的 todo.md 文件"的请求，观察智能体如何使用它的文件系统工具来完成请求。你会在 UI 中看到工具调用的展示，清楚地显示智能体正在使用哪些工具。

@@ -17,7 +17,7 @@ export const Message = ({
   role: string;
   parts: MyAgentUIMessage['parts'];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -41,10 +41,10 @@ export const Message = ({
               className="bg-blue-900/20 border border-blue-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-blue-300 mb-1">
-                Wrote to file
+                写入了文件
               </div>
               <div className="text-blue-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -56,10 +56,10 @@ export const Message = ({
               className="bg-green-900/20 border border-green-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-green-300 mb-1">
-                Read file
+                读取文件
               </div>
               <div className="text-green-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -71,10 +71,10 @@ export const Message = ({
               className="bg-red-900/20 border border-red-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-red-300 mb-1">
-                Deleted path
+                删除了路径
               </div>
               <div className="text-red-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -86,10 +86,10 @@ export const Message = ({
               className="bg-yellow-900/20 border border-yellow-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-yellow-300 mb-1">
-                Listed directory
+                列出了目录
               </div>
               <div className="text-yellow-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -118,7 +118,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled ? 'Please wait...' : 'Say something...'
+        disabled ? '请稍候...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

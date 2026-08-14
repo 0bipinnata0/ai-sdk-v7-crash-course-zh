@@ -5,11 +5,11 @@ import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 
 const App = () => {
-  // TODO - pass MyUIMessage as a type argument to useChat
+  // TODO - 把 MyUIMessage 作为类型参数传给 useChat
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    'Tell me what todo items I have today.',
+    '告诉我今天有哪些待办事项。',
   );
 
   return (

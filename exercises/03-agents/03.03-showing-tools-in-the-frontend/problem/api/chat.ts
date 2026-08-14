@@ -11,12 +11,12 @@ import {
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
 
-// TODO - move the tool definitions from the streamText call into
-// the variable below
+// TODO - 把工具定义从 streamText 调用中
+// 移到下面的变量里
 const tools = TODO;
 
-// TODO - write a UIMessage type that receives ToolsFromToolDefinition<typeof tools>
-// as the third type argument
+// TODO - 编写一个 UIMessage 类型,将 ToolsFromToolDefinition<typeof tools>
+// 作为第三个类型参数传入
 export type MyUIMessage = TODO;
 
 export const POST = async (req: Request): Promise<Response> => {
@@ -27,9 +27,9 @@ export const POST = async (req: Request): Promise<Response> => {
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful assistant that can use a sandboxed file system to create, edit and delete files.
+      你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
-      You have access to the following tools:
+      你可以使用以下工具:
       - writeFile
       - readFile
       - deletePath
@@ -38,43 +38,43 @@ export const POST = async (req: Request): Promise<Response> => {
       - exists
       - searchFiles
 
-      Use these tools to record notes, create todo lists, and edit documents for the user.
+      使用这些工具为用户记录笔记、创建待办事项列表和编辑文档。
 
-      Use markdown files to store information.
+      使用 markdown 文件来存储信息。
     `,
     tools: {
       writeFile: tool({
-        description: 'Write to a file',
+        description: '写入文件',
         inputSchema: z.object({
           path: z
             .string()
-            .describe('The path to the file to create'),
+            .describe('要创建的文件的路径'),
           content: z
             .string()
-            .describe('The content of the file to create'),
+            .describe('要创建的文件的内容'),
         }),
         execute: async ({ path, content }) => {
           return fsTools.writeFile(path, content);
         },
       }),
       readFile: tool({
-        description: 'Read a file',
+        description: '读取文件',
         inputSchema: z.object({
           path: z
             .string()
-            .describe('The path to the file to read'),
+            .describe('要读取的文件的路径'),
         }),
         execute: async ({ path }) => {
           return fsTools.readFile(path);
         },
       }),
       deletePath: tool({
-        description: 'Delete a file or directory',
+        description: '删除文件或目录',
         inputSchema: z.object({
           path: z
             .string()
             .describe(
-              'The path to the file or directory to delete',
+              '要删除的文件或目录的路径',
             ),
         }),
         execute: async ({ path }) => {
@@ -82,34 +82,34 @@ export const POST = async (req: Request): Promise<Response> => {
         },
       }),
       listDirectory: tool({
-        description: 'List a directory',
+        description: '列出目录',
         inputSchema: z.object({
           path: z
             .string()
-            .describe('The path to the directory to list'),
+            .describe('要列出的目录的路径'),
         }),
         execute: async ({ path }) => {
           return fsTools.listDirectory(path);
         },
       }),
       createDirectory: tool({
-        description: 'Create a directory',
+        description: '创建目录',
         inputSchema: z.object({
           path: z
             .string()
-            .describe('The path to the directory to create'),
+            .describe('要创建的目录的路径'),
         }),
         execute: async ({ path }) => {
           return fsTools.createDirectory(path);
         },
       }),
       exists: tool({
-        description: 'Check if a file or directory exists',
+        description: '检查文件或目录是否存在',
         inputSchema: z.object({
           path: z
             .string()
             .describe(
-              'The path to the file or directory to check',
+              '要检查的文件或目录的路径',
             ),
         }),
         execute: async ({ path }) => {
@@ -117,11 +117,11 @@ export const POST = async (req: Request): Promise<Response> => {
         },
       }),
       searchFiles: tool({
-        description: 'Search for files',
+        description: '搜索文件',
         inputSchema: z.object({
           pattern: z
             .string()
-            .describe('The pattern to search for'),
+            .describe('要搜索的模式'),
         }),
         execute: async ({ pattern }) => {
           return fsTools.searchFiles(pattern);

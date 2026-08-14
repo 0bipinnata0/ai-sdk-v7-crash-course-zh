@@ -13,9 +13,9 @@ export const POST = async (req: Request): Promise<Response> => {
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful assistant that can use a sandboxed file system to create, edit and delete files.
+      你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
-      You have access to the following tools:
+      你可以使用以下工具:
       - writeFile
       - readFile
       - deletePath
@@ -24,14 +24,14 @@ export const POST = async (req: Request): Promise<Response> => {
       - exists
       - searchFiles
 
-      Use these tools to record notes, create todo lists, and edit documents for the user.
+      使用这些工具为用户记录笔记、创建待办事项列表和编辑文档。
 
-      Use markdown files to store information.
+      使用 markdown 文件来存储信息。
     `,
-    // TODO: add the tools to the streamText call,
+    // TODO:把工具添加到 streamText 调用中
     tools: TODO,
-    // TODO: add a custom stop condition to the streamText call
-    // to force the agent to stop after 10 steps have been taken
+    // TODO:给 streamText 调用添加一个自定义停止条件,
+    // 强制智能体在执行 10 步后停止
     stopWhen: TODO,
   });
 

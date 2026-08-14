@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyAgentUIMessage>({});
 
   const [input, setInput] = useState(
-    'Create a todo.md file with three items for today.',
+    '创建一个包含今天三项待办事项的 todo.md 文件。',
   );
 
   return (

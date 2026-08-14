@@ -16,25 +16,24 @@ export const POST = async (req: Request): Promise<Response> => {
   const body: { messages: UIMessage[] } = await req.json();
   const { messages } = body;
 
-  // TODO - create an MCP client that uses the StdioMCPTransport
-  // to connect to the GitHub MCP server
+  // TODO - 创建一个使用 StdioMCPTransport 的 MCP 客户端,
+  // 连接到 GitHub MCP 服务器
   const mcpClient = TODO;
 
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful assistant that can use the GitHub API to interact with the user's GitHub account.
+      你是一个乐于助人的助手,可以使用 GitHub API 与用户的 GitHub 账户交互。
     `,
-    // TODO - use the mcpClient.tools() method to get the tools
+    // TODO - 使用 mcpClient.tools() 方法获取工具
     tools: TODO,
     stopWhen: [stepCountIs(10)],
   });
 
   return result.toUIMessageStreamResponse({
-    // TODO - use the mcpClient.close() method to close the MCP client
-    // when the stream is finished. This will also close the process
-    // running the GitHub MCP server.
+    // TODO - 使用 mcpClient.close() 方法在流结束时关闭
+    // MCP 客户端。这也会关闭运行 GitHub MCP 服务器的进程。
     onFinish: TODO,
   });
 };

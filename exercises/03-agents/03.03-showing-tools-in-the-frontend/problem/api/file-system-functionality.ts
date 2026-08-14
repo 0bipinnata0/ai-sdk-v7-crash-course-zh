@@ -1,21 +1,21 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Base directory for all file system operations
+// 所有文件系统操作的根目录
 const BASE_DIR = path.join(
   process.cwd(),
   'data',
   'file-system-db.local',
 );
 
-// Ensure the base directory exists
+// 确保根目录存在
 function ensureBaseDir(): void {
   if (!fs.existsSync(BASE_DIR)) {
     fs.mkdirSync(BASE_DIR, { recursive: true });
   }
 }
 
-// Validate that a path is within the allowed directory
+// 校验路径是否在允许的目录内
 function validatePath(filePath: string): string {
   const normalizedPath = path.normalize(filePath);
   const fullPath = path.resolve(BASE_DIR, normalizedPath);
@@ -23,21 +23,21 @@ function validatePath(filePath: string): string {
 
   if (!fullPath.startsWith(baseDirResolved)) {
     throw new Error(
-      `Access denied: Path "${filePath}" is outside the allowed directory`,
+      `访问被拒绝:路径 "${filePath}" 在允许的目录之外`,
     );
   }
 
   return fullPath;
 }
 
-// Get relative path from base directory
+// 获取相对于根目录的相对路径
 function getRelativePath(fullPath: string): string {
   const baseDirResolved = path.resolve(BASE_DIR);
   return path.relative(baseDirResolved, fullPath);
 }
 
 /**
- * Write content to a file
+ * 将内容写入文件
  */
 export function writeFile(
   filePath: string,
@@ -47,7 +47,7 @@ export function writeFile(
     ensureBaseDir();
     const fullPath = validatePath(filePath);
 
-    // Ensure the directory exists
+    // 确保目录存在
     const dir = path.dirname(fullPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -57,20 +57,20 @@ export function writeFile(
 
     return {
       success: true,
-      message: `File written successfully: ${getRelativePath(fullPath)}`,
+      message: `文件写入成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
     return {
       success: false,
-      message: `Error writing file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `写入文件出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: filePath,
     };
   }
 }
 
 /**
- * Read content from a file
+ * 从文件读取内容
  */
 export function readFile(filePath: string): {
   success: boolean;
@@ -85,7 +85,7 @@ export function readFile(filePath: string): {
     if (!fs.existsSync(fullPath)) {
       return {
         success: false,
-        message: `File not found: ${getRelativePath(fullPath)}`,
+        message: `文件未找到:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
@@ -95,20 +95,20 @@ export function readFile(filePath: string): {
     return {
       success: true,
       content,
-      message: `File read successfully: ${getRelativePath(fullPath)}`,
+      message: `文件读取成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
     return {
       success: false,
-      message: `Error reading file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `读取文件出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: filePath,
     };
   }
 }
 
 /**
- * Delete a file or directory
+ * 删除文件或目录
  */
 export function deletePath(pathToDelete: string): {
   success: boolean;
@@ -122,7 +122,7 @@ export function deletePath(pathToDelete: string): {
     if (!fs.existsSync(fullPath)) {
       return {
         success: false,
-        message: `Path not found: ${getRelativePath(fullPath)}`,
+        message: `路径未找到:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
@@ -133,34 +133,34 @@ export function deletePath(pathToDelete: string): {
       fs.rmSync(fullPath, { recursive: true, force: true });
       return {
         success: true,
-        message: `Directory deleted successfully: ${getRelativePath(fullPath)}`,
+        message: `目录删除成功:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     } else if (stats.isFile()) {
       fs.unlinkSync(fullPath);
       return {
         success: true,
-        message: `File deleted successfully: ${getRelativePath(fullPath)}`,
+        message: `文件删除成功:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     } else {
       return {
         success: false,
-        message: `Path is neither a file nor directory: ${getRelativePath(fullPath)}`,
+        message: `路径既不是文件也不是目录:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
   } catch (error) {
     return {
       success: false,
-      message: `Error deleting path: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `删除路径出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: pathToDelete,
     };
   }
 }
 
 /**
- * List contents of a directory
+ * 列出目录内容
  */
 export function listDirectory(dirPath: string = '.'): {
   success: boolean;
@@ -179,7 +179,7 @@ export function listDirectory(dirPath: string = '.'): {
     if (!fs.existsSync(fullPath)) {
       return {
         success: false,
-        message: `Directory not found: ${getRelativePath(fullPath)}`,
+        message: `目录未找到:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
@@ -188,7 +188,7 @@ export function listDirectory(dirPath: string = '.'): {
     if (!stats.isDirectory()) {
       return {
         success: false,
-        message: `Path is not a directory: ${getRelativePath(fullPath)}`,
+        message: `路径不是目录:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
@@ -208,20 +208,20 @@ export function listDirectory(dirPath: string = '.'): {
     return {
       success: true,
       items,
-      message: `Directory listed successfully: ${getRelativePath(fullPath)}`,
+      message: `目录列出成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
     return {
       success: false,
-      message: `Error listing directory: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `列出目录出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: dirPath,
     };
   }
 }
 
 /**
- * Create a directory
+ * 创建目录
  */
 export function createDirectory(dirPath: string): {
   success: boolean;
@@ -235,7 +235,7 @@ export function createDirectory(dirPath: string): {
     if (fs.existsSync(fullPath)) {
       return {
         success: false,
-        message: `Directory already exists: ${getRelativePath(fullPath)}`,
+        message: `目录已存在:${getRelativePath(fullPath)}`,
         path: getRelativePath(fullPath),
       };
     }
@@ -244,20 +244,20 @@ export function createDirectory(dirPath: string): {
 
     return {
       success: true,
-      message: `Directory created successfully: ${getRelativePath(fullPath)}`,
+      message: `目录创建成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
     return {
       success: false,
-      message: `Error creating directory: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `创建目录出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: dirPath,
     };
   }
 }
 
 /**
- * Check if a file or directory exists
+ * 检查文件或目录是否存在
  */
 export function exists(pathToCheck: string): {
   success: boolean;
@@ -274,21 +274,21 @@ export function exists(pathToCheck: string): {
     return {
       success: true,
       exists,
-      message: `Path ${exists ? 'exists' : 'does not exist'}: ${getRelativePath(fullPath)}`,
+      message: `路径${exists ? '存在' : '不存在'}:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
     return {
       success: false,
       exists: false,
-      message: `Error checking path: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `检查路径出错:${error instanceof Error ? error.message : '未知错误'}`,
       path: pathToCheck,
     };
   }
 }
 
 /**
- * Search for files by pattern (simple glob-like search)
+ * 按模式搜索文件(简单的类 glob 搜索)
  */
 export function searchFiles(
   pattern: string,
@@ -307,7 +307,7 @@ export function searchFiles(
     if (!fs.existsSync(fullSearchDir)) {
       return {
         success: false,
-        message: `Search directory not found: ${getRelativePath(fullSearchDir)}`,
+        message: `搜索目录未找到:${getRelativePath(fullSearchDir)}`,
         pattern,
         searchDir: getRelativePath(fullSearchDir),
       };
@@ -317,7 +317,7 @@ export function searchFiles(
     if (!stats.isDirectory()) {
       return {
         success: false,
-        message: `Search path is not a directory: ${getRelativePath(fullSearchDir)}`,
+        message: `搜索路径不是目录:${getRelativePath(fullSearchDir)}`,
         pattern,
         searchDir: getRelativePath(fullSearchDir),
       };
@@ -336,7 +336,7 @@ export function searchFiles(
         if (stats.isDirectory()) {
           searchRecursively(itemPath);
         } else if (stats.isFile()) {
-          // Simple pattern matching (supports * wildcard)
+          // 简单的模式匹配(支持 * 通配符)
           const regexPattern = pattern.replace(/\*/g, '.*');
           const regex = new RegExp(regexPattern);
 
@@ -352,21 +352,21 @@ export function searchFiles(
     return {
       success: true,
       files: foundFiles,
-      message: `Found ${foundFiles.length} files matching pattern "${pattern}"`,
+      message: `找到 ${foundFiles.length} 个匹配模式 "${pattern}" 的文件`,
       pattern,
       searchDir: getRelativePath(fullSearchDir),
     };
   } catch (error) {
     return {
       success: false,
-      message: `Error searching files: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      message: `搜索文件出错:${error instanceof Error ? error.message : '未知错误'}`,
       pattern,
       searchDir,
     };
   }
 }
 
-// Export all functions as a single object for easy tool registration
+// 将所有函数作为单个对象导出,便于工具注册
 export const fileSystemTools = {
   writeFile,
   readFile,

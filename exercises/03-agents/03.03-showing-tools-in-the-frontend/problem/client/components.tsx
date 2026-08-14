@@ -17,10 +17,10 @@ export const Message = ({
   parts,
 }: {
   role: string;
-  // TODO - replace the type of UIMessage with MyUIMessage
+  // TODO - 把 UIMessage 类型替换为 MyUIMessage
   parts: UIMessage['parts'];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -37,10 +37,10 @@ export const Message = ({
       </div>
       {parts.map((part, index) => {
         if (part.type === 'tool-writeFile') {
-          // TODO - return a JSX element that shows the tool call
-          // for the tool-writeFile tool call
-          // Follow the pattern of the other tool calls below
-          // Notice how it gives you autocomplete on the tools!
+          // TODO - 返回一个展示 tool-writeFile 工具调用的
+          // JSX 元素
+          // 参照下面其他工具调用的模式
+          // 注意它给你提供了工具的自动补全!
           return TODO;
         }
         if (part.type === 'tool-readFile') {
@@ -50,10 +50,10 @@ export const Message = ({
               className="bg-green-900/20 border border-green-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-green-300 mb-1">
-                📖 Read file
+                📖 读取文件
               </div>
               <div className="text-green-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -65,10 +65,10 @@ export const Message = ({
               className="bg-red-900/20 border border-red-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-red-300 mb-1">
-                🗑️ Deleted path
+                🗑️ 删除了路径
               </div>
               <div className="text-red-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -80,10 +80,10 @@ export const Message = ({
               className="bg-yellow-900/20 border border-yellow-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-yellow-300 mb-1">
-                📁 Listed directory
+                📁 列出了目录
               </div>
               <div className="text-yellow-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -95,10 +95,10 @@ export const Message = ({
               className="bg-purple-900/20 border border-purple-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-purple-300 mb-1">
-                📂 Created directory
+                📂 创建了目录
               </div>
               <div className="text-purple-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -110,10 +110,10 @@ export const Message = ({
               className="bg-cyan-900/20 border border-cyan-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-cyan-300 mb-1">
-                🔍 Checked existence
+                🔍 检查了是否存在
               </div>
               <div className="text-cyan-200">
-                Path: {part.input?.path || 'Unknown'}
+                路径:{part.input?.path || '未知'}
               </div>
             </div>
           );
@@ -125,10 +125,10 @@ export const Message = ({
               className="bg-orange-900/20 border border-orange-700 rounded p-3 text-sm"
             >
               <div className="font-semibold text-orange-300 mb-1">
-                🔎 Searched files
+                🔎 搜索了文件
               </div>
               <div className="text-orange-200">
-                Pattern: {part.input?.pattern || 'Unknown'}
+                模式:{part.input?.pattern || '未知'}
               </div>
             </div>
           );
@@ -158,8 +158,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

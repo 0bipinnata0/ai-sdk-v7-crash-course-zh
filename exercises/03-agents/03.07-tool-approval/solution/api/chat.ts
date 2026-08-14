@@ -11,16 +11,16 @@ import { z } from 'zod';
 
 const tools = {
   sendEmail: tool({
-    description: 'Send an email to a recipient',
+    description: '给收件人发送一封邮件',
     inputSchema: z.object({
-      to: z.string().describe('The email address of the recipient'),
-      subject: z.string().describe('The subject of the email'),
-      body: z.string().describe('The body of the email'),
+      to: z.string().describe('收件人的邮箱地址'),
+      subject: z.string().describe('邮件的主题'),
+      body: z.string().describe('邮件的正文'),
     }),
     needsApproval: true,
     execute: async ({ to, subject, body }) => {
-      // In a real app, this would send an email
-      console.log(`Sending email to ${to}: ${subject}`);
+      // 在真实应用中,这里会发送邮件
+      console.log(`正在发送邮件给 ${to}:${subject}`);
       return { sent: true, to, subject };
     },
   }),
@@ -40,10 +40,10 @@ export const POST = async (req: Request): Promise<Response> => {
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful email assistant. You can send emails on behalf of the user.
+      你是一个乐于助人的邮件助手。你可以代表用户发送邮件。
 
-      When the user asks you to send an email, use the sendEmail tool.
-      Always confirm the email details before sending.
+      当用户要求你发送邮件时,使用 sendEmail 工具。
+      发送前务必确认邮件详情。
     `,
     tools,
     stopWhen: [stepCountIs(10)],

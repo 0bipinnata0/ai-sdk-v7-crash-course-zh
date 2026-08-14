@@ -19,7 +19,7 @@ export const Message = ({
   role: string;
   parts: UIMessagePart<UIDataTypes, UITools>[];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -55,8 +55,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

@@ -30,7 +30,7 @@ export const POST = async (req: Request): Promise<Response> => {
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful assistant that can use the GitHub API to interact with the user's GitHub account.
+      你是一个乐于助人的助手,可以使用 GitHub API 与用户的 GitHub 账户交互。
     `,
     tools: await mcpClient.tools(),
     stopWhen: [stepCountIs(10)],

@@ -1,32 +1,32 @@
-Right now, if you want to use an MCP server with the AI SDK, you need to run it locally on your machine. That means executing code from someone else's library with `npx` - which can feel risky.
+现在，如果你想在 AI SDK 中使用 MCP 服务器，你需要在本地机器上运行它。这意味着用 `npx` 执行别人库里的代码——这可能让人觉得有风险。
 
-But MCP servers are being deployed all over the world. So how do you contact them without running code locally?
+但 MCP 服务器正在世界各地被部署。那么如何在不本地运行代码的情况下连接它们呢？
 
-The answer is [HTTP transport](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools). Instead of using [standard IO transport](https://ai-sdk.dev/docs/reference/ai-sdk-core/mcp-stdio-transport) to run an MCP server locally, you can point your AI SDK client at an external API endpoint.
+答案是 [HTTP transport](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools)。你可以把 AI SDK 客户端指向一个外部 API 端点，而不是使用[标准 IO transport](https://ai-sdk.dev/docs/reference/ai-sdk-core/mcp-stdio-transport) 在本地运行 MCP 服务器。
 
-## How Transport Types Work
+## Transport 类型的工作方式
 
-The AI SDK supports three different [transport](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools) types for connecting to MCP servers:
+AI SDK 支持三种不同的 [transport](https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools) 类型来连接 MCP 服务器：
 
-| Transport                | Use Case                 | Trade-offs                                               |
-| ------------------------ | ------------------------ | -------------------------------------------------------- |
-| Standard IO              | Local MCP servers        | Simpler setup, but executes code on your machine         |
-| HTTP                     | Remote MCP servers       | No local code execution, but depends on external service |
-| Server-Sent Events (SSE) | Real-time remote servers | Lower latency, but less widely supported                 |
+| Transport                | 使用场景           | 权衡                                       |
+| ------------------------ | ------------------ | ------------------------------------------ |
+| 标准 IO                  | 本地 MCP 服务器    | 设置更简单，但在你的机器上执行代码         |
+| HTTP                     | 远程 MCP 服务器    | 不执行本地代码，但依赖外部服务             |
+| Server-Sent Events (SSE) | 实时远程服务器     | 延迟更低，但支持不够广泛                   |
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Review the current setup in `api/chat.ts`
+- [ ] 查看 `api/chat.ts` 中的当前设置
 
-The current code uses [standard IO transport](https://ai-sdk.dev/docs/reference/ai-sdk-core/mcp-stdio-transport) to run an MCP server locally. You'll need to understand what [`createMCPClient`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client) does and how it currently works.
+当前代码使用[标准 IO transport](https://ai-sdk.dev/docs/reference/ai-sdk-core/mcp-stdio-transport) 在本地运行 MCP 服务器。你需要理解 [`createMCPClient`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client) 的作用以及它目前的工作方式。
 
-- [ ] Replace the transport configuration with HTTP transport
+- [ ] 用 HTTP transport 替换 transport 配置
 
-Change the `transport` property in the [`createMCPClient`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client) call to use HTTP instead. You'll need to:
+把 [`createMCPClient`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-mcp-client) 调用中的 `transport` 属性改为使用 HTTP。你需要：
 
-- Set `type` to `'http'`
-- Provide a `url` pointing to the remote MCP server
-- Add any necessary `headers` for authentication
+- 把 `type` 设置为 `'http'`
+- 提供指向远程 MCP 服务器的 `url`
+- 添加任何必要的 `headers` 用于身份验证
 
 ```ts
 import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
@@ -42,20 +42,20 @@ const mcpClient = await createMCPClient({
 });
 ```
 
-- [ ] Test your implementation
+- [ ] 测试你的实现
 
-Run `pnpm run dev` and test the same request: "Give me the latest issues on the mattpocock/ts-reset repo."
+运行 `pnpm run dev`，测试同样的请求："给我 mattpocock/ts-reset 仓库的最新 issue。"
 
-The agent should fetch data from the remote MCP server through HTTP instead of running code locally.
+智能体应该通过 HTTP 从远程 MCP 服务器获取数据，而不是在本地运行代码。
 
-- [ ] Observe the differences
+- [ ] 观察差异
 
-Notice how the HTTP transport:
+注意 HTTP transport 是如何：
 
-- Makes the setup simpler (no local process to manage)
-- Demands less from your server
-- Still gets the same results as the local setup
+- 让设置更简单（没有本地进程要管理）
+- 对你的服务器要求更少
+- 仍然得到与本地设置相同的结果
 
-- [ ] Consider the trade-offs
+- [ ] 思考权衡
 
-Think about what happens if the external service goes down. With HTTP transport, your entire agent depends on that external API being available. This is the main caveat of using remote MCP servers.
+想想如果外部服务宕机会发生什么。使用 HTTP transport 时，你的整个智能体都依赖那个外部 API 的可用性。这是使用远程 MCP 服务器的主要注意事项。

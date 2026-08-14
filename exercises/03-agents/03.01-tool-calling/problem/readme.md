@@ -1,8 +1,8 @@
-It's all very well talking to an LLM. That's useful enough. You can use it for rubber ducking, for talking things through, but your system can't do anything in the world.
+和 LLM 聊天固然不错，也确实有用。你可以用它来做"橡皮鸭调试"，把想法讲清楚，但你的系统无法在现实世界中做任何事。
 
-One easy way to connect LLMs with the real world is to provide them with a set of tools that they can call. That's what we're going to do in this exercise.
+把 LLM 和现实世界连接起来的一种简单方式，是给它们提供一组可以调用的工具。这就是我们在这个练习中要做的事情。
 
-All the work we're going to do is inside our POST request. We have here a [`streamText`](./api/chat.ts) call, which tells the LLM that it is a helpful assistant that can use a sandboxed file system to create, edit, and delete files.
+我们要做的所有工作都在 POST 请求里。这里有一个 [`streamText`](./api/chat.ts) 调用，它告诉 LLM：它是一个乐于助人的助手，可以使用沙箱文件系统来创建、编辑和删除文件。
 
 ```ts
 export const POST = async (req: Request): Promise<Response> => {
@@ -13,9 +13,9 @@ export const POST = async (req: Request): Promise<Response> => {
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
     system: `
-      You are a helpful assistant that can use a sandboxed file system to create, edit and delete files.
+      你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
-      You have access to the following tools:
+      你可以使用以下工具:
       - writeFile
       - readFile
       - deletePath
@@ -24,14 +24,14 @@ export const POST = async (req: Request): Promise<Response> => {
       - exists
       - searchFiles
 
-      Use these tools to record notes, create todo lists, and edit documents for the user.
+      使用这些工具为用户记录笔记、创建待办事项列表和编辑文档。
 
-      Use markdown files to store information.
+      使用 markdown 文件来存储信息。
     `,
-    // TODO: add the tools to the streamText call,
+    // TODO:把工具添加到 streamText 调用中
     tools: TODO,
-    // TODO: add a custom stop condition to the streamText call
-    // to force the agent to stop after 10 steps have been taken
+    // TODO:给 streamText 调用添加一个自定义停止条件,
+    // 强制智能体在执行 10 步后停止
     stopWhen: TODO,
   });
 
@@ -39,11 +39,11 @@ export const POST = async (req: Request): Promise<Response> => {
 };
 ```
 
-It's telling the LLM that it has access to the following tools: write file, read file, delete path, list directory, create directory, etc. It's going to use these to record notes, create to-do lists, and edit documents for the user.
+它告诉 LLM 它可以访问以下工具：写文件、读文件、删除路径、列出目录、创建目录等等。它将用这些工具为用户记录笔记、创建待办事项列表和编辑文档。
 
-Here's the thing though, we haven't actually provided the tools to the agent. So we need to add the tools to this [`streamText`](./api/chat.ts) call.
+不过问题是，我们实际上还没有把这些工具提供给智能体。所以我们需要把工具添加到这个 [`streamText`](./api/chat.ts) 调用中。
 
-As a generous teacher, I've provided you the [`file-system-functionality.ts`](./api/file-system-functionality.ts) file, which contains a bunch of functions that you can use to create, read, and delete files.
+作为一位慷慨的老师，我为你提供了 [`file-system-functionality.ts`](./api/file-system-functionality.ts) 文件，其中包含一堆可以用来创建、读取和删除文件的函数。
 
 ```ts
 export function writeFile(
@@ -51,14 +51,14 @@ export function writeFile(
   content: string,
 ): { success: boolean; message: string; path: string } {
   try {
-    // Implementation details...
+    // 实现细节...
     return {
       success: true,
-      message: `File written successfully: ${getRelativePath(fullPath)}`,
+      message: `文件写入成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
-    // Error handling...
+    // 错误处理...
   }
 }
 
@@ -69,62 +69,62 @@ export function readFile(filePath: string): {
   path: string;
 } {
   try {
-    // Implementation details...
+    // 实现细节...
     return {
       success: true,
       content,
-      message: `File read successfully: ${getRelativePath(fullPath)}`,
+      message: `文件读取成功:${getRelativePath(fullPath)}`,
       path: getRelativePath(fullPath),
     };
   } catch (error) {
-    // Error handling...
+    // 错误处理...
   }
 }
 ```
 
-Your job is to investigate this file system functionality file and hook up all of those functions into tools that the LLM can call. To create a tool, you'll need to use the [`tool`](./api/chat.ts) function from the AI SDK.
+你的任务是研究这个文件系统功能文件，把所有这些函数接入到 LLM 可以调用的工具中。要创建一个工具，你需要使用 AI SDK 中的 [`tool`](./api/chat.ts) 函数。
 
 ```ts
-// Example of creating a tool
+// 创建工具的示例
 import { tool } from 'ai';
 import { z } from 'zod';
 
-// This is just an example of the tool structure
+// 这只是工具结构的示例
 const exampleTool = tool({
-  description: 'Description of what the tool does',
+  description: '描述这个工具做什么',
   inputSchema: z.object({
-    param1: z.string().describe('Description of parameter 1'),
-    param2: z.number().describe('Description of parameter 2'),
+    param1: z.string().describe('参数 1 的描述'),
+    param2: z.number().describe('参数 2 的描述'),
   }),
   execute: async ({ param1, param2 }) => {
-    // Implementation that uses the parameters
+    // 使用参数的实现
     return { result: 'some result' };
   },
 });
 ```
 
-But your job doesn't end there. When an LLM calls a tool, it has to call the tool, then wait for the response, then read the response. That means we're actually going to have to call the LLM multiple times.
+但你的任务不止于此。当 LLM 调用一个工具时，它必须先调用工具，然后等待响应，再读取响应。这意味着我们实际上要多次调用 LLM。
 
-1. First to figure out which tool to call
-2. And then how does it want to respond to the result that it just got?
+1. 第一次是为了弄清楚要调用哪个工具
+2. 然后是它想如何回应刚刚得到的结果？
 
-The AI SDK is already set up to do that. You just need to provide it a custom stop condition via `stopWhen`. There's a bunch of custom stop conditions you can use, but I reckon you should force the agent to stop after about 10 steps have been taken.
+AI SDK 已经为此做好了准备。你只需要通过 `stopWhen` 提供一个自定义停止条件。有很多自定义停止条件可以用，但我认为你应该强制智能体在执行大约 10 步后停止。
 
-You'll find the [`stepCountIs`](./api/chat.ts) function in the `ai` package quite useful for this:
+你会发现 `ai` 包中的 [`stepCountIs`](./api/chat.ts) 函数对此很有用：
 
 ```ts
 import { stepCountIs } from 'ai';
 ```
 
-The agent _might_ stop itself before that. But specifying a maximum number of steps means that the agent won't run on forever.
+智能体_可能_在那之前就自己停止了。但指定最大步数意味着智能体不会永远运行下去。
 
-Once you've specified the tools and the `stopWhen` condition, try running the exercise and test the UI to see if you can get it creating and deleting some files. It is sandboxed to that particular directory, so you don't need to worry about it deleting your entire system.
+指定好工具和 `stopWhen` 条件之后，试着运行练习并测试 UI，看看能不能让它创建和删除一些文件。它被沙箱限制在特定目录中，所以你不用担心它会删掉你的整个系统。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Import the required dependencies in `chat.ts`:
+- [ ] 在 `chat.ts` 中导入所需的依赖：
 
 ```ts
 import { tool, stepCountIs } from 'ai';
@@ -132,10 +132,10 @@ import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
 ```
 
-- [ ] Create tool definitions for each file system function using the `tool()` function. Look at the parameters and return types of each function in the `file-system-functionality.ts` file to determine the correct input schema. Check the [reference](/exercises/99-reference/99.02-defining-tools/explainer/readme.md) for more information on how to use the `tool()` function.
+- [ ] 使用 `tool()` 函数为每个文件系统函数创建工具定义。查看 `file-system-functionality.ts` 文件中每个函数的参数和返回类型，以确定正确的输入 schema。查看[参考资料](/exercises/99-reference/99.02-defining-tools/explainer/readme.md)，了解如何使用 `tool()` 函数的更多信息。
 
-- [ ] Create a `tools` object containing all the tool definitions
+- [ ] 创建一个包含所有工具定义的 `tools` 对象
 
-- [ ] Add a `stopWhen` condition to limit the number of steps the agent can take. Check out the [docs](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#multi-step-calls-using-stopwhen) for more information.
+- [ ] 添加一个 `stopWhen` 条件来限制智能体可以执行的步数。查看[文档](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#multi-step-calls-using-stopwhen)了解更多信息。
 
-- [ ] Run the local dev server and test if the LLM can create and manage files through the UI by asking it to create a todo list or other file-related tasks.
+- [ ] 运行本地开发服务器，通过让 LLM 创建待办事项列表或其他文件相关任务，测试它能否通过 UI 创建和管理文件。

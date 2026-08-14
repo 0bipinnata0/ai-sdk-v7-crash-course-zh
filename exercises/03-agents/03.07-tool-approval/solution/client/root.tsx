@@ -14,7 +14,7 @@ const App = () => {
     });
 
   const [input, setInput] = useState(
-    'Send an email to bob@example.com saying hello',
+    '给 bob@example.com 发一封邮件,说声你好',
   );
 
   return (

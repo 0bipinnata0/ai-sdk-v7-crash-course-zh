@@ -1,50 +1,50 @@
-There's a fundamental tension when building AI agents: the more power you give them, the more useful they become, but the more likely they are to make costly mistakes. A destructive action like sending an email can't be undone.
+构建 AI 智能体时存在一个根本的矛盾：你赋予它们的权力越大，它们就越有用，但它们犯下代价高昂的错误的可能性也越大。像发送邮件这样的破坏性操作是无法撤销的。
 
-The solution is human-in-the-loop approval. Before the LLM executes risky actions, it asks for your permission first. Fortunately, the [AI SDK](https://ai-sdk.dev/docs/introduction) has built-in support for this pattern, so you don't need to implement it from scratch.
+解决方案是人在回路（human-in-the-loop）审批。在 LLM 执行有风险的操作之前，先征求你的许可。幸运的是，[AI SDK](https://ai-sdk.dev/docs/introduction) 内置了对这种模式的支持，所以你不需要从头实现。
 
-In this exercise, you'll add approval workflows to a `sendEmail` tool, creating a UI that lets users review and approve emails before they're sent.
+在本练习中，你将为一个 `sendEmail` 工具添加审批工作流，创建一个让用户在邮件发送前可以审查和批准的 UI。
 
-## Steps To Complete
+## 完成步骤
 
-### Set Up the Backend
+### 设置后端
 
-- [ ] Add `needsApproval: true` to the `sendEmail` tool definition in `api/chat.ts`
+- [ ] 在 `api/chat.ts` 中给 `sendEmail` 工具定义添加 `needsApproval: true`
 
-This tells the AI SDK that this tool requires user approval before execution.
+这告诉 AI SDK，这个工具在执行前需要用户批准。
 
 ```ts
 const tools = {
   sendEmail: tool({
-    description: 'Send an email to a recipient',
+    description: '给收件人发送一封邮件',
     inputSchema: z.object({
       to: z
         .string()
-        .describe('The email address of the recipient'),
-      subject: z.string().describe('The subject of the email'),
-      body: z.string().describe('The body of the email'),
+        .describe('收件人的邮箱地址'),
+      subject: z.string().describe('邮件的主题'),
+      body: z.string().describe('邮件的正文'),
     }),
     needsApproval: true,
-    // TODO: Add needsApproval: true to require user approval before sending
+    // TODO:添加 needsApproval: true,在发送前要求用户批准
     execute: async ({ to, subject, body }) => {
-      // In a real app, this would send an email
-      console.log(`Sending email to ${to}: ${subject}`);
+      // 在真实应用中,这里会发送邮件
+      console.log(`正在发送邮件给 ${to}:${subject}`);
       return { sent: true, to, subject };
     },
   }),
 };
 ```
 
-### Build the Frontend UI
+### 构建前端 UI
 
-- [ ] Add the `addToolApprovalResponse` prop to the `Message` component in `client/components.tsx`
+- [ ] 在 `client/components.tsx` 中给 `Message` 组件添加 `addToolApprovalResponse` 属性
 
-This prop is a function that takes an `id` (string) and `approved` (boolean).
+这个属性是一个函数，接受一个 `id`（字符串）和 `approved`（布尔值）。
 
 ```ts
 export const Message = ({
   role,
   parts,
-}: // TODO: Add addToolApprovalResponse prop, a function which takes in:
+}: // TODO:添加 addToolApprovalResponse 属性,一个接受以下参数的函数:
 // - id: string
 // - approved: boolean
 {
@@ -53,35 +53,35 @@ export const Message = ({
 })
 ```
 
-- [ ] Render an approval UI when `part.state === 'approval-requested'`
+- [ ] 当 `part.state === 'approval-requested'` 时渲染审批 UI
 
-Check for the `approval-requested` state and display the email details (to, subject, body) with approve and reject buttons.
+检查 `approval-requested` 状态，显示邮件详情（收件人、主题、正文）以及批准和拒绝按钮。
 
 ```ts
 if (part.type === 'tool-sendEmail') {
-  // TODO: Check if part.state === 'approval-requested'
-  // If so, render the email preview with approve/reject buttons
-  // Use addToolApprovalResponse({ id: part.approval.id, approved: true/false })
+  // TODO:检查 part.state === 'approval-requested'
+  // 如果是,渲染邮件预览和批准/拒绝按钮
+  // 使用 addToolApprovalResponse({ id: part.approval.id, approved: true/false })
 ```
 
-When the user clicks approve, call `addToolApprovalResponse({ id: part.approval.id, approved: true })`. When they click reject, use `approved: false`.
+当用户点击批准时，调用 `addToolApprovalResponse({ id: part.approval.id, approved: true })`。当他们点击拒绝时，使用 `approved: false`。
 
-### Wire Up the Parent Component
+### 连接父组件
 
-- [ ] Get `addToolApprovalResponse` from [`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) in `client/root.tsx`
+- [ ] 在 `client/root.tsx` 中从 [`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) 获取 `addToolApprovalResponse`
 
-The [`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) hook returns this function directly.
+[`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) hook 会直接返回这个函数。
 
 ```ts
 const { messages, sendMessage, addToolApprovalResponse } =
   useChat<MyUIMessage>({
-    // TODO: Get addToolApprovalResponse from useChat
-    // TODO: Add sendAutomaticallyWhen option using
-    // lastAssistantMessageIsCompleteWithApprovalResponses
+    // TODO:从 useChat 获取 addToolApprovalResponse
+    // TODO:使用 lastAssistantMessageIsCompleteWithApprovalResponses
+    // 添加 sendAutomaticallyWhen 选项
   });
 ```
 
-- [ ] Pass `addToolApprovalResponse` down to the `Message` component
+- [ ] 把 `addToolApprovalResponse` 传给 `Message` 组件
 
 ```ts
 {messages.map((message) => (
@@ -89,14 +89,14 @@ const { messages, sendMessage, addToolApprovalResponse } =
     key={message.id}
     role={message.role}
     parts={message.parts}
-    // TODO: Pass addToolApprovalResponse to Message
+    // TODO:把 addToolApprovalResponse 传给 Message
   />
 ))}
 ```
 
-- [ ] Add the `sendAutomaticallyWhen` option to [`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat)
+- [ ] 给 [`useChat`](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) 添加 `sendAutomaticallyWhen` 选项
 
-Import [`lastAssistantMessageIsCompleteWithApprovalResponses`](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage) from the [AI SDK](https://ai-sdk.dev/docs/introduction) and pass it to the hook. This automatically sends responses once all approvals are handled.
+从 [AI SDK](https://ai-sdk.dev/docs/introduction) 导入 [`lastAssistantMessageIsCompleteWithApprovalResponses`](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage) 并传给 hook。这会在所有审批处理完毕后自动发送响应。
 
 ```ts
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
@@ -108,18 +108,18 @@ const { messages, sendMessage, addToolApprovalResponse } =
   });
 ```
 
-### Test Your Implementation
+### 测试你的实现
 
-- [ ] Run the dev server with `pnpm run dev`
+- [ ] 用 `pnpm run dev` 运行开发服务器
 
-- [ ] Send a message: "Send an email to bob@example.com saying hello"
+- [ ] 发送消息："给 bob@example.com 发一封邮件，说声你好"
 
-The LLM should call the `sendEmail` tool and display your approval UI.
+LLM 应该调用 `sendEmail` 工具并显示你的审批 UI。
 
-- [ ] Test the approve button
+- [ ] 测试批准按钮
 
-Click approve and check your browser console. You should see `Sending email to bob@example.com: hello`.
+点击批准并检查你的浏览器控制台。你应该能看到 `正在发送邮件给 bob@example.com:你好`。
 
-- [ ] Test the reject button
+- [ ] 测试拒绝按钮
 
-Reject an email and verify the LLM asks for follow-up information instead of sending it.
+拒绝一封邮件，验证 LLM 会询问后续信息而不是直接发送。
