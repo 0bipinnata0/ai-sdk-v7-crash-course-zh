@@ -91,4 +91,4 @@ onSubmit={async (e) => {
 
 - [ ] 确保你使用的模型支持图像分析
 
-[Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models) 内置了这个能力。
+[GPT-5.5](https://ai.google.dev/gemini-api/docs/models) 内置了这个能力。

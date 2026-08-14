@@ -2,16 +2,16 @@ AI SDK 默认情况下并不总是会等待流完成。这很出人意料——�
 
 ## 问题
 
-在这段代码中，我们调用 `streamText`，把 "Hello, world!" 传给 Gemini 2.5 Flash，并且在 `streamTextResult` 上有一个 `onEnd`。
+在这段代码中，我们调用 `streamText`，把 "Hello, world!" 传给 GPT-5.5，并且在 `streamTextResult` 上有一个 `onEnd`。
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
 console.log('进程启动中...');
 
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
   onEnd: () => {
     console.log('流已完成!');
@@ -45,13 +45,13 @@ console.log('进程退出中...');
 如果我们处理它们——比如使用 for-await 循环——我们的代码会是这样：
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
 console.log('进程启动中...');
 
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
   onEnd: () => {
     console.log('流已完成!');
@@ -82,13 +82,13 @@ console.log('进程退出中...');
 为此，我们可以使用 `streamTextResult` 上的 `consumeStream()` 方法，如 explainer.1 所示：
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
 console.log('进程启动中...');
 
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
   onEnd: () => {
     console.log('流已完成!');
@@ -116,13 +116,13 @@ console.log('进程退出中...');
 这个能力不仅在 `streamTextResult` 的返回类型上有。还有一个叫做 `consumeStream` 的顶层函数，可以消费一个可读流直到它被完全读取，如 [explainer.2](../explainer.2/main.ts) 所示：
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { consumeStream, streamText } from 'ai';
 
 console.log('进程启动中...');
 
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
   onEnd: () => {
     console.log('流已完成!');

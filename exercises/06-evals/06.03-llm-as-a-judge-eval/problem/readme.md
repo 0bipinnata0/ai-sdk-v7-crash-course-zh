@@ -32,7 +32,7 @@ evalite('Chain Of Thought Paper', {
   ],
   task: async (input) => {
     const result = await generateText({
-      model: google('gemini-2.5-flash'),
+      model: openai.chat('gpt-5.5'),
       instructions: `
         你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
 
@@ -97,7 +97,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
   name: 'Attribution',
   scorer: async ({ input, output, expected }) => {
     const result = await generateObject({
-      model: google('gemini-2.5-flash'),
+      model: openai.chat('gpt-5.5'),
       instructions: ATTRIBUTION_PROMPT,
       messages: TODO, // TODO:传入思维链论文、问题和给出的答案
       schema: TODO, // TODO:定义响应的 schema

@@ -17,7 +17,7 @@ const exemplars = [
 ];
 
 const result = await streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     <task-context>
     你是一个乐于助人的助手,可以为对话生成标题。

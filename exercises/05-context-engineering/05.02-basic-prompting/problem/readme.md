@@ -6,7 +6,7 @@
 
 ```typescript
 const result = await streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   // TODO:使用上一个练习中的 Anthropic 模板
   // 重写这个提示词。
   // 你不需要模板中的所有部分。

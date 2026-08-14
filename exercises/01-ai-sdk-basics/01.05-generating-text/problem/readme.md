@@ -7,11 +7,11 @@
 
 ```ts
 // 导入必要的函数
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 
-// TODO:选择一个模型。我推荐使用 Google Gemini 模型:
-// gemini-2.5-flash
+// TODO:选择一个模型。我推荐使用 GPT 模型:
+// gpt-5.5
 const model = TODO;
 ```
 
@@ -41,7 +41,7 @@ console.log(result.text);
 
 ## 完成步骤
 
-- [ ] 通过将模型声明中的 `TODO` 替换为 Google Gemini 模型来选择一个模型。
+- [ ] 通过将模型声明中的 `TODO` 替换为 GPT 模型来选择一个模型。
 
 - [ ] 通过替换 result 声明中的 `TODO`，使用 `generateText` 函数获取结果。
 

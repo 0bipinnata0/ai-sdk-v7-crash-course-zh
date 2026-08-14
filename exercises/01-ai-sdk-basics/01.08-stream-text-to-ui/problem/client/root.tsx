@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
-import { useChat } from '@ai-sdk/react';
 
 const App = () => {
   // TODO:使用 useChat hook 获取 messages 和 sendMessage 函数
-  const { messages, sendMessage } = useChat();
+  const { messages, sendMessage } = TODO;
 
   const [input, setInput] = useState(
     `法国的首都是哪里?`,
@@ -25,11 +24,8 @@ const App = () => {
         input={input}
         onChange={(e) => setInput(e.target.value)}
         onSubmit={(e) => {
-          e.preventDefault(); 
-          sendMessage({
-            text: input,
-          });
-          setInput('');
+          e.preventDefault();
+          // TODO:发送消息
         }}
       />
     </Wrapper>

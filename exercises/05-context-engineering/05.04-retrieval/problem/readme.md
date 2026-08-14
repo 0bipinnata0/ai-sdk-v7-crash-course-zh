@@ -11,7 +11,7 @@
 让我们看看主要代码：
 
 ```typescript
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { tavily } from '@tavily/core';
 
@@ -65,7 +65,7 @@ if (!rawContent) {
 // TODO:添加一些规则,告诉模型在输出中使用段落,并引用网站内容中的引文来回答问题。
 // TODO:添加输出格式,告诉模型只返回摘要,不要任何其他文本。
 const result = await streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     <task-context>
     你是一个乐于助人的助手,负责总结 URL 的内容。

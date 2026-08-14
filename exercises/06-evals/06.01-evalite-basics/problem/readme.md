@@ -86,7 +86,7 @@ evalite('Capitals', {
 - [ ] 在文件顶部导入必要的 AI SDK 组件
 
   ```ts
-  import { google } from '@ai-sdk/google';
+  import { openai } from '@ai-sdk/openai';
   import { generateText } from 'ai';
   ```
 

@@ -43,7 +43,7 @@ console.log(`Token 长度:${tokens.length}`);
 
 ```typescript
 await generateText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: text,
   maxRetries: 0,
 });

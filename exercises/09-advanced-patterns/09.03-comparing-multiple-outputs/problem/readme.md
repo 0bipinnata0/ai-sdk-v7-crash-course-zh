@@ -10,12 +10,12 @@
 const stream = createUIMessageStream<MyMessage>({
   execute: async ({ writer }) => {
     const firstStreamResult = streamText({
-      model: google('gemini-2.5-flash-lite'),
+      model: openai.chat('gpt-5.5'),
       messages: modelMessages,
     });
 
     const secondStreamResult = streamText({
-      model: google('gemini-2.5-flash'),
+      model: openai.chat('gpt-5.5'),
       messages: modelMessages,
     });
 
@@ -26,7 +26,7 @@ const stream = createUIMessageStream<MyMessage>({
 });
 ```
 
-两个流调用被传入完全相同的消息，但我们使用两个不同的模型——一个用 `gemini-2.5-flash-lite`，另一个用 `gemini-2.5-flash`。
+两个流调用被传入完全相同的消息，但我们使用两个不同的模型——一个用 `gpt-5.5`，另一个用 `gpt-5.5`。
 
 就在这下面，我们需要用 `Promise.all` 为每个模型调用 `streamModelText`，并传入相应的模型。
 

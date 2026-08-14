@@ -8,7 +8,7 @@
 while (step < 2) {
   // 写 Slack 消息
   const writeSlackResult = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
     prompt: `/* 提示词内容 */`,
   });

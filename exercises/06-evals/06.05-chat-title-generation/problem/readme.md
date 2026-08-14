@@ -2,11 +2,11 @@
 
 ## 评估
 
-我们这里有一个叫做聊天标题生成的 eval，它只是调用 `generateText`，传入 `google('gemini-2.5-flash-lite')`，并说"根据输入给我生成一个标题":
+我们这里有一个叫做聊天标题生成的 eval，它只是调用 `generateText`，传入 `openai.chat('gpt-5.5')`，并说"根据输入给我生成一个标题":
 
 ```typescript
 const result = await generateText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     给我生成一个标题:
     ${input}
@@ -52,7 +52,7 @@ const dataForEvalite = data.data
 
 ```typescript
 const result = await generateText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     给我生成一个标题:
     ${input}

@@ -53,7 +53,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
   // TODO:将 modelMessages 传给 streamText
   const streamTextResult = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
   });
 
   // TODO:从 streamTextResult 创建一个 UIMessageStream
@@ -67,7 +67,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
 在网络标签页中检查请求时，你会发现 `body.messages` 包含一个 `UIMessage` 数组。要把这些发送给 `streamText`，我们首先需要使用 `ai` 包中的一个函数将它们从 `UIMessage` 转换为 `ModelMessage`。查看[参考资料](/exercises/99-reference/99.01-ui-messages-vs-model-messages/explainer/readme.md)了解更多信息。
 
-完成所有这些步骤后，你就能与 Gemini 模型进行完整的对话了——不只是单次的问答，而是一场不断演进的对话，LLM 会在所有先前的消息之上保持上下文。
+完成所有这些步骤后，你就能与 GPT 模型进行完整的对话了——不只是单次的问答，而是一场不断演进的对话，LLM 会在所有先前的消息之上保持上下文。
 
 ## 完成步骤
 

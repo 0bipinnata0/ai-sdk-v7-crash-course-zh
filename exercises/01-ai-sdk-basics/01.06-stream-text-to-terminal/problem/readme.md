@@ -5,10 +5,10 @@
 让我们看看需要解决的问题：
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
-const model = google('gemini-2.5-flash');
+const model = openai.chat('gpt-5.5');
 
 const prompt = '给我写一个关于假想星球的故事的第一段。';
 

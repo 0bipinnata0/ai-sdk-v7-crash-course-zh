@@ -46,7 +46,7 @@ const writeTextPart = (
 writeTextPart(writer, '第 1 段: ');
 
 const firstParagraphResult = streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   messages: [
     ...modelMessages,
     {

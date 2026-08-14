@@ -17,12 +17,12 @@
 使用来自 [AI SDK](https://ai-sdk.dev/docs/introduction) 的 [`wrapLanguageModel()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/wrap-language-model) 函数为你的模型添加中间件。把模型和中间件传给它：
 
 ```ts
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { devToolsMiddleware } from '@ai-sdk/devtools';
 import { wrapLanguageModel } from 'ai';
 
 const model = wrapLanguageModel({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   middleware: devToolsMiddleware(),
 });
 ```

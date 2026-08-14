@@ -4,7 +4,7 @@
 
 ```ts
 const result = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '把消息“你好,世界!”打印到控制台',
   tools: {
     // ...下面解释

@@ -8,7 +8,7 @@
 
 ```ts
 const result = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   messages: await convertToModelMessages(messages),
   instructions: `...`,
   tools: {

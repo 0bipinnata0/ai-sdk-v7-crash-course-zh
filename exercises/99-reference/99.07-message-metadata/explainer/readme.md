@@ -19,7 +19,7 @@ type MyMessage = UIMessage<MyMetadata>;
 
 ```ts
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
 });
 ```

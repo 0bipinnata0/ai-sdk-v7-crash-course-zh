@@ -10,7 +10,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const { messages } = body;
 
   const result = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     messages: await convertToModelMessages(messages),
     onEnd: ({ response }) => {
       console.log('streamText.onEnd');

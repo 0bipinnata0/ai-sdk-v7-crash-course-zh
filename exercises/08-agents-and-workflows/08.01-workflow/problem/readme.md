@@ -79,7 +79,7 @@ const formatMessageHistory = (messages: UIMessage[]) => {
 
 ## 完成步骤
 
-- [ ] 实现第一个 `writeSlackResult` 函数，使用 Google Gemini 模型和提供的系统提示词生成 Slack 消息初稿。你需要在这里使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
+- [ ] 实现第一个 `writeSlackResult` 函数，使用 GPT 模型和提供的系统提示词生成 Slack 消息初稿。你需要在这里使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
 
 - [ ] 实现 `evaluateSlackResult` 函数，用评估系统提示词进行另一次 LLM 调用来评估初稿——同样使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
 

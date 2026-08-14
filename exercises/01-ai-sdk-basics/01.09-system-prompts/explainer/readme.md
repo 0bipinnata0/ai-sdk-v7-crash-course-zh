@@ -18,7 +18,7 @@ const SYSTEM_PROMPT = `
 
 ```ts
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   messages: modelMessages,
   instructions: SYSTEM_PROMPT,
 });

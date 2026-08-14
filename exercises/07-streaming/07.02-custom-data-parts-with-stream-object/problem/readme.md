@@ -30,7 +30,7 @@ export type MyMessage = UIMessage<
 // 因为我们需要使用结构化输出来可靠地
 // 生成多条建议
 const followupSuggestionsResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   // TODO:使用 zod 定义建议的 schema
   schema: TODO,
   messages: [

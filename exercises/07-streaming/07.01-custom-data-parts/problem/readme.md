@@ -45,7 +45,7 @@ export type MyMessage = UIMessage<
 const stream = createUIMessageStream<MyMessage>({
   execute: async ({ writer }) => {
     const streamTextResult = streamText({
-      model: google('gemini-2.5-flash'),
+      model: openai.chat('gpt-5.5'),
       messages: modelMessages,
     });
 
@@ -66,7 +66,7 @@ const stream = createUIMessageStream<MyMessage>({
 
 ```ts
 const followupSuggestionsResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   messages: [
     ...modelMessages,
     {
