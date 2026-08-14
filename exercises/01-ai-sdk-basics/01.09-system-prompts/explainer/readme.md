@@ -20,7 +20,7 @@ const SYSTEM_PROMPT = `
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   messages: modelMessages,
-  system: SYSTEM_PROMPT,
+  instructions: SYSTEM_PROMPT,
 });
 ```
 

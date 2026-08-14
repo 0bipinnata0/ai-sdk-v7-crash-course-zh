@@ -40,7 +40,7 @@ export type MyMessage = UIMessage<
 // TODO - 改为 streamText,并作为自定义数据部件写入流
 const writeSlackResult = await generateText({
   model: google('gemini-2.5-flash'),
-  system: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
+  instructions: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
   prompt: `
     对话历史:
     ${formatMessageHistory(messages)}
@@ -50,7 +50,7 @@ const writeSlackResult = await generateText({
 // TODO - 改为 streamText,并作为自定义数据部件写入流
 const evaluateSlackResult = await generateText({
   model: google('gemini-2.5-flash'),
-  system: EVALUATE_SLACK_MESSAGE_SYSTEM,
+  instructions: EVALUATE_SLACK_MESSAGE_SYSTEM,
   prompt: `
     对话历史:
     ${formatMessageHistory(messages)}
@@ -72,7 +72,7 @@ const evaluateSlackResult = await generateText({
 ```typescript
 const finalSlackAttempt = streamText({
   model: google('gemini-2.5-flash'),
-  system: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
+  instructions: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
   prompt: `
     对话历史:
     ${formatMessageHistory(messages)}

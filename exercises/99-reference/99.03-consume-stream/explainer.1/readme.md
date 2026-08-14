@@ -1,8 +1,8 @@
-AI SDK 默认情况下并不总是会等待流完成。这很出人意料——当你依赖 `onFinish` 回调被调用时，这可能会坑到你。
+AI SDK 默认情况下并不总是会等待流完成。这很出人意料——当你依赖 `onEnd` 回调被调用时，这可能会坑到你。
 
 ## 问题
 
-在这段代码中，我们调用 `streamText`，把 "Hello, world!" 传给 Gemini 2.5 Flash，并且在 `streamTextResult` 上有一个 `onFinish`。
+在这段代码中，我们调用 `streamText`，把 "Hello, world!" 传给 Gemini 2.5 Flash，并且在 `streamTextResult` 上有一个 `onEnd`。
 
 ```ts
 import { google } from '@ai-sdk/google';
@@ -13,7 +13,7 @@ console.log('进程启动中...');
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   prompt: '你好,世界!',
-  onFinish: () => {
+  onEnd: () => {
     console.log('流已完成!');
   },
 });
@@ -36,7 +36,7 @@ console.log('进程退出中...');
 - "进程启动中..."
 - "进程退出中..."
 
-所以这里的 `onFinish` 实际上从未被调用。"流已完成！"从未真正出现。
+所以这里的 `onEnd` 实际上从未被调用。"流已完成！"从未真正出现。
 
 ## 处理流
 
@@ -53,7 +53,7 @@ console.log('进程启动中...');
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   prompt: '你好,世界!',
-  onFinish: () => {
+  onEnd: () => {
     console.log('流已完成!');
   },
 });
@@ -90,7 +90,7 @@ console.log('进程启动中...');
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   prompt: '你好,世界!',
-  onFinish: () => {
+  onEnd: () => {
     console.log('流已完成!');
   },
 });
@@ -101,9 +101,9 @@ await streamTextResult.consumeStream();
 console.log('进程退出中...');
 ```
 
-这会等待流完成并消费所有部分，然后触发 `onFinish`。
+这会等待流完成并消费所有部分，然后触发 `onEnd`。
 
-最常见的使用场景是：当你的 `onFinish` 中有持久化逻辑时。因为如果出现网络连接问题，你的流会中断，流不会被完全消费，于是你的 `onFinish` 就不会被触发。
+最常见的使用场景是：当你的 `onEnd` 中有持久化逻辑时。因为如果出现网络连接问题，你的流会中断，流不会被完全消费，于是你的 `onEnd` 就不会被触发。
 
 如果我们用 `consumeStream()` 运行，会看到如我们所愿的输出：
 
@@ -124,7 +124,7 @@ console.log('进程启动中...');
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
   prompt: '你好,世界!',
-  onFinish: () => {
+  onEnd: () => {
     console.log('流已完成!');
   },
 });
@@ -145,7 +145,7 @@ console.log('进程退出中...');
 - "流已完成！"
 - "进程退出中..."
 
-所以，如果你遇到 `onFinish` 回调没有被调用的情况，很可能某种形式的 `consumeStream` 能帮你确保流完成。
+所以，如果你遇到 `onEnd` 回调没有被调用的情况，很可能某种形式的 `consumeStream` 能帮你确保流完成。
 
 我建议你查看这两个 explainer，多运行几次，试着把它们注释掉又取消注释，试试能不能把它搞坏。
 
@@ -153,17 +153,17 @@ console.log('进程退出中...');
 
 ## 完成步骤
 
-- [ ] 理解问题：使用 `streamText` 时，如果流没有被消费，`onFinish` 回调就不会执行。
+- [ ] 理解问题：使用 `streamText` 时，如果流没有被消费，`onEnd` 回调就不会执行。
 
-- [ ] 查看 [`explainer.1`](./main.ts) 示例，它使用 `streamTextResult.consumeStream()` 来确保流完成并触发 `onFinish` 回调。
+- [ ] 查看 [`explainer.1`](./main.ts) 示例，它使用 `streamTextResult.consumeStream()` 来确保流完成并触发 `onEnd` 回调。
 
 - [ ] 研究 [`explainer.2`](../explainer.2/main.ts) 示例，它使用顶层的 `consumeStream()` 函数配合 `toUIMessageStream()` 实现同样的目标。
 
 - [ ] 通过运行 `pnpm run dev` 尝试运行这两个示例
 
-- [ ] 通过注释掉两个示例中的 `consumeStream` 行来做实验，观察 `onFinish` 回调如何不再执行。
+- [ ] 通过注释掉两个示例中的 `consumeStream` 行来做实验，观察 `onEnd` 回调如何不再执行。
 
-- [ ] 在 `explainer.1` 中，实现一个 for-await 循环来处理流块，看看它如何也能确保 `onFinish` 回调执行：
+- [ ] 在 `explainer.1` 中，实现一个 for-await 循环来处理流块，看看它如何也能确保 `onEnd` 回调执行：
   - `for await (const chunk of streamTextResult.textStream) { process.stdout.write(chunk); }`
 
 - [ ] 尝试不同的流消费方式组合，理解它们的行为。

@@ -58,7 +58,7 @@ export const POST = async (req: Request): Promise<Response> => {
       为这段对话生成一个标题。
       只返回标题。
     `,
-    // TODO:使用以下对象声明 experimental_telemetry 属性:
+    // TODO:使用以下对象声明 telemetry 属性:
     // - isEnabled: true
     // - functionId: 'your-name-here'
     // - metadata: { langfuseTraceId: trace.id }
@@ -68,7 +68,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const streamTextResult = streamText({
     model: google('gemini-2.5-flash'),
     messages: modelMessages,
-    // TODO:使用以下对象声明 experimental_telemetry 属性:
+    // TODO:使用以下对象声明 telemetry 属性:
     // - isEnabled: true
     // - functionId: 'your-name-here'
     // - metadata: { langfuseTraceId: trace.id }

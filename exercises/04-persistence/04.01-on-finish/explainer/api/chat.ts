@@ -16,7 +16,7 @@ export const POST = async (req: Request): Promise<Response> => {
       // 'response.messages' 是一个 ToolModelMessage 和 AssistantModelMessage 的数组,
       // 它们是在流式传输过程中生成的模型消息。
       // 如果你不需要 UIMessage,这很有用——适用于更简单的应用。
-      console.log('streamText.onFinish');
+      console.log('streamText.onEnd');
       console.log('  response.messages');
       console.dir(response.messages, { depth: null });
     },
@@ -27,12 +27,12 @@ export const POST = async (req: Request): Promise<Response> => {
     onEnd: ({ messages, responseMessage }) => {
       // 'messages' 是完整的消息历史,包括你通过
       // originalMessages 传入的原始消息。
-      console.log('toUIMessageStreamResponse.onFinish');
+      console.log('toUIMessageStreamResponse.onEnd');
       console.log('  messages');
       console.dir(messages, { depth: null });
 
       // 'responseMessage' 是消息历史中的最后一条消息。
-      console.log('toUIMessageStreamResponse.onFinish');
+      console.log('toUIMessageStreamResponse.onEnd');
       console.log('  responseMessage');
       console.dir(responseMessage, { depth: null });
     },

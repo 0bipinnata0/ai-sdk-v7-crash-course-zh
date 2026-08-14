@@ -4,17 +4,17 @@
 
 我们使用之前练习中的一个简化示例，把它放进自己的 [`main.ts`](./main.ts) 文件中。代码设置为用所有先前定义的工具运行一次 [`streamText`](./main.ts) 调用，但现在我们要把流转换为 `UIMessageStream` 并打印到控制台。
 
-这个流遵循我们熟悉的模式，有 `start`、`finish`、`text-delta`、`text-start` 和 `text-end` 等事件。但我们还会通过 [`onFinish`](./main.ts) 回调来检查消息的最终形态。
+这个流遵循我们熟悉的模式，有 `start`、`finish`、`text-delta`、`text-start` 和 `text-end` 等事件。但我们还会通过 [`onEnd`](./main.ts) 回调来检查消息的最终形态。
 
 ```ts
 const result = streamText({
   // 模型和提示词的配置
   // ...
-  stopWhen: [stepCountIs(10)],
+  stopWhen: [isStepCount(10)],
 });
 
 const stream = result.toUIMessageStream({
-  onFinish: ({ messages }) => {
+  onEnd: ({ messages }) => {
     console.log('--- ON FINISH ---');
     console.dir(messages, { depth: null });
   },
@@ -100,7 +100,7 @@ for await (const message of stream) {
 
 ## `UIMessage` 中的 `parts`
 
-但最有趣的部分发生在流完成之后。`onFinish` 回调给了我们 `UIMessage` 的最终形态，也就是前端应用中 `useChat` 会使用的东西。
+但最有趣的部分发生在流完成之后。`onEnd` 回调给了我们 `UIMessage` 的最终形态，也就是前端应用中 `useChat` 会使用的东西。
 
 在最终的 `UIMessage` 结构中，所有流式传输的部件都被收集到一条 `assistant` 消息中。
 
@@ -157,6 +157,6 @@ for await (const message of stream) {
 
 - [ ] 运行练习并观察控制台输出。
 
-- [ ] 将流式事件与 `onFinish` 回调中最终的 `UIMessage` 结构进行对比。
+- [ ] 将流式事件与 `onEnd` 回调中最终的 `UIMessage` 结构进行对比。
 
 - [ ] 用不同的提示词做实验，看看它们如何影响工具的使用和最终的 `UIMessage` 结构。

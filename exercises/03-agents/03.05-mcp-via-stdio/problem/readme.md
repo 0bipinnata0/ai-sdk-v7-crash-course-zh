@@ -19,7 +19,7 @@ MCP 服务器可以暴露工具集——换句话说，就是作为客户端的�
 在开始流式传输之前，我们需要初始化一个 MCP 客户端。这将使用来自 `@ai-sdk/mcp/mcp-stdio` 的 [`StdioMCPTransport`](./api/chat.ts)。
 
 ```ts
-import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
+import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport as StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 ```
 
@@ -61,7 +61,7 @@ MCP 客户端设置好之后，你需要获取它的工具，并把这些工具�
 
 最后，因为我们自己运行 MCP 服务器（这就是 `StdioMCPTransport` 所做的事情——它启动 MCP 服务器），我们需要在完成后手动关闭它。
 
-所以在 [`onFinish`](./api/chat.ts) 回调中，我们要通过调用 `mcpClient.close()` 来关闭连接。
+所以在 [`onEnd`](./api/chat.ts) 回调中，我们要通过调用 `mcpClient.close()` 来关闭连接。
 
 对我们来说，这意味着当请求发出时，我们启动 GitHub MCP 服务器；当请求完成时，我们把它关掉。这可能不是最理想的方式，但目前是可行的。
 
@@ -97,10 +97,10 @@ const myTransport = new StdioMCPTransport({
 
 - [ ] 使用 `mcpClient.tools()` 方法获取工具，并把它们传给 `streamText` 函数。
 
-- [ ] 实现 `onFinish` 回调，在流结束时关闭 MCP 客户端
+- [ ] 实现 `onEnd` 回调，在流结束时关闭 MCP 客户端
 
 ```ts
-onFinish: async () => {
+onEnd: async () => {
   // 关闭 MCP 客户端
 },
 ```

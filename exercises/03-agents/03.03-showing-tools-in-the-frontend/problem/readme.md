@@ -10,7 +10,7 @@
 const result = streamText({
   model: google('gemini-2.5-flash'),
   messages: await convertToModelMessages(messages),
-  system: `...`,
+  instructions: `...`,
   tools: {
     writeFile: tool({...}),
     readFile: tool({...}),

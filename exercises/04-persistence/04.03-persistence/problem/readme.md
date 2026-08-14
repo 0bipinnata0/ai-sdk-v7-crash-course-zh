@@ -173,7 +173,7 @@ onSubmit={(e) => {
   - 用 `getChat(id)` 实现获取现有聊天
   - 如果聊天不存在，用 `createChat(id, messages)` 创建
   - 如果聊天存在，用 `appendToChatMessages` 追加最新消息
-  - 修改 `toUIMessageStreamResponse()`，使用 `onFinish` 回调保存 AI 响应消息
+  - 修改 `toUIMessageStreamResponse()`，使用 `onEnd` 回调保存 AI 响应消息
 
 - [ ] 通过运行开发服务器并查看刷新页面后消息是否保持，来测试你的实现
 

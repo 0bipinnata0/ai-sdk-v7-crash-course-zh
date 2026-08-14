@@ -12,8 +12,8 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    onFinish: ({ response }) => {
-      console.log('streamText.onFinish');
+    onEnd: ({ response }) => {
+      console.log('streamText.onEnd');
       console.log('  response.messages');
       console.dir(response.messages, { depth: null });
     },
@@ -25,7 +25,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
 我们从请求体中取出 UI 消息，把它们转换为模型消息后传给 `streamText` 函数。
 
-然后我们有多个 [`onFinish`](./api/chat.ts) 回调：
+然后我们有多个 [`onEnd`](./api/chat.ts) 回调：
 
 1. 一个在 [`streamText`](./api/chat.ts) 内部，打印 `response.messages`
 2. 另一个在 [`toUIMessageStreamResponse`](./api/chat.ts) 内部，打印 `messages` 和 `responseMessage`
@@ -33,12 +33,12 @@ export const POST = async (req: Request): Promise<Response> => {
 ```ts
 return result.toUIMessageStreamResponse({
   originalMessages: messages,
-  onFinish: ({ messages, responseMessage }) => {
-    console.log('toUIMessageStreamResponse.onFinish');
+  onEnd: ({ messages, responseMessage }) => {
+    console.log('toUIMessageStreamResponse.onEnd');
     console.log('  messages');
     console.dir(messages, { depth: null });
 
-    console.log('toUIMessageStreamResponse.onFinish');
+    console.log('toUIMessageStreamResponse.onEnd');
     console.log('  responseMessage');
     console.dir(responseMessage, { depth: null });
   },
@@ -51,19 +51,19 @@ return result.toUIMessageStreamResponse({
 
 | 响应类型                                                 | 描述                                          | 内容                                                | 是否适合持久化             |
 | -------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------- | -------------------------- |
-| `streamText > onFinish > response.messages`              | 模型消息(AssistantModelMessage 或 ToolModelMessage) | 信息最少，没有 UI 数据                              | 不适合 UI 应用             |
-| `toUIMessageStreamResponse > onFinish > messages`        | 完整消息历史                                  | 包括原始用户消息和助手响应（含所有部件）            | 持久化整个对话的理想选择   |
-| `toUIMessageStreamResponse > onFinish > responseMessage` | 单条消息                                      | 只有新生成的助手消息                                | 适合只持久化最新响应       |
+| `streamText > onEnd > response.messages`              | 模型消息(AssistantModelMessage 或 ToolModelMessage) | 信息最少，没有 UI 数据                              | 不适合 UI 应用             |
+| `toUIMessageStreamResponse > onEnd > messages`        | 完整消息历史                                  | 包括原始用户消息和助手响应（含所有部件）            | 持久化整个对话的理想选择   |
+| `toUIMessageStreamResponse > onEnd > responseMessage` | 单条消息                                      | 只有新生成的助手消息                                | 适合只持久化最新响应       |
 
 根据你想如何管理持久化，你可能会使用完整的消息历史，或者只使用最终生成的消息。
 
-`toUIMessageStreamResponse.onFinish.messages` 中的完整消息历史包含所有部件，包括状态信息（start、done)，适合持久化整个对话。
+`toUIMessageStreamResponse.onEnd.messages` 中的完整消息历史包含所有部件，包括状态信息（start、done)，适合持久化整个对话。
 
 总结一下：
 
-- `streamText.onFinish` 有 `response.messages`（模型消息）——不适合持久化 UI 数据
-- `toUIMessageStreamResponse.onFinish` 有完整的 `messages` 历史（特别是当你传入 originalMessages 时）
-- `toUIMessageStreamResponse.onFinish` 还有 `responseMessage`，即新生成的那条消息
+- `streamText.onEnd` 有 `response.messages`（模型消息）——不适合持久化 UI 数据
+- `toUIMessageStreamResponse.onEnd` 有完整的 `messages` 历史（特别是当你传入 originalMessages 时）
+- `toUIMessageStreamResponse.onEnd` 还有 `responseMessage`，即新生成的那条消息
 
 ## 完成步骤
 

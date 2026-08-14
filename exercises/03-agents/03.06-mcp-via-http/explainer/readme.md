@@ -29,7 +29,7 @@ AI SDK 支持三种不同的 [transport](https://ai-sdk.dev/docs/ai-sdk-core/mcp
 - 添加任何必要的 `headers` 用于身份验证
 
 ```ts
-import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
+import { createMCPClient } from '@ai-sdk/mcp';
 
 const mcpClient = await createMCPClient({
   transport: {

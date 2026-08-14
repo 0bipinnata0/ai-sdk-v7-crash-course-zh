@@ -12,7 +12,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
-    system: `
+    instructions: `
       你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
       你可以使用以下工具:
@@ -110,10 +110,10 @@ const exampleTool = tool({
 
 AI SDK 已经为此做好了准备。你只需要通过 `stopWhen` 提供一个自定义停止条件。有很多自定义停止条件可以用，但我认为你应该强制智能体在执行大约 10 步后停止。
 
-你会发现 `ai` 包中的 [`stepCountIs`](./api/chat.ts) 函数对此很有用：
+你会发现 `ai` 包中的 [`isStepCount`](./api/chat.ts) 函数对此很有用：
 
 ```ts
-import { stepCountIs } from 'ai';
+import { isStepCount } from 'ai';
 ```
 
 智能体_可能_在那之前就自己停止了。但指定最大步数意味着智能体不会永远运行下去。
@@ -127,7 +127,7 @@ import { stepCountIs } from 'ai';
 - [ ] 在 `chat.ts` 中导入所需的依赖：
 
 ```ts
-import { tool, stepCountIs } from 'ai';
+import { tool, isStepCount } from 'ai';
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
 ```

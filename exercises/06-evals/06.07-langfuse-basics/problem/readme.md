@@ -94,16 +94,16 @@ trace 则像是一个装 span 的容器。它像是整个事情经过的完整�
 
 ### 给 `streamText` 和 `generateText` 调用传入 `telemetry`
 
-创建 trace 之后，我们应该进入 `streamText` 调用和 `generateText` 调用，查看 `experimental_telemetry` 属性。
+创建 trace 之后，我们应该进入 `streamText` 调用和 `generateText` 调用，查看 `telemetry` 属性。
 
 AI SDK 内置了对 telemetry 的支持。我们只需要把这个 `TODO` 替换成一个带有 `isEnabled` 属性、`functionId` 属性，以及一些用于关联到 `langfuse.trace.id` 的 metadata 的对象。
 
 ```ts
 // 把这个:
-experimental_telemetry: TODO,
+telemetry: TODO,
 
 // 替换成类似这样的:
-experimental_telemetry: {
+telemetry: {
   isEnabled: true,
   functionId: 'your-name-here',
   metadata: {
@@ -116,12 +116,12 @@ experimental_telemetry: {
 
 ### 刷新 trace
 
-完成之后，我们可以一直到代码末尾的 `onFinish`。
+完成之后，我们可以一直到代码末尾的 `onEnd`。
 
 在 `onFinish` 中，我们需要使用 `langfuse.flushAsync` 方法刷新 LangFuse 的 trace。这里的"刷新"意思是把 trace 发送给 LangFuse，这样我们就能在它的云端查看器中查看它们。
 
 ```ts
-onFinish: async () => {
+onEnd: async () => {
   // TODO:使用 langfuse.flushAsync 方法刷新 langfuse 的 trace,
   // 并 await 结果
   TODO;
@@ -154,9 +154,9 @@ onFinish: async () => {
 
 - [ ] 在 [`chat.ts`](./api/chat.ts) 中实现 trace 变量
 
-- [ ] 给 [`chat.ts`](./api/chat.ts) 中的 `streamText` 调用和 `generateText` 调用添加 `experimental_telemetry`
+- [ ] 给 [`chat.ts`](./api/chat.ts) 中的 `streamText` 调用和 `generateText` 调用添加 `telemetry`
 
-- [ ] 在 `onFinish` 处理器中实现 `langfuse.flushAsync()` 调用
+- [ ] 在 `onEnd` 处理器中实现 `langfuse.flushAsync()` 调用
 
 - [ ] 通过运行本地开发服务器测试你的应用
 

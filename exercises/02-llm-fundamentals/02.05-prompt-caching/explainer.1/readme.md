@@ -1,4 +1,4 @@
-之前我们在 AI SDK 返回的 `usage` 上看到了一个有趣的属性：`cachedInputTokens`。
+之前我们在 AI SDK 返回的 `usage` 上看到了一个有趣的属性：`inputTokenDetails.cacheReadTokens`(在旧版本中叫 `cachedInputTokens`)。
 
 这涉及到一个非常重要的概念，叫做提示词缓存（prompt caching)：模型提供商实际上会为你缓存请求的一部分，这样你在重复请求时就能少花钱。
 
