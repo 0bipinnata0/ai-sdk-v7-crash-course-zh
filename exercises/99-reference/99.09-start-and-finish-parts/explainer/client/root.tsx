@@ -7,7 +7,7 @@ import './tailwind.css';
 const App = () => {
   const { messages, sendMessage } = useChat();
 
-  const [input, setInput] = useState(`Silas, the watchmaker`);
+  const [input, setInput] = useState(`钟表匠塞拉斯`);
 
   return (
     <Wrapper>

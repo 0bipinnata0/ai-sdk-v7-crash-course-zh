@@ -1,10 +1,10 @@
 [
   {
     role: 'user',
-    content: [ { type: 'text', text: 'What is the capital of France?' } ]
+    content: [ { type: 'text', text: '法国的首都是哪里?' } ]
   },
   {
     role: 'assistant',
-    content: [ { type: 'text', text: 'The capital of France is Paris.' } ]
+    content: [ { type: 'text', text: '法国的首都是巴黎。' } ]
   }
 ]

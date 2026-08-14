@@ -6,7 +6,7 @@ import {
 
 export type MyMessage = UIMessage<unknown, {}>;
 
-const text = `Hello, friend! How are you? My name's Matthew. It's a pleasure to meet you today. I hope you're having a wonderful day so far. I wanted to introduce myself and let you know that I'm here to help with anything you might need. Whether you have questions, need assistance with a project, or just want to chat, feel free to reach out. I enjoy learning new things, meeting new people, and working together to solve interesting problems. So, tell me a bit about yourself! What brings you here today, and how can I assist you?`;
+const text = `你好,朋友!你好吗?我叫 Matthew。很高兴今天见到你。希望你今天过得愉快。我想介绍一下自己,并告诉你,我会在这里帮助你处理任何需要的事情。无论你是有什么问题、项目上需要协助,还是只想聊聊天,都欢迎随时开口。我喜欢学习新事物、认识新朋友,也喜欢一起协作解决有趣的问题。那么,跟我说说你自己吧!今天是什么把你带到这里,我又能帮上什么忙呢?`;
 
 export const POST = async (req: Request): Promise<Response> => {
   const body: { messages: UIMessage[] } = await req.json();
@@ -21,12 +21,12 @@ export const POST = async (req: Request): Promise<Response> => {
         id: textPartId,
       });
 
-      const splitText = text.split(' ');
+      const splitText = text.split('');
 
       for (const word of splitText) {
         writer.write({
           type: 'text-delta',
-          delta: word + ' ',
+          delta: word,
           id: textPartId,
         });
 

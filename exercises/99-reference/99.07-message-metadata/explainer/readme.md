@@ -1,30 +1,30 @@
-Sometimes you want to attach some information about the message to the message itself. In cases like these, you can use message metadata from the AI SDK.
+有时你想把一些关于消息的信息附加到消息本身上。在这种情况下，你可以使用 AI SDK 的消息 metadata（元数据）。
 
-Whereas message `parts` comprise the actual contents of the message, message `metadata` is information about the message.
+消息的 `parts` 是消息的实际内容，而消息的 `metadata` 是关于消息的信息。
 
-## Tracking Message Length
+## 追踪消息长度
 
-In this case, we're going to have some metadata about the length of the message generated. The way we're doing this is by declaring a `MyMetadata` type and then creating a custom message type here by passing in `MyMetadata` to `UIMessage`:
+在这个例子中，我们将记录一些关于生成消息长度的 metadata。做法是：声明一个 `MyMetadata` 类型，然后把它传给 `UIMessage` 来创建一个自定义消息类型：
 
 ```ts
 type MyMetadata = {
-  // The length of the message generated
+  // 生成消息的长度
   length: number;
 };
 
 type MyMessage = UIMessage<MyMetadata>;
 ```
 
-We then have a standard `streamText` result here:
+然后我们有一个标准的 `streamText` 调用：
 
 ```ts
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
 });
 ```
 
-And below, we turn the `streamTextResult` into a `UIMessage` stream, passing `MyMessage` as the type argument to the `UIMessageStream`:
+在下面，我们把 `streamTextResult` 变成一个 `UIMessage` 流，把 `MyMessage` 作为类型参数传给 `UIMessageStream`:
 
 ```ts
 let totalLength = 0;
@@ -44,15 +44,15 @@ const stream = streamTextResult.toUIMessageStream<MyMessage>({
 });
 ```
 
-Since `toUIMessageStream` is a function, we are passing an object to that function containing a callback called `messageMetadata`. `messageMetadata` is called on every part of the `UIMessage` stream, and you can return some metadata to update the metadata of the message.
+由于 `toUIMessageStream` 是一个函数，我们向它传入一个包含名为 `messageMetadata` 回调的对象。`messageMetadata` 会在 `UIMessage` 流的每个部件上被调用，你可以返回一些 metadata 来更新消息的 metadata。
 
-Thanks to TypeScript's clever inference, this is type safe. So if we misspell `length` in the `messageMetadata` callback, we'll get an error.
+多亏了 TypeScript 聪明的类型推断，这是类型安全的。所以如果我们在 `messageMetadata` 回调中把 `length` 拼错，就会得到一个错误。
 
-Our logic here is that we have a total length of the messages, then every time we see a text delta part, we measure the length of that text part and add it to the total length. Finally, when we see a part type of `finish`, we just return our message metadata type.
+我们这里的逻辑是：维护一个消息的总长度，每次看到一个 text-delta 部件时，测量那个文本部件的长度并加到总长度上。最后，当我们看到类型为 `finish` 的部件时，就返回我们的消息 metadata 类型。
 
-## Testing the Output
+## 测试输出
 
-Below, we are logging each chunk of the stream, so we should be able to see what happens:
+在下面，我们打印流的每个块，这样就能看到发生了什么：
 
 ```ts
 for await (const chunk of stream) {
@@ -60,7 +60,7 @@ for await (const chunk of stream) {
 }
 ```
 
-We can see that we begin with a start and then a start step chunk. Then, our text delta begins, so we start with a delta of "hello", then another delta of "there, can I help you today?":
+可以看到，我们以 start 和 start-step 块开始。然后 text delta 开始了，先是一个 "你好" 的 delta，然后是另一个 delta:
 
 ```txt
 { type: 'start' }
@@ -77,29 +77,29 @@ We can see that we begin with a start and then a start step chunk. Then, our tex
 { type: 'finish', messageMetadata: { length: 39 } }
 ```
 
-Finally, we go down to the finish, where some `messageMetadata` has been attached of length `39`.
+最后，来到 finish，这里附加了一些 `messageMetadata`，长度为 `39`。
 
-You can use message metadata for all sorts of stuff, tracking the model that was used for each message, and of course, you can persist it in your database too.
+你可以用消息 metadata 做各种各样的事情，比如追踪每条消息使用了哪个模型，当然，你也可以把它持久化到你的数据库中。
 
-I recommend you mess about for a bit, try declaring your own message metadata types and see how that affects the chunks that come out from the stream.
+我建议你动手玩一玩，试着声明你自己的消息 metadata 类型，看看它如何影响从流中产出的块。
 
-Good luck, and I'll see you in the next one.
+祝你好运，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Review the [`MyMetadata` type definition](./main.ts) and how it's used to create a custom message type with `UIMessage`
-  - This defines what kind of metadata we'll attach to messages.
+- [ ] 查看 [`MyMetadata` 类型定义](./main.ts)，以及它是如何被用来通过 `UIMessage` 创建自定义消息类型的
+  - 这定义了我们将附加到消息上的 metadata 类型。
 
-- [ ] Examine how the `streamTextResult` is converted to a `UIMessageStream` with `toUIMessageStream`
-  - Note how we pass the generic type parameter `<MyMessage>`.
+- [ ] 检查 `streamTextResult` 是如何通过 `toUIMessageStream` 转换为 `UIMessageStream` 的
+  - 注意我们如何传入泛型类型参数 `<MyMessage>`。
 
-- [ ] Study the `messageMetadata` callback implementation
-  - See how it tracks the total length of the message
-  - Note how it returns the metadata object on the `finish` part
+- [ ] 研究 `messageMetadata` 回调的实现
+  - 看看它如何追踪消息的总长度
+  - 注意它如何在 `finish` 部件上返回 metadata 对象
 
-- [ ] Run the example code to see the output in the console
-  - Observe how the metadata gets attached to the message chunks
+- [ ] 运行示例代码，在控制台中查看输出
+  - 观察 metadata 是如何附加到消息块上的
 
-- [ ] Try creating your own metadata types and implementations
-  - Experiment with different properties in your metadata
-  - See how they appear in the output stream
+- [ ] 试着创建你自己的 metadata 类型和实现
+  - 在你的 metadata 中试验不同的属性
+  - 看看它们如何出现在输出流中

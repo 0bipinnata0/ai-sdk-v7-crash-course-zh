@@ -1,17 +1,17 @@
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-console.log('Process starting...');
+console.log('进程启动中...');
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
   onFinish: () => {
-    console.log('Stream finished!');
+    console.log('流已完成!');
   },
 });
 
-// Try commenting this out and see what happens!
+// 试着把这行注释掉,看看会发生什么!
 await streamTextResult.consumeStream();
 
-console.log('Process exiting...');
+console.log('进程退出中...');

@@ -39,12 +39,12 @@ export const POST = async (req: Request): Promise<Response> => {
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
-      // TODO: Try uncommenting this and see what happens
+      // TODO:试着取消注释,看看会发生什么
       // writer.write({
       //   type: 'start',
       // });
 
-      writeTextPart(writer, 'Paragraph 1: ');
+      writeTextPart(writer, '第 1 段: ');
 
       const firstParagraphResult = streamText({
         model: google('gemini-2.5-flash-lite'),
@@ -53,14 +53,14 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
             content:
-              'Given the conversation history above, write the first paragraph of a story. Make it short.',
+              '根据上面的对话历史,写出故事的第一段。写得短一点。',
           },
         ],
       });
 
       writer.merge(
         firstParagraphResult.toUIMessageStream({
-          // TODO: Try uncommenting these and see what happens
+          // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
           // sendFinish: false,
         }),
@@ -68,7 +68,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
       const firstParagraph = await firstParagraphResult.text;
 
-      writeTextPart(writer, 'Paragraph 2: ');
+      writeTextPart(writer, '第 2 段: ');
 
       const secondParagraphResult = streamText({
         model: google('gemini-2.5-flash-lite'),
@@ -76,8 +76,8 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'user',
-            content: `Given the conversation history above, write the second paragraph of a story. Make it short.
-              Here's the first paragraph:
+            content: `根据上面的对话历史,写出故事的第二段。写得短一点。
+              这是第一段:
               ${firstParagraph}`,
           },
         ],
@@ -85,7 +85,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
       writer.merge(
         secondParagraphResult.toUIMessageStream({
-          // TODO: Try uncommenting these and see what happens
+          // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
           // sendFinish: false,
         }),
@@ -93,7 +93,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
       const secondParagraph = await secondParagraphResult.text;
 
-      writeTextPart(writer, 'Paragraph 3: ');
+      writeTextPart(writer, '第 3 段: ');
 
       const thirdParagraphResult = streamText({
         model: google('gemini-2.5-flash-lite'),
@@ -101,10 +101,10 @@ export const POST = async (req: Request): Promise<Response> => {
           ...modelMessages,
           {
             role: 'user',
-            content: `Given the conversation history above, write the third paragraph of a story. Make it short.
-              Here's the first paragraph:
+            content: `根据上面的对话历史,写出故事的第三段。写得短一点。
+              这是第一段:
               ${firstParagraph}
-              Here's the second paragraph:
+              这是第二段:
               ${secondParagraph}`,
           },
         ],
@@ -112,7 +112,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
       writer.merge(
         thirdParagraphResult.toUIMessageStream({
-          // TODO: Try uncommenting this and see what happens
+          // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
         }),
       );

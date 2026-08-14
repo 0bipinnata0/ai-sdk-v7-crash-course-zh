@@ -1,171 +1,169 @@
-The AI SDK, by default, does not always wait for a stream to be completed. This is surprising - and can trip you up when you're relying on the `onFinish` callback to be called.
+AI SDK 默认情况下并不总是会等待流完成。这很出人意料——当你依赖 `onFinish` 回调被调用时，这可能会坑到你。
 
-## The Problem
+## 问题
 
-In this code here, we're calling `streamText`, passing "Hello, world!" to Gemini 2.5 Flash, and we have an `onFinish` on the `streamTextResult`.
+在这段代码中，我们调用 `streamText`，把 "Hello, world!" 传给 Gemini 2.5 Flash，并且在 `streamTextResult` 上有一个 `onFinish`。
 
 ```ts
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-console.log('Process starting...');
+console.log('进程启动中...');
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
   onFinish: () => {
-    console.log('Stream finished!');
+    console.log('流已完成!');
   },
 });
 
-// No consumption of the stream here
+// 这里没有消费流
 
-console.log('Process exiting...');
+console.log('进程退出中...');
 ```
 
-Our expectation here is that the stream is going to complete its work, and then it's going to say "Stream finished", and log that to the terminal.
+我们预期流会完成它的工作，然后打印"流已完成！"到终端。
 
-In theory, we should get three logs:
+理论上，我们应该得到三条日志：
 
-- "Process starting..."
-- "Stream finished!"
-- "Process exiting..."
+- "进程启动中..."
+- "流已完成！"
+- "进程退出中..."
 
-However, when we run this, we actually don't get that. We get:
+然而，当我们运行这个时，实际上并不是这样。我们得到的是：
 
-- "Process starting..."
-- "Process exiting..."
+- "进程启动中..."
+- "进程退出中..."
 
-So `onFinish` here is never actually called. "Stream finished!" never actually appears.
+所以这里的 `onFinish` 实际上从未被调用。"流已完成！"从未真正出现。
 
-## Processing the Stream
+## 处理流
 
-That's because even though we're getting streaming data coming from the LLM, we're not actually processing the parts of that stream.
+这是因为，尽管我们正在接收来自 LLM 的流式数据，但我们实际上没有处理这个流的各个部分。
 
-If we do process them, for instance, using a for-await loop, our code would look like this:
+如果我们处理它们——比如使用 for-await 循环——我们的代码会是这样：
 
 ```ts
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-console.log('Process starting...');
+console.log('进程启动中...');
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
   onFinish: () => {
-    console.log('Stream finished!');
+    console.log('流已完成!');
   },
 });
 
-// Process each chunk of the stream
+// 处理流的每个块
 for await (const chunk of streamTextResult.textStream) {
   process.stdout.write(chunk);
 }
 
-console.log('Process exiting...');
+console.log('进程退出中...');
 ```
 
-Then we'll see that we get:
+然后我们会看到：
 
-- "Process starting..."
-- "Hello there, how can I help you today?"
-- "Stream finished!"
-- "Process exiting..."
+- "进程启动中..."
+- "你好，今天有什么可以帮你的？"
+- "流已完成！"
+- "进程退出中..."
 
-So, processing the stream's parts is a way to make sure that the stream finishes.
+所以，处理流的各个部分是确保流完成的一种方式。
 
-## Consuming the Stream
+## 消费流
 
-However, there are some situations where we want to consume the entire stream and make sure that the stream finishes without necessarily processing all of the parts. Or we might want to await the result of a stream without necessarily processing all the bits as well.
+然而，有些情况下我们想消费整个流并确保流完成，但不一定需要处理所有部分。或者我们可能想 await 流的结果，同样不一定处理所有的部分。
 
-For that, we can use the `consumeStream()` method on the `streamTextResult` as shown in explainer.1:
+为此，我们可以使用 `streamTextResult` 上的 `consumeStream()` 方法，如 explainer.1 所示：
 
 ```ts
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-console.log('Process starting...');
+console.log('进程启动中...');
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
   onFinish: () => {
-    console.log('Stream finished!');
+    console.log('流已完成!');
   },
 });
 
-// This ensures the stream is fully consumed
+// 这确保流被完全消费
 await streamTextResult.consumeStream();
 
-console.log('Process exiting...');
+console.log('进程退出中...');
 ```
 
-This will wait for the stream to complete and consume all of the parts, and then trigger the `onFinish`.
+这会等待流完成并消费所有部分，然后触发 `onFinish`。
 
-The most common use case for this is when you have persistence logic inside your `onFinish`, because if there's a network connection issue, then your stream will interrupt, and your stream won't be fully consumed, so your `onFinish` won't be hit.
+最常见的使用场景是：当你的 `onFinish` 中有持久化逻辑时。因为如果出现网络连接问题，你的流会中断，流不会被完全消费，于是你的 `onFinish` 就不会被触发。
 
-If we run this with `consumeStream()`, we'll see that we get:
+如果我们用 `consumeStream()` 运行，会看到如我们所愿的输出：
 
-- "Process starting..."
-- "Stream finished!"
-- "Process exiting..."
+- "进程启动中..."
+- "流已完成！"
+- "进程退出中..."
 
-as we expect.
+## 顶层 `consumeStream` 函数
 
-## The Top-Level `consumeStream` Function
-
-Now this is not just available on the return type of `streamTextResult` too. There's also a top level function called `consumeStream`, which can consume a readable stream until it's fully read, as shown in [explainer.2](../explainer.2/main.ts):
+这个能力不仅在 `streamTextResult` 的返回类型上有。还有一个叫做 `consumeStream` 的顶层函数，可以消费一个可读流直到它被完全读取，如 [explainer.2](../explainer.2/main.ts) 所示：
 
 ```ts
 import { google } from '@ai-sdk/google';
 import { consumeStream, streamText } from 'ai';
 
-console.log('Process starting...');
+console.log('进程启动中...');
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
   onFinish: () => {
-    console.log('Stream finished!');
+    console.log('流已完成!');
   },
 });
 
-// Using the top-level consumeStream function
+// 使用顶层的 consumeStream 函数
 await consumeStream({
   stream: streamTextResult.toUIMessageStream(),
 });
 
-console.log('Process exiting...');
+console.log('进程退出中...');
 ```
 
-We're calling `consumeStream` with a `streamTextResult` and creating a UI message stream out of the `streamTextResult`. So functionally, this is doing the same thing as before. We're just doing an extra step where we turn it into a UI message stream instead.
+我们用 `streamTextResult` 调用 `consumeStream`，并从 `streamTextResult` 创建一个 UI 消息流。所以在功能上，这和之前做的是同一件事，只是多了一步：我们先把它变成 UI 消息流。
 
-Let's run it and see if it works, and we can see we have:
+运行一下看看是否有效，可以看到我们得到：
 
-- "Process starting..."
-- "Stream finished!"
-- "Process exiting..."
+- "进程启动中..."
+- "流已完成！"
+- "进程退出中..."
 
-So if you have a situation where your `onFinish` callbacks are not being called, it's likely that some variety of `consumeStream` will help make sure that your streams finish.
+所以，如果你遇到 `onFinish` 回调没有被调用的情况，很可能某种形式的 `consumeStream` 能帮你确保流完成。
 
-I recommend checking out these two explainers, running them a few times, trying commenting them in and out, trying to break it if you can.
+我建议你查看这两个 explainer，多运行几次，试着把它们注释掉又取消注释，试试能不能把它搞坏。
 
-Good luck and I will see you in the next one.
+祝你好运，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Understand the problem: When using `streamText`, the `onFinish` callback doesn't execute unless the stream is consumed.
+- [ ] 理解问题：使用 `streamText` 时，如果流没有被消费，`onFinish` 回调就不会执行。
 
-- [ ] Examine the [`explainer.1`](./main.ts) example that uses `streamTextResult.consumeStream()` to ensure the stream completes and triggers the `onFinish` callback.
+- [ ] 查看 [`explainer.1`](./main.ts) 示例，它使用 `streamTextResult.consumeStream()` 来确保流完成并触发 `onFinish` 回调。
 
-- [ ] Study the [`explainer.2`](../explainer.2/main.ts) example that uses the top-level `consumeStream()` function with `toUIMessageStream()` to accomplish the same goal.
+- [ ] 研究 [`explainer.2`](../explainer.2/main.ts) 示例，它使用顶层的 `consumeStream()` 函数配合 `toUIMessageStream()` 实现同样的目标。
 
-- [ ] Try running both examples by running `pnpm run dev`
+- [ ] 通过运行 `pnpm run dev` 尝试运行这两个示例
 
-- [ ] Experiment by commenting out the `consumeStream` lines in both examples to observe how the `onFinish` callback doesn't execute.
+- [ ] 通过注释掉两个示例中的 `consumeStream` 行来做实验，观察 `onFinish` 回调如何不再执行。
 
-- [ ] In `explainer.1`, implement a for-await loop to process stream chunks and see how that also ensures the `onFinish` callback executes:
+- [ ] 在 `explainer.1` 中，实现一个 for-await 循环来处理流块，看看它如何也能确保 `onFinish` 回调执行：
   - `for await (const chunk of streamTextResult.textStream) { process.stdout.write(chunk); }`
 
-- [ ] Try different combinations of stream consumption methods to understand their behavior.
+- [ ] 尝试不同的流消费方式组合，理解它们的行为。

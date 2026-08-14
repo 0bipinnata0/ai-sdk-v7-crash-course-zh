@@ -2,7 +2,7 @@ import { google } from '@ai-sdk/google';
 import { streamText, type UIMessage } from 'ai';
 
 type MyMetadata = {
-  // The length of the message generated
+  // 生成消息的长度
   length: number;
 };
 
@@ -10,7 +10,7 @@ type MyMessage = UIMessage<MyMetadata>;
 
 const streamTextResult = streamText({
   model: google('gemini-2.5-flash'),
-  prompt: 'Hello, world!',
+  prompt: '你好,世界!',
 });
 
 let totalLength = 0;

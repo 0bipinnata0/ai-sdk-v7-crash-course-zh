@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    'What should balding men do to improve their outlook on life?',
+    '脱发的人该如何改善心态,积极面对生活?',
   );
 
   return (

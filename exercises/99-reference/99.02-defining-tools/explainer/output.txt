@@ -9,19 +9,19 @@
 {
   type: 'tool-input-delta',
   toolCallId: 'B1iGVK2Sa3b0JRzJ',
-  inputTextDelta: '{"message":"Hello, world!"}'
+  inputTextDelta: '{"message":"你好,世界!"}'
 }
-Hello, world!
+你好,世界!
 {
   type: 'tool-input-available',
   toolCallId: 'B1iGVK2Sa3b0JRzJ',
   toolName: 'logToConsole',
-  input: { message: 'Hello, world!' }
+  input: { message: '你好,世界!' }
 }
 {
   type: 'tool-output-available',
   toolCallId: 'B1iGVK2Sa3b0JRzJ',
-  output: 'Message logged to console'
+  output: '消息已打印到控制台'
 }
 { type: 'finish-step' }
 { type: 'finish' }

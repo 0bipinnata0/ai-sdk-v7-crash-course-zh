@@ -1,13 +1,13 @@
-When you're working in the AI SDK, it's really important to know the difference between `UIMessage` messages and `ModelMessage` messages.
+在使用 AI SDK 时，了解 `UIMessage` 消息和 `ModelMessage` 消息之间的区别非常重要。
 
-- `UIMessage` messages are the ones that display in your UI - and are also the ones you persist in your database.
-- `ModelMessage` messages are the ones that are sent to the LLM.
+- `UIMessage` 消息是在你的 UI 中显示的那些——也是你要持久化到数据库中的那些。
+- `ModelMessage` 消息是发送给 LLM 的那些。
 
-In a typical application, you're going to send an array of `UIMessage` to your `POST` route, usually at `api/chat`, and then you'll need to convert them to model messages before you can pass them to any of the AI SDK's calls.
+在一个典型的应用中，你会把一个 `UIMessage` 数组发送到你的 `POST` 路由（通常在 `api/chat`)，然后你需要把它们转换为模型消息，才能传给 AI SDK 的任何调用。
 
 ## `UIMessage`
 
-`UIMessage` messages look like this. They have a `role`, they have an `id`, and they have a `parts` array. These parts can contain many, many different things, but for now, these ones in the example just contain text.
+`UIMessage` 消息看起来像这样。它们有一个 `role`、一个 `id`，以及一个 `parts` 数组。这些 parts 可以包含非常多种不同的内容，但目前，这个例子中的 parts 只包含文本。
 
 ```ts
 const messages: UIMessage[] = [
@@ -17,58 +17,58 @@ const messages: UIMessage[] = [
     parts: [
       {
         type: 'text',
-        text: 'What is the capital of France?',
+        text: '法国的首都是哪里?',
       },
     ],
   },
   // ...
 ```
 
-This example has two messages. We have one message with a role of `user`, another one with a role of `assistant`.
+这个例子有两条消息。我们有一条 role 为 `user` 的消息，另一条 role 为 `assistant`。
 
 ## `ModelMessage`
 
-`ModelMessage` messages are the ones that are sent to the LLM. They get rid of the IDs for each message, since the LLM doesn't care about that, and instead of parts, we just have an array of content.
+`ModelMessage` 消息是发送给 LLM 的那些。它们去掉了每条消息的 ID，因为 LLM 不关心这个；并且不再有 parts，而只有一个内容数组。
 
-We can convert `UIMessage` messages to `ModelMessage` messages using the `convertToModelMessages` function.
+我们可以使用 `convertToModelMessages` 函数把 `UIMessage` 消息转换为 `ModelMessage` 消息。
 
 ```ts
 const modelMessages = await convertToModelMessages(messages);
 ```
 
-The output looks like this:
+输出看起来像这样：
 
 ```ts
 [
   {
     role: 'user',
     content: [
-      { type: 'text', text: 'What is the capital of France?' },
+      { type: 'text', text: '法国的首都是哪里?' },
     ],
   },
   {
     role: 'assistant',
     content: [
-      { type: 'text', text: 'The capital of France is Paris.' },
+      { type: 'text', text: '法国的首都是巴黎。' },
     ],
   },
 ];
 ```
 
-What I suggest you do is try exploring with the types inside the `UIMessage`. Try adding some different parts here and run the exercise a few times to see what that gets transformed to after `convertToModelMessages` has been run on it.
+我建议你试着探索一下 `UIMessage` 内部的类型。试着在这里添加一些不同的 parts，多运行几次这个练习，看看经过 `convertToModelMessages` 处理后它们会变成什么样。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Open our [`main.ts`](./main.ts) file to explore the code
+- [ ] 打开我们的 [`main.ts`](./main.ts) 文件来探索代码
 
-- [ ] Try modifying the `UIMessage` parts array to include different types of content
+- [ ] 尝试修改 `UIMessage` 的 parts 数组，包含不同类型的内容
 
-- [ ] For example, add an image URL, a tool call, or other content types
+- [ ] 例如，添加一个图片 URL、一个工具调用，或其他内容类型
 
-- [ ] Run the code to see how `convertToModelMessages` transforms your modified UI messages into model messages
+- [ ] 运行代码，看看 `convertToModelMessages` 如何把你修改后的 UI 消息转换为模型消息
 
-- [ ] Experiment with different combinations of content types in the parts array
+- [ ] 在 parts 数组中试验不同的内容类型组合
 
-- [ ] Observe the output in the terminal to understand how the transformation works
+- [ ] 观察终端输出，理解转换是如何工作的
 
-- [ ] Try to predict what the transformation will look like before running the code
+- [ ] 试着在运行代码之前预测转换的结果会是什么样

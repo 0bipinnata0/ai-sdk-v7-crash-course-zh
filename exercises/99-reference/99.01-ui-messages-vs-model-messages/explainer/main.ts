@@ -11,7 +11,7 @@ const messages: UIMessage[] = [
     parts: [
       {
         type: 'text',
-        text: 'What is the capital of France?',
+        text: '法国的首都是哪里?',
       },
     ],
   },
@@ -21,7 +21,7 @@ const messages: UIMessage[] = [
     parts: [
       {
         type: 'text',
-        text: 'The capital of France is Paris.',
+        text: '法国的首都是巴黎。',
       },
     ],
   },

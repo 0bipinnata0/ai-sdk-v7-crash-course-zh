@@ -1,6 +1,6 @@
-We're now going to look at streaming these custom data parts to the front end. Let's examine how this works through the code.
+现在我们要看看如何把这些自定义数据部件流式传输到前端。让我们通过代码来了解它是如何工作的。
 
-First, we define our custom message type:
+首先，我们定义自定义消息类型：
 
 ```ts
 export type MyMessage = UIMessage<
@@ -12,7 +12,7 @@ export type MyMessage = UIMessage<
 >;
 ```
 
-This creates a `UIMessage` type that can handle our custom data parts. Our [`API route`](./api/chat.ts) still creates a message stream similar to before:
+这创建了一个能处理我们自定义数据部件的 `UIMessage` 类型。我们的 [API 路由](./api/chat.ts)仍然创建一个与之前类似的消息流：
 
 ```ts
 const stream = createUIMessageStream<MyMessage>({
@@ -21,18 +21,18 @@ const stream = createUIMessageStream<MyMessage>({
       type: 'data-hello',
       data: 'Bonjour!',
     });
-    // More writes...
+    // 更多写入...
   },
 });
 ```
 
-On the front end in our [`client components`](./client/components.tsx), we use the `useChat` hook with our custom message type:
+在前端的[客户端组件](./client/components.tsx)中，我们用自定义消息类型来使用 `useChat` hook:
 
 ```tsx
 const { messages, sendMessage } = useChat<MyMessage>({});
 ```
 
-The messages get passed into our `Message` component which accepts parts with the type `MyMessage['parts']`:
+消息被传入我们的 `Message` 组件，它接受类型为 `MyMessage['parts']` 的 parts:
 
 ```tsx
 export const Message = ({
@@ -42,11 +42,11 @@ export const Message = ({
   role: string;
   parts: MyMessage['parts'];
 }) => {
-  // Component implementation
+  // 组件实现
 };
 ```
 
-Inside this component, we handle the custom data parts:
+在这个组件内部，我们处理自定义数据部件：
 
 ```tsx
 {
@@ -78,7 +78,7 @@ Inside this component, we handle the custom data parts:
 }
 ```
 
-And when we test this in the frontend, we'll see this output in the browser:
+当我们在前端测试这个时，会在浏览器中看到这个输出：
 
 ```
 { type: 'data-hello', data: 'Bonjour!' }
@@ -87,8 +87,8 @@ And when we test this in the frontend, we'll see this output in the browser:
 { type: 'data-goodbye', data: 'Auf Wiedersehen!' }
 ```
 
-This is then rendered by our `Message` component and displays in the frontend.
+然后由我们的 `Message` 组件渲染并显示在前端。
 
-Check out the video above to see this in action.
+查看上面的视频，看看实际运行效果。
 
-Nice work. And I will see you in the next one.
+干得漂亮。我们下一课见。

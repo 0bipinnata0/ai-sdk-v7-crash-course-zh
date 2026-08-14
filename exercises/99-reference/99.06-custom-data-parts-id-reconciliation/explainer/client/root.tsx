@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    'How many countries are there in the world?',
+    '世界上有多少个国家?',
   );
 
   return (

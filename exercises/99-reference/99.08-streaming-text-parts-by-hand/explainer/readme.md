@@ -1,8 +1,8 @@
-Sometimes you'll want to not only be able to stream custom parts, but also stream in the AI SDK's built-in parts in order to mimic them. I'm specifically thinking here of streaming manually text parts by hand.
+有时你不仅想流式传输自定义部件，还想手动流式传输 AI SDK 的内置部件来模拟它们。我这里具体指的是手动流式传输文本部件。
 
-This comes up in a few edge cases where you want something to look like an LLM call that isn't actually an LLM call, or you have some data that's been prepared in parallel that you just want to spit out all at once.
+这会出现在一些边界场景中：你想让某个东西看起来像一次 LLM 调用，但它实际上不是 LLM 调用；或者你有一些并行准备好的数据，想一次性全部输出。
 
-To do this, we're going to create a `UIMessageStream` using `createUIMessageStream`:
+要做到这一点，我们将使用 `createUIMessageStream` 创建一个 `UIMessageStream`:
 
 ```ts
 const stream = createUIMessageStream<MyMessage>({
@@ -34,11 +34,11 @@ const stream = createUIMessageStream<MyMessage>({
 });
 ```
 
-With text streaming, there's a specific sequence you need to follow. You start with a `text-start` event, then send multiple `text-delta` events for each piece of text, and finally a `text-end` event to complete the sequence.
+对于文本流式传输，有一个你需要遵循的特定顺序。你以 `text-start` 事件开始，然后为每段文本发送多个 `text-delta` 事件，最后用一个 `text-end` 事件来完成这个序列。
 
-Each of these message parts needs to share the same ID (`textPartId` in this case), which is generated using `crypto.randomUUID()`.
+这些消息部件需要共享同一个 ID（在本例中是 `textPartId`)，它用 `crypto.randomUUID()` 生成。
 
-The text is split into words, and each word is sent as a separate delta with a small delay to create the streaming effect:
+文本被拆分成单词，每个单词作为一个单独的 delta 发送，并带一点延迟来制造流式效果：
 
 ```ts
 const splitText = text.split(' ');
@@ -54,6 +54,6 @@ for (const word of splitText) {
 }
 ```
 
-This approach is really handy when you want to mimic a part of the AI SDK or just manually stream in some text. You can see the full example in our [`main.ts`](./main.ts) file.
+当你想模拟 AI SDK 的某个部件，或者只是想手动流式传输一些文本时，这种方式非常好用。你可以在我们的 [`main.ts`](./main.ts) 文件中看到完整的示例。
 
-Nice work, and I'll see you in the next one.
+干得漂亮，我们下一课见。

@@ -1,17 +1,17 @@
-We've seen how you can use custom data parts to stream down custom objects, custom shapes into your front end. But what if you have a data part that you want to overwrite another data part?
+我们已经看到了如何使用自定义数据部件把自定义对象、自定义结构流式传输到前端。但如果你有一个想覆盖另一个数据部件的数据部件，该怎么办？
 
-A classic example of this is like a current status data part, where you say, oh, we're loading, then we're searching the web, then we're scraping some pages, then we're summarizing:
+一个经典的例子是"当前状态"数据部件：比如，正在加载，然后正在搜索网络，然后正在抓取一些页面，然后正在总结：
 
 ```txt
-Loading...
-Searching the web...
-Scraping some pages...
-Summarizing...
+加载中...
+正在搜索网络...
+正在抓取页面...
+正在总结...
 ```
 
-You don't want those to show as four different elements in the UI. You want them just to show as a single status that changes over time.
+你肯定不希望它们在 UI 中显示为四个不同的元素。你希望它们显示为一个随时间变化的单一状态。
 
-We can model that by providing a stable ID to each data part.
+我们可以通过给每个数据部件提供一个稳定的 ID 来建模这个需求。
 
 ```ts
 const stream = createUIMessageStream<MyMessage>({
@@ -19,7 +19,7 @@ const stream = createUIMessageStream<MyMessage>({
     const helloId = crypto.randomUUID();
     const goodbyeId = crypto.randomUUID();
 
-    // Initial state: No parts
+    // 初始状态:没有部件
     // messageParts = []
 
     writer.write({
@@ -28,7 +28,7 @@ const stream = createUIMessageStream<MyMessage>({
       data: 'Bonjour!',
     });
 
-    // After first write:
+    // 第一次写入后:
     // messageParts = [
     //   {
     //     type: 'data-hello',
@@ -45,7 +45,7 @@ const stream = createUIMessageStream<MyMessage>({
       data: 'Au revoir!',
     });
 
-    // After second write:
+    // 第二次写入后:
     // messageParts = [
     //   {
     //     type: 'data-hello',
@@ -67,12 +67,12 @@ const stream = createUIMessageStream<MyMessage>({
       data: 'Guten Tag!',
     });
 
-    // After third write - notice how the helloId part is UPDATED, not added:
+    // 第三次写入后——注意 helloId 部件是被更新了,而不是新增:
     // messageParts = [
     //   {
     //     type: 'data-hello',
     //     id: helloId,
-    //     data: 'Guten Tag!'  // Updated from 'Bonjour!'
+    //     data: 'Guten Tag!'  // 从 'Bonjour!' 更新而来
     //   },
     //   {
     //     type: 'data-goodbye',
@@ -89,7 +89,7 @@ const stream = createUIMessageStream<MyMessage>({
       data: 'Auf Wiedersehen!',
     });
 
-    // After fourth write - goodbye part is UPDATED:
+    // 第四次写入后——goodbye 部件被更新了:
     // messageParts = [
     //   {
     //     type: 'data-hello',
@@ -99,18 +99,18 @@ const stream = createUIMessageStream<MyMessage>({
     //   {
     //     type: 'data-goodbye',
     //     id: goodbyeId,
-    //     data: 'Auf Wiedersehen!'  // Updated from 'Au revoir!'
+    //     data: 'Auf Wiedersehen!'  // 从 'Au revoir!' 更新而来
     //   }
     // ]
   },
 });
 ```
 
-With just this small change of providing stable IDs, we can see how the message parts change over time. When we write to an existing ID:
+仅仅通过提供稳定 ID 这个小改动，我们就能看到消息部件如何随时间变化。当我们写入一个已存在的 ID 时：
 
-- "Guten Tag!" replaces "Bonjour!"
-- "Auf Wiedersehen!" replaces "Au revoir!"
+- "Guten Tag!" 替换 "Bonjour!"
+- "Auf Wiedersehen!" 替换 "Au revoir!"
 
-So by providing this ID here, we have given each data part a stable identity, and when we write to an existing ID, we update the value of that data part rather than creating a new one.
+所以，通过提供这个 ID，我们给了每个数据部件一个稳定的身份；当我们写入一个已存在的 ID 时，我们是在更新那个数据部件的值，而不是创建一个新的。
 
-So it's a really nice way to model data parts that need to update over time. Very, very cool. Nice work, and I will see you in the next one.
+这是为需要随时间更新的数据部件建模的一种非常优雅的方式。非常、非常酷。干得漂亮，我们下一课见。

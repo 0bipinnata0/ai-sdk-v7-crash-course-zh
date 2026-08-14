@@ -1,8 +1,8 @@
-I want to help you diagnose an issue that comes up when you stream multiple things one after the other. Here we are streaming one paragraph of a story at a time. And before each paragraph, we're writing paragraph 1, paragraph 2, and paragraph 3.
+我想帮你诊断一个当你一个接一个地流式传输多个内容时会出现的问题。这里我们一次流式传输故事的一个段落。在每个段落之前，我们会写入"第 1 段"、"第 2 段"和"第 3 段"。
 
-## Understanding the Code
+## 理解代码
 
-In the [code](./api/chat.ts), we're inside a `UIMessageStream`. We have a `writeTextPart` function that essentially just writes a single text part.
+在[代码](./api/chat.ts)中，我们在一个 `UIMessageStream` 内部。我们有一个 `writeTextPart` 函数，它本质上只是写入单个文本部件。
 
 ```typescript
 const writeTextPart = (
@@ -26,24 +26,24 @@ const writeTextPart = (
 };
 ```
 
-If you don't know what this code does, then there's [other reference material](/exercises/99-reference/99.08-streaming-text-parts-by-hand/explainer/readme.md) that explains it.
+如果你不知道这段代码是干什么的，有[其他参考资料](/exercises/99-reference/99.08-streaming-text-parts-by-hand/explainer/readme.md)解释了它。
 
-## The Issue with Multiple Streams
+## 多个流的问题
 
-In our main stream execution, we:
+在我们的主流执行中，我们：
 
-1. Write "Paragraph 1:" text
-2. Stream the first paragraph result
-3. Merge that stream into the parent stream
-4. Wait for the first paragraph text and pass that to the second paragraph stream
-5. Write a title for the second paragraph
-6. Stream the text
-7. Merge it in
+1. 写入"第 1 段："文本
+2. 流式传输第一段的结果
+3. 把那个流合并到父流中
+4. 等待第一段的文本，并把它传给第二段的流
+5. 写入第二段的标题
+6. 流式传输文本
+7. 把它合并进来
 
-We do this three times until we have three paragraphs. Here's the code for the first paragraph:
+我们这样重复三次，直到有三个段落。这是第一段的代码：
 
 ```ts
-writeTextPart(writer, 'Paragraph 1: ');
+writeTextPart(writer, '第 1 段: ');
 
 const firstParagraphResult = streamText({
   model: google('gemini-2.5-flash-lite'),
@@ -52,7 +52,7 @@ const firstParagraphResult = streamText({
     {
       role: 'user',
       content:
-        'Given the conversation history above, write the first paragraph of a story. Make it short.',
+        '根据上面的对话历史,写出故事的第一段。写得短一点。',
     },
   ],
 });
@@ -60,96 +60,96 @@ const firstParagraphResult = streamText({
 writer.merge(firstParagraphResult.toUIMessageStream());
 ```
 
-## The Weird Error
+## 奇怪的错误
 
-The issue we're getting is a really weird one. At the top of our UI, we end up with two separate messages where one message only has paragraph one, but the second message also has paragraph one. Check the video above for a visual.
+我们遇到的问题非常奇怪。在我们的 UI 顶部，最终出现了两条独立的消息：一条只有第一段，但第二条也有第一段。查看上面的视频可以看到直观效果。
 
-## The Problem with Start and Finish Parts
+## Start 和 Finish 部件的问题
 
-The issue is that there are multiple start and finish chunks being streamed in:
+问题在于有多个 start 和 finish 块被流式传输进来：
 
-1. A start and finish for the first paragraph
-2. A start and finish for the next paragraph
-3. A start part and finish part for paragraph three
+1. 第一段的 start 和 finish
+2. 第二段的 start 和 finish
+3. 第三段的 start 部件和 finish 部件
 
-I thought this was sort of okay to have multiple finish and start parts like this. But I chatted to the lead maintainer of the AI SDK, Lars, and he said, "Oh no, we do not support that."
+我原以为有多个 finish 和 start 部件没什么问题。但我和 AI SDK 的首席维护者 Lars 聊了聊，他说："哦不，我们不支持那样。"
 
-You should be very, very careful about your start and finish part, otherwise you're going to get really weird errors like double messages in the frontend.
+你必须非常非常小心你的 start 和 finish 部件，否则你会遇到非常奇怪的错误，比如前端出现重复消息。
 
-## The Correct Approach
+## 正确的做法
 
-The way this code should work is we should only have:
+这段代码的正确工作方式是我们只应该有：
 
-- A single `start` part at the very start of the stream
-- A `finish` part right at the end
+- 在流的最开始有一个 `start` 部件
+- 在最后有一个 `finish` 部件
 
-We can fix this by uncommenting the commented TODO in our code and manually writing the start part:
+我们可以通过取消代码中被注释的 TODO、手动写入 start 部件来修复这个问题：
 
 ```ts
-// TODO: Try uncommenting this and see what happens
+// TODO:试着取消注释,看看会发生什么
 // writer.write({
 //   type: 'start',
 // });
 ```
 
-Just this change, by the way, is enough to fix the weird error that we were getting. The issue was that this text part was being streamed before the stream had started, and so it was being counted as a separate message.
+顺便说一下，仅仅这个修改就足以修复我们遇到的奇怪错误。问题是那段文本在流开始之前就被流式传输了，所以它被计为了一条单独的消息。
 
-Whereas if we try it again now, then we only get a single message because it's been started.
+而如果我们现在再试一次，就只会得到一条消息，因为流已经开始了。
 
-## Further Improvements
+## 进一步改进
 
-We can clean this up a lot more even by going into the `toUIMessageStream` function and saying whether we want it to send a start part or send a finish part.
+我们还可以更进一步清理：进入 `toUIMessageStream` 函数，告诉它是否要发送 start 部件或 finish 部件。
 
-For the first paragraph, we don't need it to send a start part because we've already started it, and we don't need to send a finish part either because there's a lot more to go.
+对于第一段，我们不需要它发送 start 部件，因为我们已经开始了；也不需要发送 finish 部件，因为后面还有很多内容。
 
 ```ts
 writer.merge(
   firstParagraphResult.toUIMessageStream({
-    // TODO: Try uncommenting these and see what happens
+    // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
     // sendFinish: false,
   }),
 );
 ```
 
-Same is true in the second paragraph too. We can uncomment both of these parameters:
+第二段也一样。我们可以取消这两个参数的注释：
 
 ```ts
 writer.merge(
   secondParagraphResult.toUIMessageStream({
-    // TODO: Try uncommenting these and see what happens
+    // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
     // sendFinish: false,
   }),
 );
 ```
 
-And then in the third paragraph down here, we only need to say `sendStart: false` because we do want it to add a finish part:
+然后在下面的第三段，我们只需要 `sendStart: false`，因为我们确实想让它添加 finish 部件：
 
 ```ts
 writer.merge(
   thirdParagraphResult.toUIMessageStream({
-    // TODO: Try uncommenting these and see what happens
+    // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
   }),
 );
 ```
 
-Now when we run this, we can see we get a type start here and there's no type finish until all the way at the end. And so this behavior, even though it's pretty annoying to have to manually do it yourself, more closely matches what the AI SDK actually expects.
+现在运行这个，我们可以看到这里有一个 start 类型，并且直到最后才有 finish 类型。所以这种行为——尽管要手动做确实挺烦人——更贴近 AI SDK 实际期望的方式。
 
-So if you ever have any bugs where you have multiple different messages being streamed in, then it's probably something to do with your start and finish parts.
+所以如果你遇到任何有多个不同消息被流式传输进来的 bug，很可能与你的 start 和 finish 部件有关。
 
-Nice work, and I will see you in the next one.
+干得漂亮，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Uncomment the initial `writer.write({ type: 'start' })` block to manually write the start part
+- [ ] 取消注释开头的 `writer.write({ type: 'start' })` 块，手动写入 start 部件
 
-- [ ] Uncomment the `sendStart: false` and `sendFinish: false` parameters in the first paragraph's `toUIMessageStream` call
+- [ ] 取消注释第一段的 `toUIMessageStream` 调用中的 `sendStart: false` 和 `sendFinish: false` 参数
 
-- [ ] Uncomment the `sendStart: false` and `sendFinish: false` parameters in the second paragraph's `toUIMessageStream` call
+- [ ] 取消注释第二段的 `toUIMessageStream` 调用中的 `sendStart: false` 和 `sendFinish: false` 参数
 
-- [ ] Uncomment the `sendStart: false` parameter in the third paragraph's `toUIMessageStream` call
-  - Note that we don't set `sendFinish: false` here because we want it to add a finish part
+- [ ] 取消注释第三段的 `toUIMessageStream` 调用中的 `sendStart: false` 参数
+  - 注意我们这里不设置 `sendFinish: false`，因为我们想让它添加 finish 部件
 
-- [ ] Test your changes by running the exercise and observing if you get only a single message in the UI instead of multiple messages
+- [ ] 通过运行练习来测试你的修改，观察 UI 中是否只出现一条消息而不是多条

@@ -18,7 +18,7 @@ const indexHtmlTemplate = `<!doctype html>
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <title>AI SDK v5 Crash Course</title>
+    <title>AI SDK v6 速成课程</title>
   </head>
   <body>
     <div id="root"></div>
@@ -74,7 +74,7 @@ const runHonoApp = async (opts: {
         return;
       } else {
         console.error(e);
-        c.res = new Response('Internal server error', {
+        c.res = new Response('服务器内部错误', {
           status: 500,
         });
         return;
@@ -93,10 +93,10 @@ const runHonoApp = async (opts: {
 };
 
 /**
- * Runs a local dev server for a given root directory and routes.
+ * 为给定的根目录和路由运行本地开发服务器。
  *
- * Client code is assumed to be at `./client` of the root directory.
- * Server code is assumed to be at `./api` of the root directory.
+ * 客户端代码假定位于根目录的 `./client`。
+ * 服务器代码假定位于根目录的 `./api`。
  */
 export const runLocalDevServer = async (opts: {
   root: string;

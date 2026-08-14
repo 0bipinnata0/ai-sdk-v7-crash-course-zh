@@ -1,6 +1,6 @@
-In the AI SDK, you can take full control over the stream that comes from the back end to the front end, and you can create your own custom data parts that you can use to stream custom information.
+在 AI SDK 中，你可以完全掌控从后端到前端的流，并且可以创建自己的自定义数据部件，用来流式传输自定义信息。
 
-The first way you do that is by setting up a custom message type:
+第一种做法是设置一个自定义消息类型：
 
 ```ts
 type MyMessage = UIMessage<
@@ -12,9 +12,9 @@ type MyMessage = UIMessage<
 >;
 ```
 
-`UIMessage` can receive three type arguments: the metadata, some data parts, and some tools. We're interested in data parts here, so we can default metadata to unknown, and parse a map of our different data parts.
+`UIMessage` 可以接收三个类型参数：metadata、数据部件和工具。我们这里关心的是数据部件，所以可以把 metadata 默认为 unknown，然后传入我们各个数据部件的映射表。
 
-When we write to the stream, we'll use the keys from this map in our writer.write calls. This creates a message stream which we can then write to:
+当我们向流写入时，会在 `writer.write` 调用中使用这个映射表的键。这创建了一个我们可以写入的消息流：
 
 ```ts
 const stream = createUIMessageStream<MyMessage>({
@@ -45,9 +45,9 @@ const stream = createUIMessageStream<MyMessage>({
 });
 ```
 
-The keys here represent the keys that we're going to use to write our data parts. The "hello" in our type corresponds to "data-hello" when we write to the stream, and "goodbye" corresponds to "data-goodbye".
+这里的键代表我们写数据部件时要用的键。类型中的 "hello" 对应写入流时的 "data-hello","goodbye" 对应 "data-goodbye"。
 
-Then we're just taking all of those chunks and logging them to the console:
+然后我们把所有这些块打印到控制台：
 
 ```ts
 for await (const chunk of stream) {
@@ -55,7 +55,7 @@ for await (const chunk of stream) {
 }
 ```
 
-If we run the exercise, we'll see this output:
+如果我们运行这个练习，会看到这个输出：
 
 ```
 { type: 'data-hello', data: 'Bonjour!' }
@@ -64,10 +64,10 @@ If we run the exercise, we'll see this output:
 { type: 'data-goodbye', data: 'Auf Wiedersehen!' }
 ```
 
-Each chunk is logged as it's produced, with a 1-second delay between them due to our `setTimeout` calls.
+每个块在产生时就被打印出来，由于我们的 `setTimeout` 调用，它们之间有 1 秒的延迟。
 
-When we hook this to the UI, we're going to see these exact same data parts streamed in there too.
+当我们把它接到 UI 上时，我们会看到这些完全相同的数据部件也被流式传输到那里。
 
-Once we've created that `MyMessage` type, we can create a `UIMessageStream` and just write custom things to it. These can be interleaved with stream text calls which merge into this stream too.
+一旦我们创建了那个 `MyMessage` 类型，我们就可以创建一个 `UIMessageStream`，直接往里面写自定义内容。这些还可以与 streamText 调用交错进行，后者也可以合并进这个流。
 
-Nice work, and I'll see you in the next one.
+干得漂亮，我们下一课见。
