@@ -1,6 +1,6 @@
-Copy and paste the below into your terminal to test the API!
+把下面的内容复制粘贴到你的终端中来测试 API!
 
-## Invalid message
+## 无效消息
 
 ```bash
 curl -X POST http://localhost:3000/api/chat   -H "Content-Type: application/json"   -d '{
@@ -13,7 +13,7 @@ curl -X POST http://localhost:3000/api/chat   -H "Content-Type: application/json
 }'
 ```
 
-## Valid message
+## 有效消息
 
 ```bash
 curl -X POST http://localhost:3000/api/chat   -H "Content-Type: application/json"   -d '{
@@ -24,7 +24,7 @@ curl -X POST http://localhost:3000/api/chat   -H "Content-Type: application/json
       "parts": [
         {
           "type": "text",
-          "text": "What is the capital of France?"
+          "text": "法国的首都是哪里?"
         }
       ]
     }

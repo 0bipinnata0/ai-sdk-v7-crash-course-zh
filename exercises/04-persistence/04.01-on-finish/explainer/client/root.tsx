@@ -8,7 +8,7 @@ const App = () => {
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    'Write me a poem about a fish called Grant.',
+    '给我写一首关于一条叫 Grant 的鱼的诗。',
   );
 
   return (

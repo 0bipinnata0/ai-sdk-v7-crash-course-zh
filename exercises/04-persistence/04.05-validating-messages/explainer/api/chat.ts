@@ -18,7 +18,7 @@ export const POST = async (req: Request): Promise<Response> => {
       messages: body.messages,
     });
   } catch (error) {
-    return new Response('Invalid messages', { status: 400 });
+    return new Response('无效的消息', { status: 400 });
   }
 
   const modelMessages: ModelMessage[] =

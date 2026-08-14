@@ -3,7 +3,7 @@ import { join } from 'path';
 import type { UIMessage } from 'ai';
 
 export namespace DB {
-  // Types for our persistence layer
+  // 持久层的类型
   export interface Chat {
     id: string;
     messages: UIMessage[];
@@ -16,7 +16,7 @@ export namespace DB {
   }
 }
 
-// File path for storing the data
+// 存储数据的文件路径
 const DATA_FILE_PATH = join(
   process.cwd(),
   'data',
@@ -24,7 +24,7 @@ const DATA_FILE_PATH = join(
 );
 
 /**
- * Ensure the data directory exists
+ * 确保数据目录存在
  */
 async function ensureDataDirectory(): Promise<void> {
   const dataDir = join(process.cwd(), 'data');
@@ -36,7 +36,7 @@ async function ensureDataDirectory(): Promise<void> {
 }
 
 /**
- * Load all chats from the JSON file
+ * 从 JSON 文件加载所有聊天
  */
 export async function loadChats(): Promise<DB.Chat[]> {
   try {
@@ -45,13 +45,13 @@ export async function loadChats(): Promise<DB.Chat[]> {
     const parsed: DB.PersistenceData = JSON.parse(data);
     return parsed.chats || [];
   } catch (error) {
-    // If file doesn't exist or is invalid, return empty array
+    // 如果文件不存在或无效,返回空数组
     return [];
   }
 }
 
 /**
- * Save all chats to the JSON file
+ * 将所有聊天保存到 JSON 文件
  */
 export async function saveChats(
   chats: DB.Chat[],
@@ -66,7 +66,7 @@ export async function saveChats(
 }
 
 /**
- * Create a new chat
+ * 创建新聊天
  */
 export async function createChat(
   id: string,
@@ -89,7 +89,7 @@ export async function createChat(
 }
 
 /**
- * Get a chat by ID
+ * 按 ID 获取聊天
  */
 export async function getChat(
   chatId: string,
@@ -99,7 +99,7 @@ export async function getChat(
 }
 
 /**
- * Update a chat's messages
+ * 更新聊天的消息
  */
 export async function appendToChatMessages(
   chatId: string,
@@ -125,7 +125,7 @@ export async function appendToChatMessages(
 }
 
 /**
- * Delete a chat
+ * 删除聊天
  */
 export async function deleteChat(
   chatId: string,
@@ -137,7 +137,7 @@ export async function deleteChat(
   );
 
   if (filteredChats.length === initialLength) {
-    return false; // Chat not found
+    return false; // 聊天未找到
   }
 
   await saveChats(filteredChats);

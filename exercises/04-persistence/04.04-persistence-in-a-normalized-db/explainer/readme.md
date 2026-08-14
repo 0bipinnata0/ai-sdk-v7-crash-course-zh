@@ -1,10 +1,10 @@
-So far, we've been persisting our data in a pretty naive way by saving it to a JSON file and reading it back. This isn't how real applications handle data persistence. Let's explore a more production-ready approach.
+到目前为止，我们一直在用一种相当朴素的方式持久化数据——把它保存到 JSON 文件再读回来。这不是真实应用处理数据持久化的方式。让我们探索一种更接近生产环境的做法。
 
-## `parts` as a JSON blob
+## 作为 JSON blob 的 `parts`
 
-In our `main.ts` file, we have a message with a type of `MyUIMessage`. This represents a slice of an application that might contain tool calls and custom data parts. Each message has an `id`, a `role`, and an array of `parts`.
+在我们的 `main.ts` 文件中，有一个类型为 `MyUIMessage` 的消息。它代表应用的一个切片，可能包含工具调用和自定义数据部件。每条消息都有一个 `id`、一个 `role` 和一个 `parts` 数组。
 
-While `id` and `role` are straightforward to represent in a database, the `parts` array is more complex because it contains different types of elements with varying properties.
+虽然 `id` 和 `role` 在数据库中很容易表示，但 `parts` 数组更复杂，因为它包含具有不同属性的不同类型元素。
 
 ```typescript
 const message: MyUIMessage = {
@@ -13,11 +13,11 @@ const message: MyUIMessage = {
   parts: [
     {
       type: 'text',
-      text: 'Hello!',
+      text: '你好!',
     },
     {
       type: 'reasoning',
-      text: 'I am thinking...',
+      text: '我正在思考...',
     },
     {
       type: 'tool-getWeatherInformation',
@@ -35,15 +35,15 @@ const message: MyUIMessage = {
 };
 ```
 
-You might be tempted to store these parts as a JSON blob in your Postgres database. However, this approach has significant drawbacks:
+你可能会想把这些 parts 作为 JSON blob 存进 Postgres 数据库。然而，这种做法有明显的缺点：
 
-1. The JSON blob isn't managed by Postgres - it's just literal data
-2. The structure isn't guaranteed over time, making migrations difficult
-3. It's inefficient for filtering or displaying only certain parts
+1. JSON blob 不受 Postgres 管理——它只是字面数据
+2. 结构随时间推移没有保证，迁移会很困难
+3. 过滤或只显示特定部件时效率低下
 
-## `parts` as a normalized table
+## 作为规范化表的 `parts`
 
-Instead, we'll use a separate table for parts. In `schema.ts`, we have an example schema written using [Drizzle ORM](https://orm.drizzle.team/), which helps design and query database tables.
+作为替代，我们将为 parts 使用一张单独的表。在 `schema.ts` 中，有一个用 [Drizzle ORM](https://orm.drizzle.team/) 编写的示例 schema，它能帮助设计和查询数据库表。
 
 ```typescript
 export const chats = pgTable('chats', {
@@ -64,11 +64,11 @@ export const messages = pgTable(
     createdAt: timestamp().defaultNow().notNull(),
     role: varchar().$type<MyUIMessage['role']>().notNull(),
   },
-  // indexes omitted for brevity
+  // 为简洁起见省略了索引
 );
 ```
 
-For the parts, we create a dedicated table with fields for each type of part. This table uses SQL constraints to ensure the correct fields exist for each part type:
+对于 parts，我们创建了一张专门的表，为每种类型的部件准备了字段。这张表使用 SQL 约束来确保每种部件类型都有正确的字段：
 
 ```typescript
 export const parts = pgTable(
@@ -84,30 +84,30 @@ export const parts = pgTable(
     createdAt: timestamp().defaultNow().notNull(),
     order: integer().notNull().default(0),
 
-    // Text fields
+    // 文本字段
     text_text: text(),
 
-    // Reasoning fields
+    // 推理字段
     reasoning_text: text(),
 
-    // Many more fields for different part types...
+    // 更多不同部件类型的字段...
   },
   (t) => [
-    // Check constraints for each part type
+    // 每种部件类型的检查约束
     check(
       'text_text_required_if_type_is_text',
       sql`CASE WHEN ${t.type} = 'text' THEN ${t.text_text} IS NOT NULL ELSE TRUE END`,
     ),
-    // More constraints...
+    // 更多约束...
   ],
 );
 ```
 
-The constraints ensure that, for example, when a part's type is `text`, the `text_text` field must exist. Each part type has its own constraint to enforce data integrity.
+这些约束确保了，比如，当一个部件的类型是 `text` 时，`text_text` 字段必须存在。每种部件类型都有自己的约束来强制数据完整性。
 
-## Mapping between UI and database representations
+## UI 表示与数据库表示之间的映射
 
-When we run our mapping function with the original message, we get an array of database parts that look very different from the UI parts:
+当我们用原始消息运行映射函数时，我们得到一个与 UI 部件看起来很不一样的数据库部件数组：
 
 ```typescript
 const dbMessageParts = mapUIMessagePartsToDBParts(
@@ -118,9 +118,9 @@ const dbMessageParts = mapUIMessagePartsToDBParts(
 console.dir(dbMessageParts, { depth: null });
 ```
 
-For example, a UI part with `type: 'text'` and `text: 'Hello!'` becomes a database part with `type: 'text'` and `text_text: 'Hello!'`. Other part types will have their own fields.
+例如，一个 `type: 'text'` 且 `text: 'Hello!'` 的 UI 部件，会变成 `type: 'text'` 且 `text_text: 'Hello!'` 的数据库部件。其他部件类型会有自己的字段。
 
-This approach requires mapping functions to convert between UI and database representations. The `mapUIMessagePartsToDBParts` function uses a switch case to handle each type:
+这种方式需要映射函数来在 UI 表示和数据库表示之间转换。`mapUIMessagePartsToDBParts` 函数使用 switch case 来处理每种类型：
 
 ```typescript
 export const mapUIMessagePartsToDBParts = (
@@ -136,38 +136,38 @@ export const mapUIMessagePartsToDBParts = (
           type: part.type,
           text_text: part.text,
         };
-      // Cases for other part types...
+      // 其他部件类型的 case...
     }
   });
 };
 ```
 
-Similarly, the `mapDBPartToUIMessagePart` function converts database parts back to UI parts.
+类似地，`mapDBPartToUIMessagePart` 函数把数据库部件转换回 UI 部件。
 
-This structured approach gives us confidence that our message parts maintain their correct structure. While some JSON fields still exist for complex nested data (like tool inputs/outputs), the overall schema is much more robust and easier to reason about.
+这种结构化的方式让我们有信心确保消息部件保持正确的结构。虽然对于复杂的嵌套数据（比如工具的输入/输出）仍然存在一些 JSON 字段，但整体 schema 要健壮得多，也更容易理解。
 
-Try experimenting with different parts in the message object and see how they're represented in the database. You can examine the `schema.ts` file and use AI to help answer questions about the implementation.
+试着在 message 对象中试验不同的部件，看看它们在数据库中是如何表示的。你可以查看 `schema.ts` 文件，并使用 AI 来帮助回答关于实现的问题。
 
-The code shown is based on a reference example from the [Vercel AI SDK docs](https://github.com/vercel-labs/ai-sdk-persistence-db), which provides a fully working implementation of this approach.
+展示的代码基于 [Vercel AI SDK 文档](https://github.com/vercel-labs/ai-sdk-persistence-db)中的一个参考示例，它提供了这种方式的完整可用实现。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Examine the structure of the `message` object in [`main.ts`](./main.ts) to understand the UI representation of messages
-  - Look at the different part types and their properties
-  - Notice how each part type has its own specific structure
+- [ ] 检查 [`main.ts`](./main.ts) 中 `message` 对象的结构，理解消息的 UI 表示
+  - 查看不同的部件类型及其属性
+  - 注意每种部件类型如何有自己特定的结构
 
-- [ ] Study the database schema in [`schema.ts`](./schema.ts) to see how messages and parts are represented
-  - Pay attention to the table relationships between chats, messages, and parts
-  - Note the constraints that enforce data integrity for each part type
+- [ ] 研究 [`schema.ts`](./schema.ts) 中的数据库 schema，看看消息和部件是如何表示的
+  - 注意 chats、messages 和 parts 之间的表关系
+  - 留意为每种部件类型强制数据完整性的约束
 
-- [ ] Review the mapping functions in [`mapping.ts`](./mapping.ts) that convert between UI and DB representations
-  - Understand how `mapUIMessagePartsToDBParts` converts UI parts to DB parts
-  - See how `mapDBPartToUIMessagePart` converts DB parts back to UI parts
+- [ ] 查看 [`mapping.ts`](./mapping.ts) 中在 UI 和 DB 表示之间转换的映射函数
+  - 理解 `mapUIMessagePartsToDBParts` 如何把 UI 部件转换为 DB 部件
+  - 看看 `mapDBPartToUIMessagePart` 如何把 DB 部件转换回 UI 部件
 
-- [ ] Experiment with the code by modifying the `message` object in [`main.ts`](./main.ts)
-  - Add or change parts of different types
-  - Run the code with `pnpm run exercise` to see how they're represented in the database
+- [ ] 通过修改 [`main.ts`](./main.ts) 中的 `message` 对象来做实验
+  - 添加或修改不同类型的部件
+  - 用 `pnpm run exercise` 运行代码，看看它们在数据库中如何表示
 
-- [ ] Consider the tradeoffs of this approach versus storing parts as a JSON blob
-  - Think about data integrity, query efficiency, and migration complexity
-  - Reflect on when each approach might be appropriate
+- [ ] 思考这种方式与把部件存为 JSON blob 的权衡
+  - 想想数据完整性、查询效率和迁移复杂度
+  - 反思每种方式在什么场景下更合适

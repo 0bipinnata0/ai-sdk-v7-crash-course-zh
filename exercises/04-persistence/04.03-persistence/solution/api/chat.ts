@@ -19,11 +19,11 @@ export const POST = async (req: Request): Promise<Response> => {
   const mostRecentMessage = messages[messages.length - 1];
 
   if (!mostRecentMessage) {
-    return new Response('No messages provided', { status: 400 });
+    return new Response('未提供消息', { status: 400 });
   }
 
   if (mostRecentMessage.role !== 'user') {
-    return new Response('Last message must be from the user', {
+    return new Response('最后一条消息必须来自用户', {
       status: 400,
     });
   }
@@ -52,7 +52,7 @@ export const GET = async (req: Request): Promise<Response> => {
   const chatId = url.searchParams.get('chatId');
 
   if (!chatId) {
-    return new Response('No chatId provided', { status: 400 });
+    return new Response('未提供 chatId', { status: 400 });
   }
 
   const chat = await getChat(chatId);

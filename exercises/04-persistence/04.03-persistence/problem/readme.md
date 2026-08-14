@@ -1,11 +1,11 @@
-So, the next step on our journey now is to actually persist the messages that we get from the LLM and our own user messages to a database of some sort. To spare you any trouble of setting up a Postgres database, I've provided you with a persistence layer.
+好，我们旅程的下一步是把从 LLM 得到的消息和我们自己的用户消息真正持久化到某种数据库中。为了免去你搭建 Postgres 数据库的麻烦，我为你准备了一个持久层。
 
-## Understanding the Persistence Layer
+## 理解持久层
 
-This persistence layer has a few functions that you'll need to know about:
+这个持久层有几个你需要了解的函数：
 
 ```ts
-// Available functions
+// 可用的函数
 loadChats();
 saveChats();
 createChat();
@@ -14,22 +14,22 @@ appendToChatMessages();
 deleteChat();
 ```
 
-The main two you'll need to know about are:
+你主要需要了解的是这两个：
 
-- `getChat`: Retrieves chats and their associated messages
-- `appendToChatMessages`: Takes a `chatId` and messages and appends them to the chat history
+- `getChat`：获取聊天及其关联的消息
+- `appendToChatMessages`：接受一个 `chatId` 和一些消息，把它们追加到聊天历史中
 
-### Todo:
+### 待办：
 
-- Review all available persistence functions
-- Focus on learning how to use `getChat` and `appendToChatMessages`
+- 查看所有可用的持久化函数
+- 重点学习如何使用 `getChat` 和 `appendToChatMessages`
 
-## Frontend Code Structure
+## 前端代码结构
 
-Let's take a look at the frontend first. I've added a `backupChatId` piece of state:
+让我们先看看前端。我添加了一个 `backupChatId` 状态：
 
 ```tsx
-// This provides a stable chatId for when we're creating a new chat
+// 这为创建新聊天时提供一个稳定的 chatId
 const [backupChatId, setBackupChatId] = useState(
   crypto.randomUUID(),
 );
@@ -38,9 +38,9 @@ const [searchParams, setSearchParams] = useSearchParams();
 const chatIdFromSearchParams = searchParams.get('chatId');
 ```
 
-The idea is that when we're at `localhost:3000` without any `chatId` in the URL, we want a valid stable `chatId` to be passed - one that doesn't change every render.
+思路是：当我们在 `localhost:3000` 且 URL 中没有任何 `chatId` 时，我们希望传入一个有效且稳定的 `chatId`——一个不会在每次渲染时变化的 ID。
 
-I've also added React Query code to fetch the chat from the backend:
+我还添加了从后端获取聊天的 React Query 代码：
 
 ```tsx
 const { data } = useSuspenseQuery({
@@ -57,24 +57,24 @@ const { data } = useSuspenseQuery({
 });
 ```
 
-This takes the `chatId` from search params and fetches from the `/api/chat` endpoint.
+这会从搜索参数中取出 `chatId`，并从 `/api/chat` 端点获取数据。
 
-We need to pass the `chatId` to the `useChat` hook as well as any existing messages:
+我们需要把 `chatId` 以及任何已存在的消息传给 `useChat` hook:
 
 ```tsx
-// TODO: pass the chatId to the useChat hook,
-// as well as any existing messages from the backend
+// TODO:把 chatId 传给 useChat hook,
+// 以及来自后端的任何已存在消息
 const { messages, sendMessage } = useChat({});
 ```
 
-### Todo:
+### 待办：
 
-- Update the `useChat` hook to include the `chatId`
-- Pass existing messages from the backend to the `useChat` hook
+- 更新 `useChat` hook，包含 `chatId`
+- 把来自后端的已存在消息传给 `useChat` hook
 
-## Backend Implementation
+## 后端实现
 
-Looking at the backend code for `/api/chat`, the `GET` endpoint is already implemented. It's just fetching the chat from the database:
+看看 `/api/chat` 的后端代码，`GET` 端点已经实现了。它只是从数据库中获取聊天：
 
 ```ts
 export const GET = async (req: Request): Promise<Response> => {
@@ -95,7 +95,7 @@ export const GET = async (req: Request): Promise<Response> => {
 };
 ```
 
-The `POST` endpoint is where we need to do most of our work:
+`POST` 端点是我们需要做大部分工作的地方：
 
 ```ts
 export const POST = async (req: Request): Promise<Response> => {
@@ -115,16 +115,16 @@ export const POST = async (req: Request): Promise<Response> => {
     });
   }
 
-  const chat = TODO; // TODO: Get the existing chat
+  const chat = TODO; // TODO:获取现有聊天
 
   if (!chat) {
-    // TODO: If the chat doesn't exist, create it with the id
+    // TODO:如果聊天不存在,用这个 id 创建它
   } else {
-    // TODO: Otherwise, append the most recent message to the chat
+    // TODO:否则,把最新消息追加到聊天中
   }
 
-  // TODO: wait for the stream to finish and append the
-  // last message to the chat
+  // TODO:等待流完成,并把最后一条消息
+  // 追加到聊天中
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
@@ -134,16 +134,16 @@ export const POST = async (req: Request): Promise<Response> => {
 };
 ```
 
-### Todo:
+### 待办：
 
-- Implement getting existing chat with `getChat(id)`
-- Create new chat if it doesn't exist with `createChat(id, messages)`
-- Append most recent message to chat if it exists
-- Modify `result.toUIMessageStreamResponse()` to save AI response message
+- 用 `getChat(id)` 实现获取现有聊天
+- 如果聊天不存在，用 `createChat(id, messages)` 创建新聊天
+- 如果聊天存在，追加最新消息
+- 修改 `result.toUIMessageStreamResponse()` 来保存 AI 的响应消息
 
-## Form Submission Updates
+## 表单提交更新
 
-Finally, we need to update the form submission handler:
+最后，我们需要更新表单提交处理器：
 
 ```tsx
 onSubmit={(e) => {
@@ -153,30 +153,30 @@ onSubmit={(e) => {
   });
   setInput('');
 
-  // TODO: set the search params to the new chatId
-  // if the chatId is not already set
+  // TODO:如果 chatId 还没设置,
+  // 把搜索参数设置为新的 chatId
 
-  // TODO: refresh the backup chatId
-  // if the chatId is not already set
+  // TODO:如果 chatId 还没设置,
+  // 刷新备用 chatId
 }}
 ```
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Modify the `useChat` hook call in the frontend to include the `chatId` (either from URL or backup) and any existing messages from the backend. You should be able to explore the autocomplete in the options object passed to `useChat` to figure it out.
+- [ ] 修改前端的 `useChat` hook 调用，包含 `chatId`（来自 URL 或备用 ID）以及来自后端的任何已存在消息。你可以通过探索传给 `useChat` 的选项对象的自动补全来弄清楚怎么做。
 
-- [ ] Update the form submission handler:
-  - to set search params with the chatId when creating a new chat
-  - to refresh the backup chatId when creating a new chat
+- [ ] 更新表单提交处理器：
+  - 创建新聊天时，用 chatId 设置搜索参数
+  - 创建新聊天时，刷新备用 chatId
 
-- [ ] In the backend POST handler:
-  - implement retrieving an existing chat with `getChat(id)`
-  - if the chat doesn't exist, create it with `createChat(id, messages)`
-  - if the chat exists, append the most recent message with `appendToChatMessages`
-  - modify `toUIMessageStreamResponse()` to save the AI response message using `onFinish` callback
+- [ ] 在后端 POST 处理器中：
+  - 用 `getChat(id)` 实现获取现有聊天
+  - 如果聊天不存在，用 `createChat(id, messages)` 创建
+  - 如果聊天存在，用 `appendToChatMessages` 追加最新消息
+  - 修改 `toUIMessageStreamResponse()`，使用 `onFinish` 回调保存 AI 响应消息
 
-- [ ] Test your implementation by running the dev server and seeing if messages persist when you refresh the page
+- [ ] 通过运行开发服务器并查看刷新页面后消息是否保持，来测试你的实现
 
-- [ ] Test that new chats get unique IDs in the URL
+- [ ] 测试新聊天是否在 URL 中获得唯一 ID
 
-- [ ] Check that when you visit a chat URL directly, the previous messages load correctly
+- [ ] 检查直接访问某个聊天 URL 时，之前的消息是否正确加载

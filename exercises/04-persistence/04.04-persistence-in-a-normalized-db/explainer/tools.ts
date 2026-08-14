@@ -9,16 +9,16 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 export const getWeatherInformation = (
-  // need to type like this to avoid circular type dependencies
-  // typing here is not necessary, but provides type safety for `writer.write()`
-  // e.g. completion for `data-weather` and type safe `data` object
+  // 需要像这样标注类型,以避免循环类型依赖
+  // 这里的类型标注不是必需的,但能为 `writer.write()` 提供类型安全
+  // 例如 `data-weather` 的自动补全和类型安全的 `data` 对象
   writer: UIMessageStreamWriter<UIMessage<never, MyDataPart>>,
 ) =>
   tool({
-    description: 'show the weather in a given city to the user',
+    description: '向用户展示指定城市的天气',
     inputSchema: z.object({ city: z.string() }),
     execute: async ({ city }, { toolCallId: id }) => {
-      // write initial message part
+      // 写入初始消息部件
       writer.write({
         type: 'data-weather',
         data: {
@@ -29,7 +29,7 @@ export const getWeatherInformation = (
         id,
       });
 
-      // Add artificial delay of 2 seconds
+      // 添加 2 秒的人为延迟
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const weatherOptions = [
@@ -45,20 +45,20 @@ export const getWeatherInformation = (
           Math.floor(Math.random() * weatherOptions.length)
         ];
 
-      // add weather value with same id
+      // 用相同的 id 添加天气值
       writer.write({
         type: 'data-weather',
         data: { weather, loading: true },
         id,
       });
 
-      // add another artificial delay of 2 seconds
+      // 再添加 2 秒的人为延迟
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Generate random temperature between -10 and 40 degrees Celsius
+      // 生成 -10 到 40 摄氏度之间的随机温度
       const temperature = Math.floor(Math.random() * 51) - 10;
 
-      // write temperature value with same id
+      // 用相同的 id 写入温度值
       writer.write({
         type: 'data-weather',
         data: { temperature, loading: false },
@@ -69,7 +69,7 @@ export const getWeatherInformation = (
     },
   });
 
-// types used in our db schema
+// 我们的数据库 schema 中使用的类型
 export type getWeatherInformationInput = InferToolInput<
   ReturnType<typeof getWeatherInformation>
 >;
@@ -78,9 +78,9 @@ export type getWeatherInformationOutput = InferToolOutput<
 >;
 
 export const getLocation = tool({
-  description: 'Get the user location.',
+  description: '获取用户位置。',
   inputSchema: z.object({}),
-  // client side tool requires typing the output schema explicitly
+  // 客户端工具需要显式标注输出 schema 的类型
   outputSchema: z.object({ location: z.string() }),
 });
 
@@ -92,6 +92,6 @@ export type getLocationOutput = InferToolOutput<
 >;
 
 export const tools = (writer: UIMessageStreamWriter) => ({
-  getWeatherInformation: getWeatherInformation(writer), // pipe in stream writer
+  getWeatherInformation: getWeatherInformation(writer), // 传入 stream writer
   getLocation,
 });

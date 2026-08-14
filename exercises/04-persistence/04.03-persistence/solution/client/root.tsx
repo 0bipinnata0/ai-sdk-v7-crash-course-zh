@@ -38,7 +38,7 @@ const App = () => {
   });
 
   const [input, setInput] = useState(
-    `Who's the best football player in the world?`,
+    `谁是世界上最棒的足球运动员?`,
   );
 
   return (

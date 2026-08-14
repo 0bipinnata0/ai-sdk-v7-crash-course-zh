@@ -18,25 +18,25 @@ export const POST = async (req: Request): Promise<Response> => {
   const mostRecentMessage = messages[messages.length - 1];
 
   if (!mostRecentMessage) {
-    return new Response('No messages provided', { status: 400 });
+    return new Response('未提供消息', { status: 400 });
   }
 
   if (mostRecentMessage.role !== 'user') {
-    return new Response('Last message must be from the user', {
+    return new Response('最后一条消息必须来自用户', {
       status: 400,
     });
   }
 
-  const chat = TODO; // TODO: Get the existing chat
+  const chat = TODO; // TODO:获取现有聊天
 
   if (!chat) {
-    // TODO: If the chat doesn't exist, create it with the id
+    // TODO:如果聊天不存在,用这个 id 创建它
   } else {
-    // TODO: Otherwise, append the most recent message to the chat
+    // TODO:否则,把最新消息追加到聊天中
   }
 
-  // TODO: wait for the stream to finish and append the
-  // last message to the chat
+  // TODO:等待流完成,并把最后一条消息
+  // 追加到聊天中
   const result = streamText({
     model: google('gemini-2.5-flash'),
     messages: await convertToModelMessages(messages),
@@ -51,7 +51,7 @@ export const GET = async (req: Request): Promise<Response> => {
   const chatId = url.searchParams.get('chatId');
 
   if (!chatId) {
-    return new Response('No chatId provided', { status: 400 });
+    return new Response('未提供 chatId', { status: 400 });
   }
 
   const chat = await getChat(chatId);

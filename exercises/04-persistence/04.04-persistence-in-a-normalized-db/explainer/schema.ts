@@ -64,34 +64,34 @@ export const parts = pgTable(
     createdAt: timestamp().defaultNow().notNull(),
     order: integer().notNull().default(0),
 
-    // Text fields
+    // 文本字段
     text_text: text(),
 
-    // Reasoning fields
+    // 推理字段
     reasoning_text: text(),
 
-    // File fields
+    // 文件字段
     file_mediaType: varchar(),
-    file_filename: varchar(), // optional
+    file_filename: varchar(), // 可选
     file_url: varchar(),
 
-    // Source url fields
+    // 来源 URL 字段
     source_url_sourceId: varchar(),
     source_url_url: varchar(),
-    source_url_title: varchar(), // optional
+    source_url_title: varchar(), // 可选
 
-    // Source document fields
+    // 来源文档字段
     source_document_sourceId: varchar(),
     source_document_mediaType: varchar(),
     source_document_title: varchar(),
-    source_document_filename: varchar(), // optional
+    source_document_filename: varchar(), // 可选
 
-    // shared tool call columns
+    // 共享的工具调用列
     tool_toolCallId: varchar(),
     tool_state: varchar().$type<ToolUIPart['state']>(),
     tool_errorText: varchar().$type<ToolUIPart['state']>(),
 
-    // tools inputs and outputss are stored in separate cols
+    // 工具的输入和输出存储在单独的列中
     tool_getWeatherInformation_input:
       jsonb().$type<getWeatherInformationInput>(),
     tool_getWeatherInformation_output:
@@ -100,7 +100,7 @@ export const parts = pgTable(
     tool_getLocation_input: jsonb().$type<getLocationInput>(),
     tool_getLocation_output: jsonb().$type<getLocationOutput>(),
 
-    // Data parts
+    // 数据部件
     data_weather_id: varchar().$defaultFn(() => generateId()),
     data_weather_location:
       varchar().$type<MyDataPart['weather']['location']>(),
@@ -112,14 +112,14 @@ export const parts = pgTable(
     providerMetadata: jsonb().$type<MyProviderMetadata>(),
   },
   (t) => [
-    // Indexes for performance optimisation
+    // 用于性能优化的索引
     index('parts_message_id_idx').on(t.messageId),
     index('parts_message_id_order_idx').on(t.messageId, t.order),
 
-    // Check constraints
+    // 检查约束
     check(
       'text_text_required_if_type_is_text',
-      // This SQL expression enforces: if type = 'text' then text_text IS NOT NULL
+      // 这个 SQL 表达式强制要求:如果 type = 'text',则 text_text 不能为 NULL
       sql`CASE WHEN ${t.type} = 'text' THEN ${t.text_text} IS NOT NULL ELSE TRUE END`,
     ),
     check(

@@ -7,11 +7,11 @@ const message: MyUIMessage = {
   parts: [
     {
       type: 'text',
-      text: 'Hello!',
+      text: '你好!',
     },
     {
       type: 'reasoning',
-      text: 'I am thinking...',
+      text: '我正在思考...',
     },
     {
       type: 'tool-getWeatherInformation',

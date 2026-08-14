@@ -1,8 +1,8 @@
-In this section, we're going to investigate how to persist messages to a database. The way this works is we'll wait for our stream to finish and then take the created messages and upload them to a database.
+在本节中，我们将研究如何把消息持久化到数据库。工作方式是：等待流完成，然后把创建的消息上传到数据库。
 
-However, waiting for messages to finish is slightly non-trivial in the AI SDK. There are several properties that look similar but do subtly different things. Let's demystify them.
+然而，在 AI SDK 中等待消息完成并不是那么简单。有几个属性看起来相似，但作用有微妙的差别。让我们来揭开它们的神秘面纱。
 
-Our setup is that inside our POST route, we're doing some [`streamText`](./api/chat.ts) processing:
+我们的设置是：在 POST 路由内部，我们正在做一些 [`streamText`](./api/chat.ts) 处理：
 
 ```ts
 export const POST = async (req: Request): Promise<Response> => {
@@ -19,16 +19,16 @@ export const POST = async (req: Request): Promise<Response> => {
     },
   });
 
-  // More code...
+  // 更多代码...
 };
 ```
 
-We're taking the UI messages from the request body and passing them to the `streamText` function by converting them to model messages.
+我们从请求体中取出 UI 消息，把它们转换为模型消息后传给 `streamText` 函数。
 
-Then we have multiple [`onFinish`](./api/chat.ts) callbacks:
+然后我们有多个 [`onFinish`](./api/chat.ts) 回调：
 
-1. One inside [`streamText`](./api/chat.ts), which logs the `response.messages`
-2. Another inside [`toUIMessageStreamResponse`](./api/chat.ts), which logs both `messages` and `responseMessage`
+1. 一个在 [`streamText`](./api/chat.ts) 内部，打印 `response.messages`
+2. 另一个在 [`toUIMessageStreamResponse`](./api/chat.ts) 内部，打印 `messages` 和 `responseMessage`
 
 ```ts
 return result.toUIMessageStreamResponse({
@@ -45,30 +45,30 @@ return result.toUIMessageStreamResponse({
 });
 ```
 
-When we interact with our UI and ask "Write me a poem about a fish called Grant", we get several logs in the terminal.
+当我们与 UI 交互并问"给我写一首关于一条叫 Grant 的鱼的诗"时，我们会在终端中得到几条日志。
 
-Let's examine the differences between the three types of responses:
+让我们来看看这三种响应类型之间的区别：
 
-| Response Type                                            | Description                                                | Content                                                                | Suitability for Persistence                  |
-| -------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------- |
-| `streamText > onFinish > response.messages`              | Model messages (AssistantModelMessage or ToolModelMessage) | Minimal information, no UI data                                        | Not suitable for UI applications             |
-| `toUIMessageStreamResponse > onFinish > messages`        | Full message history                                       | Includes original user message and assistant's response with all parts | Ideal for persisting entire conversations    |
-| `toUIMessageStreamResponse > onFinish > responseMessage` | Single message                                             | Just the newly generated assistant message                             | Good for persisting only the latest response |
+| 响应类型                                                 | 描述                                          | 内容                                                | 是否适合持久化             |
+| -------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------- | -------------------------- |
+| `streamText > onFinish > response.messages`              | 模型消息(AssistantModelMessage 或 ToolModelMessage) | 信息最少，没有 UI 数据                              | 不适合 UI 应用             |
+| `toUIMessageStreamResponse > onFinish > messages`        | 完整消息历史                                  | 包括原始用户消息和助手响应（含所有部件）            | 持久化整个对话的理想选择   |
+| `toUIMessageStreamResponse > onFinish > responseMessage` | 单条消息                                      | 只有新生成的助手消息                                | 适合只持久化最新响应       |
 
-Depending on how you want to manage persistence, you might use either the entire message history or just the final generated message.
+根据你想如何管理持久化，你可能会使用完整的消息历史，或者只使用最终生成的消息。
 
-The full message history in `toUIMessageStreamResponse.onFinish.messages` contains all parts, including state information (start, done), making it suitable for persisting the entire conversation.
+`toUIMessageStreamResponse.onFinish.messages` 中的完整消息历史包含所有部件，包括状态信息（start、done)，适合持久化整个对话。
 
-To summarize:
+总结一下：
 
-- `streamText.onFinish` has `response.messages` (model messages) - not suitable for persisting UI data
-- `toUIMessageStreamResponse.onFinish` has the full `messages` history (especially if you pass in originalMessages)
-- `toUIMessageStreamResponse.onFinish` also has `responseMessage` which is just the newly generated message
+- `streamText.onFinish` 有 `response.messages`（模型消息）——不适合持久化 UI 数据
+- `toUIMessageStreamResponse.onFinish` 有完整的 `messages` 历史（特别是当你传入 originalMessages 时）
+- `toUIMessageStreamResponse.onFinish` 还有 `responseMessage`，即新生成的那条消息
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Review the code and understand the difference between the three different message formats available in the callbacks
+- [ ] 查看代码，理解回调中可用的三种不同消息格式之间的区别
 
-- [ ] Test your implementation by running the local dev server and checking that messages are properly logged
+- [ ] 通过运行本地开发服务器并检查消息是否被正确打印来测试你的实现
 
-- [ ] Try having a longer conversation to see how the different message formats change with multiple exchanges
+- [ ] 试着进行更长的对话，看看不同的消息格式在多次交换中如何变化

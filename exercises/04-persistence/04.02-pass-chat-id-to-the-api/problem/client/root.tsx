@@ -12,7 +12,7 @@ const App = () => {
 
   const { messages, sendMessage } = useChat({});
 
-  const [input, setInput] = useState('Hello, how are you?');
+  const [input, setInput] = useState('你好,你好吗?');
 
   return (
     <Wrapper>

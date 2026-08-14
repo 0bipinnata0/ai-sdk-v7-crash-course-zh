@@ -12,8 +12,8 @@ import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 
 const App = () => {
-  // This provides a stable chatId for when we're
-  // creating a new chat
+  // 这为创建新聊天时提供一个
+  // 稳定的 chatId
   const [backupChatId, setBackupChatId] = useState(
     crypto.randomUUID(),
   );
@@ -34,13 +34,13 @@ const App = () => {
     },
   });
 
-  // TODO: pass the chatId from the search params to the
-  // useChat hook, as well as any existing messages
-  // from the backend
+  // TODO:把搜索参数中的 chatId 传给
+  // useChat hook,以及来自后端的
+  // 任何已存在消息
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    `Who's the best football player in the world?`,
+    `谁是世界上最棒的足球运动员?`,
   );
 
   return (
@@ -58,19 +58,19 @@ const App = () => {
         onSubmit={(e) => {
           e.preventDefault();
 
-          // NOTE: We're using startTransition to ensure
-          // all state updates are batched together
+          // 注意:我们使用 startTransition 来确保
+          // 所有状态更新被批量处理
           startTransition(() => {
             sendMessage({
               text: input,
             });
             setInput('');
 
-            // TODO: set the search params to the new chatId
-            // if the chatId is not already set
+            // TODO:如果 chatId 还没设置,
+            // 把搜索参数设置为新的 chatId
 
-            // TODO: refresh the backup chatId
-            // if the chatId is not already set
+            // TODO:如果 chatId 还没设置,
+            // 刷新备用 chatId
           });
         }}
       />

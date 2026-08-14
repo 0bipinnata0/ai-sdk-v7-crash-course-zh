@@ -114,7 +114,7 @@ export const mapUIMessagePartsToDBParts = (
           data_weather_location: part.data.location,
           data_weather_weather: part.data.weather,
           data_weather_temperature: part.data.temperature,
-          // no need to persist loading variable -> set to false in mapping below
+          // 不需要持久化 loading 变量 -> 在下面的映射中设为 false
         };
       default:
         throw new Error(`Unsupported part type: ${part}`);
