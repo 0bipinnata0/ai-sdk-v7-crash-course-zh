@@ -26,7 +26,7 @@ const App = () => {
       <ChatInput
         suggestion={
           messages.length === 0
-            ? 'What is the capital of France?'
+            ? '法国的首都是哪里?'
             : latestSuggestion
         }
         input={input}

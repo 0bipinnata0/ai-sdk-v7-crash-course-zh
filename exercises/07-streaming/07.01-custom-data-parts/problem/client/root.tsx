@@ -10,7 +10,7 @@ const App = () => {
 
   const [input, setInput] = useState(``);
 
-  // TODO: Get the data-suggestion part from the last message
+  // TODO:从最后一条消息中获取 data-suggestion 部件
   const latestSuggestion: string | undefined = TODO;
 
   return (
@@ -23,11 +23,11 @@ const App = () => {
         />
       ))}
       <ChatInput
-        // NOTE: We are passing the suggestion to the ChatInput component
-        // where we will display it as a button
+        // 注意:我们把建议传给 ChatInput 组件,
+        // 在那里它会显示为一个按钮
         suggestion={
           messages.length === 0
-            ? 'What is the capital of France?'
+            ? '法国的首都是哪里?'
             : latestSuggestion
         }
         input={input}

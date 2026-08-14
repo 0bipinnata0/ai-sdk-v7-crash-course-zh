@@ -1,19 +1,19 @@
-Our single suggestion setup is working quite well, but a single suggestion is pretty lame. Ideally, we want to provide multiple suggestions to give users more options to choose from.
+我们的单条建议设置运行得相当不错，但只有一条建议实在太简陋了。理想情况下，我们想提供多条建议，给用户更多选择。
 
-To achieve this, we need to make several changes to our current implementation. Let's examine what needs to be updated.
+要实现这一点，我们需要对当前实现做几处修改。让我们看看需要更新什么。
 
 ## `data-suggestion` -> `data-suggestions`
 
-First, we need to modify our `MyMessage` type definition to support multiple suggestions instead of just one. This means changing the data type from a single string to an array of strings.
+首先，我们需要修改 `MyMessage` 类型定义，支持多条建议而不是只有一条。这意味着把数据类型从单个字符串改为字符串数组。
 
-Looking at our code in `problem/api/chat.ts`, we can see the current type definition:
+看看 `problem/api/chat.ts` 中的代码，可以看到当前的类型定义：
 
 ```ts
 export type MyMessage = UIMessage<
   never,
   {
-    // TODO: Change the type to 'suggestions' and
-    // make it an array of strings
+    // TODO:把类型改为 'suggestions',
+    // 并让它成为字符串数组
     suggestion: string;
   }
 >;
@@ -21,18 +21,17 @@ export type MyMessage = UIMessage<
 
 ## `streamText` -> `streamObject`
 
-Next, we need to update our approach to generating suggestions. Currently, we're using `streamText`, which isn't ideal for returning structured data like arrays. A more reliable approach would be to use structured outputs with `streamObject` instead.
+接下来，我们需要更新生成建议的方式。目前我们使用 `streamText`，它不太适合返回数组这样的结构化数据。更可靠的方式是改用 `streamObject` 的结构化输出。
 
-We also need to define a schema using Zod to ensure we get the correct data structure:
+我们还需要用 Zod 定义一个 schema，确保得到正确的数据结构：
 
 ```ts
-// TODO: Change the streamText call to streamObject,
-// since we'll need to use structured outputs to reliably
-// generate multiple suggestions
+// TODO:把 streamText 调用改为 streamObject,
+// 因为我们需要使用结构化输出来可靠地
+// 生成多条建议
 const followupSuggestionsResult = streamText({
   model: google('gemini-2.5-flash'),
-  // TODO: Define the schema for the suggestions
-  // using zod
+  // TODO:使用 zod 定义建议的 schema
   schema: TODO,
   messages: [
     ...modelMessages,
@@ -43,26 +42,25 @@ const followupSuggestionsResult = streamText({
     {
       role: 'user',
       content:
-        // TODO: Change the prompt to tell the LLM
-        // to return an array of suggestions
-        'What question should I ask next? Return only the question text.',
+        // TODO:修改提示词,告诉 LLM
+        // 返回一个建议数组
+        '我接下来应该问什么问题?只返回问题文本。',
     },
   ],
 });
 ```
 
-## Streaming the Suggestions
+## 流式传输建议
 
-When we get to handling the response, we'll need to update our streaming logic. Instead of following the `textStream`, we'll iterate over the `partialObjectStream`. This gives us access to the partial object as it's streaming, including the array of suggestions:
+在处理响应时，我们需要更新流式传输逻辑。不再跟随 `textStream`，而是遍历 `partialObjectStream`。这让我们能在流式传输过程中访问部分对象，包括建议数组：
 
 ```ts
-// TODO: Update this to iterate over the partialObjectStream
+// TODO:改为遍历 partialObjectStream
 for await (const chunk of followupSuggestionsResult.textStream) {
   fullSuggestion += chunk;
 
-  // TODO: Update this to write the data part
-  // with the suggestions array. You might need
-  // to filter out undefined suggestions.
+  // TODO:改为用建议数组写入数据部件。
+  // 你可能需要过滤掉 undefined 的建议。
   writer.write({
     id: dataPartId,
     type: 'data-suggestion',
@@ -71,60 +69,60 @@ for await (const chunk of followupSuggestionsResult.textStream) {
 }
 ```
 
-Return to the [exercise on streamObject](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md) for a reminder.
+回到 [streamObject 练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
 
-## Showing the Suggestions in the Frontend
+## 在前端显示建议
 
-Finally, we need to update our frontend code to display multiple suggestions. The `ChatInput` component has already been updated to handle an array of suggestions, but we still need to modify the `latestSuggestion` variable in our `root.tsx` file:
+最后，我们需要更新前端代码来显示多条建议。`ChatInput` 组件已经更新为可以处理建议数组，但我们还需要修改 `root.tsx` 文件中的 `latestSuggestion` 变量：
 
 ```tsx
-// TODO: Update this to handle the new
-// data-suggestions part
+// TODO:更新这里以处理新的
+// data-suggestions 部件
 const latestSuggestion = messages[
   messages.length - 1
 ]?.parts.find((part) => part.type === 'data-suggestion')?.data;
 ```
 
-This needs to be changed to properly extract the array of suggestions from the message parts.
+这里需要改成能正确地从消息部件中提取建议数组。
 
-The goal is to create a user interface where after asking a question, the user will see multiple follow-up suggestion options, making the chat experience more dynamic and helpful.
+目标是创建这样一个用户界面：用户提出问题后，会看到多个后续建议选项，让聊天体验更动态、更有帮助。
 
-Good luck, and I'll see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Update the `MyMessage` type in `problem/api/chat.ts` to support an array of strings
-  - Change `suggestion: string` to `suggestions: string[]`
+- [ ] 更新 `problem/api/chat.ts` 中的 `MyMessage` 类型，支持字符串数组
+  - 把 `suggestion: string` 改为 `suggestions: string[]`
 
-- [ ] Change the `streamText` call to `streamObject` for generating suggestions
-  - Import the required functions: `streamObject` from 'ai'
-  - Update the function call from `streamText` to `streamObject`
+- [ ] 把生成建议的 `streamText` 调用改为 `streamObject`
+  - 导入所需的函数：从 'ai' 导入 `streamObject`
+  - 把函数调用从 `streamText` 更新为 `streamObject`
 
-- [ ] Define a schema for the suggestions using Zod
-  - Import zod: `import { z } from 'zod'`
-  - Create a schema defining an array of strings
+- [ ] 用 Zod 定义建议的 schema
+  - 导入 zod:`import { z } from 'zod'`
+  - 创建一个定义字符串数组的 schema
 
-- [ ] Update the prompt to tell the LLM to return an array of suggestions
-  - Modify the prompt to specifically request multiple follow-up questions
+- [ ] 更新提示词，告诉 LLM 返回建议数组
+  - 修改提示词，明确要求多个后续问题
 
-- [ ] Update the streaming logic to use the `partialObjectStream`
-  - Change `followupSuggestionsResult.textStream` to `followupSuggestionsResult.partialObjectStream`
-  - Remove the `fullSuggestion` variable as it's no longer needed
-  - Return to the [exercise on streamObject](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md) for a reminder.
+- [ ] 更新流式传输逻辑，使用 `partialObjectStream`
+  - 把 `followupSuggestionsResult.textStream` 改为 `followupSuggestionsResult.partialObjectStream`
+  - 移除不再需要的 `fullSuggestion` 变量
+  - 回到 [streamObject 练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
 
-- [ ] Update the `writer.write` call to handle the array of suggestions
-  - Change the data field to use the chunks from the partial object stream
-  - Filter out any undefined suggestions
+- [ ] 更新 `writer.write` 调用，处理建议数组
+  - 把 data 字段改为使用来自 partial object stream 的 chunk
+  - 过滤掉任何 undefined 的建议
 
-- [ ] Update the `latestSuggestion` variable in [`client/root.tsx`](./client/root.tsx)
-  - Rename to `latestSuggestions` to reflect the plural nature
-  - Update the variable to correctly extract the array of suggestions
+- [ ] 更新 [`client/root.tsx`](./client/root.tsx) 中的 `latestSuggestion` 变量
+  - 重命名为 `latestSuggestions`，以反映复数性质
+  - 更新该变量，正确提取建议数组
 
-- [ ] Update the `ChatInput` component usage in [`client/root.tsx`](./client/root.tsx)
-  - Change from passing `suggestion` to `suggestions`
-  - Handle the case when there are no messages by providing a default array
+- [ ] 更新 [`client/root.tsx`](./client/root.tsx) 中的 `ChatInput` 组件用法
+  - 从传 `suggestion` 改为传 `suggestions`
+  - 处理没有消息的情况，提供一个默认数组
 
-- [ ] Test your implementation
-  - Run the exercise with `pnpm run exercise`
-  - Check the local dev server at localhost:3000
-  - Ask a question and verify that multiple suggestions appear
+- [ ] 测试你的实现
+  - 用 `pnpm run exercise` 运行练习
+  - 在 localhost:3000 查看本地开发服务器
+  - 问一个问题，验证是否出现了多条建议

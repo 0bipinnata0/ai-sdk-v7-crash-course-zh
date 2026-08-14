@@ -11,7 +11,7 @@ import {
 export type MyMessage = UIMessage<
   never,
   {
-    // TODO: Define the type for the suggestion data part
+    // TODO:定义建议数据部件的类型
     TODO: TODO;
   }
 >;
@@ -46,24 +46,24 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
             content:
-              'What question should I ask next? Return only the question text.',
+              '我接下来应该问什么问题?只返回问题文本。',
           },
         ],
       });
 
-      // NOTE: Create an id for the data part
+      // 注意:为数据部件创建一个 id
       const dataPartId = crypto.randomUUID();
 
-      // NOTE: Create a variable to store the full suggestion,
-      // since we need to store the full suggestion each time
+      // 注意:创建一个变量来存储完整的建议,
+      // 因为我们每次都需要存储完整的建议
       let fullSuggestion = TODO;
 
       for await (const chunk of followupSuggestionsResult.textStream) {
-        // TODO: Append the chunk to the full suggestion
+        // TODO:把 chunk 追加到完整建议中
         fullSuggestion += TODO;
 
-        // TODO: Call writer.write and write the data part
-        // to the stream
+        // TODO:调用 writer.write,把数据部件
+        // 写入流中
         TODO;
       }
     },

@@ -10,8 +10,8 @@ const App = () => {
 
   const [input, setInput] = useState(``);
 
-  // TODO: Update this to handle the new
-  // data-suggestions part
+  // TODO:更新这里以处理新的
+  // data-suggestions 部件
   const latestSuggestion = messages[
     messages.length - 1
   ]?.parts.find((part) => part.type === 'data-suggestion')?.data;
@@ -26,11 +26,11 @@ const App = () => {
         />
       ))}
       <ChatInput
-        // TODO: Update this to handle the new
-        // data-suggestions part
+        // TODO:更新这里以处理新的
+        // data-suggestions 部件
         suggestion={
           messages.length === 0
-            ? 'What is the capital of France?'
+            ? '法国的首都是哪里?'
             : latestSuggestion
         }
         input={input}

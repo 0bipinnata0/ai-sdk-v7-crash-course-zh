@@ -5,25 +5,25 @@ import {
 } from 'ai';
 
 export const POST = async (req: Request): Promise<Response> => {
-  // All the AI SDK errors are available here:
+  // 所有 AI SDK 错误都可以在这里找到:
   // https://ai-sdk.dev/docs/reference/ai-sdk-errors
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       throw new RetryError({
-        errors: [new Error('An error occurred')],
-        message: 'Maximum retries exceeded',
+        errors: [new Error('发生了一个错误')],
+        message: '超过最大重试次数',
         reason: 'maxRetriesExceeded',
       });
     },
     onError(error) {
-      // TODO: Check if the error is a RetryError using:
+      // TODO:使用以下方式检查错误是否是 RetryError:
       // RetryError.isInstance(error)
       if (TODO) {
-        // TODO: If it is, return a message that tells the user to try again
+        // TODO:如果是,返回一条告诉用户重试的消息
         return TODO;
       }
 
-      // TODO: Return a default message if the error is not a RetryError
+      // TODO:如果错误不是 RetryError,返回一条默认消息
       return TODO;
     },
   });

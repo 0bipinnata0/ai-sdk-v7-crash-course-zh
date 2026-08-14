@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyUIMessage>({});
 
   const [input, setInput] = useState(
-    `Give me the opening paragraph of a book about a detective cat.`,
+    `给我写一本关于一只侦探猫的书的开篇段落。`,
   );
 
   return (
@@ -19,7 +19,7 @@ const App = () => {
           key={message.id}
           role={message.role}
           parts={message.parts}
-          // TODO: Pass the metadata to the Message component
+          // TODO:把 metadata 传给 Message 组件
           metadata={TODO}
         />
       ))}

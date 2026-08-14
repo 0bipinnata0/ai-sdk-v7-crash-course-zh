@@ -6,11 +6,11 @@ import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 
 const App = () => {
-  // TODO: Destructure the error property returned from the useChat hook
+  // TODO:从 useChat hook 解构出 error 属性
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    `What's the capital of France?`,
+    `法国的首都是哪里?`,
   );
 
   return (
@@ -22,7 +22,7 @@ const App = () => {
           parts={message.parts}
         />
       ))}
-      {/* TODO: Show an error message if the error exists */}
+      {/* TODO:如果存在错误,显示错误消息 */}
       {TODO}
       <ChatInput
         input={input}

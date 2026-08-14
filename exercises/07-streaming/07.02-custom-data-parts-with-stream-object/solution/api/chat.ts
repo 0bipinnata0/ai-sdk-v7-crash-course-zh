@@ -50,7 +50,7 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
             content:
-              'What question should I ask next? Return an array of suggested questions.',
+              '我接下来应该问什么问题?返回一个建议问题的数组。',
           },
         ],
       });

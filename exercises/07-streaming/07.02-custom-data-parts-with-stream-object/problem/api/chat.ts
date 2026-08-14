@@ -11,8 +11,8 @@ import {
 export type MyMessage = UIMessage<
   never,
   {
-    // TODO: Change the type to 'suggestions' and
-    // make it an array of strings
+    // TODO:把类型改为 'suggestions',
+    // 并让它成为字符串数组
     suggestion: string;
   }
 >;
@@ -36,13 +36,12 @@ export const POST = async (req: Request): Promise<Response> => {
 
       await streamTextResult.consumeStream();
 
-      // TODO: Change the streamText call to streamObject,
-      // since we'll need to use structured outputs to reliably
-      // generate multiple suggestions
+      // TODO:把 streamText 调用改为 streamObject,
+      // 因为我们需要使用结构化输出来可靠地
+      // 生成多条建议
       const followupSuggestionsResult = streamText({
         model: google('gemini-2.5-flash'),
-        // TODO: Define the schema for the suggestions
-        // using zod
+        // TODO:使用 zod 定义建议的 schema
         schema: TODO,
         messages: [
           ...modelMessages,
@@ -53,9 +52,9 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
             content:
-              // TODO: Change the prompt to tell the LLM
-              // to return an array of suggestions
-              'What question should I ask next? Return only the question text.',
+              // TODO:修改提示词,告诉 LLM
+              // 返回一个建议数组
+              '我接下来应该问什么问题?只返回问题文本。',
           },
         ],
       });
@@ -64,13 +63,12 @@ export const POST = async (req: Request): Promise<Response> => {
 
       let fullSuggestion = '';
 
-      // TODO: Update this to iterate over the partialObjectStream
+      // TODO:改为遍历 partialObjectStream
       for await (const chunk of followupSuggestionsResult.textStream) {
         fullSuggestion += chunk;
 
-        // TODO: Update this to write the data part
-        // with the suggestions array. You might need
-        // to filter out undefined suggestions.
+        // TODO:改为用建议数组写入数据部件。
+        // 你可能需要过滤掉 undefined 的建议。
         writer.write({
           id: dataPartId,
           type: 'data-suggestion',

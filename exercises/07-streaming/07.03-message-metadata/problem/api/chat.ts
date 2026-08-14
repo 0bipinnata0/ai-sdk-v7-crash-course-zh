@@ -5,8 +5,8 @@ import {
   type UIMessage,
 } from 'ai';
 
-// TODO: Add the type of the metadata to the object here
-// We probably want it to be { duration: number }
+// TODO:在这里的对象中添加 metadata 的类型
+// 我们可能想要 { duration: number }
 export type MyUIMessage = UIMessage<TODO>;
 
 export const POST = async (req: Request): Promise<Response> => {
@@ -18,13 +18,13 @@ export const POST = async (req: Request): Promise<Response> => {
     messages: await convertToModelMessages(messages),
   });
 
-  // TODO: Calculate the start time of the stream
+  // TODO:计算流的开始时间
   const startTime = TODO;
 
   return result.toUIMessageStreamResponse<MyUIMessage>({
-    // TODO: Add the messageMetadata function here
-    // If it encounters a 'finish' part, it should return the duration
-    // of the stream in milliseconds
+    // TODO:在这里添加 messageMetadata 函数
+    // 如果遇到 'finish' 部件,它应该返回
+    // 流的持续时间(毫秒)
     messageMetadata: TODO,
   });
 };

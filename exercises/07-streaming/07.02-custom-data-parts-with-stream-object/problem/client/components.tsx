@@ -19,7 +19,7 @@ export const Message = ({
   role: string;
   parts: MyMessage['parts'];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -71,7 +71,7 @@ export const ChatInput = ({
       <input
         className="w-full p-2 border-2 border-gray-700 rounded shadow-xl bg-gray-800"
         value={input}
-        placeholder="Say something..."
+        placeholder="说点什么..."
         onChange={(e) => onChange(e.target.value)}
         autoFocus
       />

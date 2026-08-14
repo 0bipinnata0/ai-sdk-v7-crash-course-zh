@@ -45,7 +45,7 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
             content:
-              'What question should I ask next? Return only the question text.',
+              '我接下来应该问什么问题?只返回问题文本。',
           },
         ],
       });
