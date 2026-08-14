@@ -1,24 +1,24 @@
-We saw earlier an intriguing property on the `usage` that we get back from the AI SDK, which was `cachedInputTokens`.
+之前我们在 AI SDK 返回的 `usage` 上看到了一个有趣的属性：`cachedInputTokens`。
 
-This touches on a really important concept called prompt caching, where model providers actually cache some of the request for you so you pay less on repeat requests.
+这涉及到一个非常重要的概念，叫做提示词缓存（prompt caching)：模型提供商实际上会为你缓存请求的一部分，这样你在重复请求时就能少花钱。
 
-## Exploring Prompt Caching
+## 探索提示词缓存
 
-I've given you a playground that you can play with to explore prompt caching. There are a few important variables here:
+我给你准备了一个可以上手把玩的游乐场，用来探索提示词缓存。这里有几个重要的变量：
 
-Let's imagine that in a previous request, we have sent these tokens to the cache: "The quick brown fox jumps over the lazy dog." Then in a later request, we're going to send these input tokens - the same thing that we had before and then add a few extra tokens on the end.
+想象一下，在之前的请求中，我们把这些 token 送进了缓存："敏捷的棕色狐狸跳过了懒狗"。然后在之后的请求中，我们要发送这些输入 token——和之前一样的内容，然后在结尾多加几个 token。
 
 ```ts
 const tokensInCache = tokenize(
-  `The quick brown fox jumps over the lazy dog`,
+  `敏捷的棕色狐狸跳过了懒狗`,
 );
 const inputTokens = tokenize(
-  // NOTE: Change this to change what the input is
-  `The quick brown fox jumps over the lazy dog. What a brilliant story.`,
+  // 注意:修改这里可以改变输入内容
+  `敏捷的棕色狐狸跳过了懒狗。多棒的故事啊。`,
 );
 ```
 
-Below this, I've added some logic that matches what happens in the prompt caching. And below that, we're displaying a nice display of what gets cached and what doesn't.
+在这下面，我添加了一些模拟提示词缓存实际行为的逻辑。再往下，我们展示了一个漂亮的可视化，说明哪些内容被缓存、哪些没有。
 
 ```ts
 let numberOfMatchingTokens = 0;
@@ -30,85 +30,82 @@ for (let i = 0; i < inputTokens.length; i++) {
   }
 }
 
-// The cached and uncached tokens
+// 已缓存和未缓存的 token
 const cachedTokens = tokensInCache.slice(
   0,
   numberOfMatchingTokens,
 );
 const uncachedTokens = inputTokens.slice(numberOfMatchingTokens);
 
-// The cached and uncached output text
+// 已缓存和未缓存的输出文本
 const cachedText = tokenizer.decode(cachedTokens);
 const uncachedText = tokenizer.decode(uncachedTokens);
 ```
 
-## How Caching Works
+## 缓存的工作原理
 
-If we run this, we can see that "The quick brown fox jumps over the lazy dog" has been cached. In other words, these would be counted as cached input tokens. And then, "What a brilliant story," gets counted as normal input tokens:
+如果我们运行这个，可以看到"敏捷的棕色狐狸跳过了懒狗"被缓存了。换句话说，这些会被计为已缓存的输入 token。然后，"多棒的故事啊"会被计为普通的输入 token:
 
-- Cached: "The quick brown fox jumps over the lazy dog"
-- Uncached: ". What a brilliant story."
+- 已缓存："敏捷的棕色狐狸跳过了懒狗"
+- 未缓存："。多棒的故事啊。"
 
-The way this cache works is you invalidate it as soon as you reach a token that isn't already in the cache. So if we change "quick" to "fast", for instance, and then run this again, we can see that it only caches one token:
+这个缓存的工作方式是：一旦遇到一个不在缓存中的 token，缓存就失效了。所以如果我们把"敏捷"改成"迅捷"，然后再运行一次，可以看到它只缓存了很少的 token。
 
-- Cached: "The"
-- Uncached: " fast brown fox jumps over the lazy dog. What a brilliant story."
+当然，如果我们完全换掉内容，比如只发送"foo"，再运行一次，最终就完全不会有缓存：
 
-Or of course, if we change this completely and just send "foo", for instance, and run it again, then we're going to end up with no caching:
+- 已缓存：""
+- 未缓存："foo"
 
-- Cached: ""
-- Uncached: "foo"
+## 对话中的缓存
 
-## Caching in Conversations
-
-This caching behavior matches how conversations in most chat apps end up working. For instance, let's imagine that we have this in the cache where we have a user message and then an assistant message.
+这种缓存行为与大多数聊天应用中对话的实际工作方式相吻合。比如，假设我们的缓存中有这样的内容：一条用户消息，然后是一条助手消息。
 
 ```ts
 const tokensInCache = tokenize(
-  // NOTE: Change this to change what's in the cache
+  // 注意:修改这里可以改变缓存内容
   [
-    'User: What is the capital of France?',
-    'Assistant: Paris',
+    '用户:法国的首都是哪里?',
+    '助手:巴黎',
   ].join('\n'),
 );
 
 const inputTokens = tokenize(
-  // NOTE: Change this to change what the input is
+  // 注意:修改这里可以改变输入内容
   [
-    'User: What is the capital of France?',
-    'Assistant: Paris',
-    'User: What is the capital of Germany?',
+    '用户:法国的首都是哪里?',
+    '助手:巴黎',
+    '用户:德国的首都是哪里?',
   ].join('\n'),
 );
 ```
 
-Well, if we send some input tokens here where we just add in the previous conversation but add in a new question, we can see that all of the previous parts of the conversation have been cached and only the new stuff gets really charged to us at the uncached rate:
+那么，如果我们发送的输入 token 是之前的对话再加上一个新问题，我们可以看到对话之前的所有部分都被缓存了，只有新内容才真正按未缓存的费率收费：
 
-- Cached:
-  - "User: What is the capital of France?"
-  - "Assistant: Paris"
-- Uncached:
-  - "User: What is the capital of Germany?"
+- 已缓存：
+  - "用户：法国的首都是哪里？"
+  - "助手：巴黎"
+- 未缓存：
+  - "用户：德国的首都是哪里？"
 
-Cached input tokens and normal input tokens get billed at different rates. You should check out your model provider to see how caching works there.
+已缓存的输入 token 和普通的输入 token 按不同的费率计费。你应该查看你的模型提供商的文档，了解那里的缓存是如何工作的。
 
-Some model providers explicitly ask you to tell them how long to cache it for, and some use implicit caching where it's just automatically enabled. But all of them work like this where you have something in the cache and it gets cached up until the point where it receives a new token.
+有些模型提供商明确要求你告诉它们缓存多长时间，有些则使用隐式缓存，也就是自动启用。但它们的工作方式都一样：缓存中有一些内容，在收到新 token 之前的部分都会被缓存。
 
-## Steps to Complete
+## 完成步骤
 
-- [ ] [Run the playground](./main.ts) with the initial settings to observe the basic caching behavior
-  - Look for the green (cached) and red (uncached) text in the output
+- [ ] 用初始设置[运行游乐场](./main.ts)，观察基本的缓存行为
+  - 注意输出中的绿色（已缓存）和红色（未缓存）文本
 
-- [ ] Modify the `tokensInCache` variable to experiment with different cache contents
-  - Try simple sentences, conversation formats, or completely different text
+- [ ] 修改 `tokensInCache` 变量，试验不同的缓存内容
+  - 尝试简单句子、对话格式或完全不同的文本
 
-- [ ] Change the `inputTokens` variable to test different scenarios
-  - Try matching the cache exactly
-  - Try partial matches with the cache
-  - Try completely different text from what's in the cache
+- [ ] 修改 `inputTokens` 变量，测试不同的场景
+  - 尝试与缓存完全匹配
+  - 尝试与缓存部分匹配
+  - 尝试与缓存内容完全不同的文本
 
-- [ ] Test the [conversation scenario](../explainer.2/main.ts) by setting up both variables as conversation formats
-  - See how adding new messages affects caching
+- [ ] 通过把两个变量都设置为对话格式，测试[对话场景](../explainer.2/main.ts)
+  - 看看添加新消息如何影响缓存
 
-- [ ] Experiment with changing just a single word or character in the input to see how it affects caching
-  - Observe how early changes invalidate more of the cache than later changes
+- [ ] 试验只修改输入中的一个词或一个字符，看看它如何影响缓存
+  - 观察越靠前的修改会让越多的缓存失效，而越靠后的修改影响越小

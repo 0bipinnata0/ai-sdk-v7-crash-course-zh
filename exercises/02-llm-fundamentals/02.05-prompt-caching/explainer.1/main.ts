@@ -3,7 +3,7 @@ import o200k_base from 'js-tiktoken/ranks/o200k_base';
 import { styleText } from 'util';
 
 const tokenizer = new Tiktoken(
-  // NOTE: o200k_base is the tokenizer for GPT-4o
+  // 注意:o200k_base 是 GPT-4o 的分词器
   o200k_base,
 );
 
@@ -12,12 +12,12 @@ const tokenize = (text: string) => {
 };
 
 const tokensInCache = tokenize(
-  `The quick brown fox jumps over the lazy dog`,
+  `敏捷的棕色狐狸跳过了懒狗`,
 );
 
 const inputTokens = tokenize(
-  // NOTE: Change this to change what the input is
-  `The quick brown fox jumps over the lazy dog. What a brilliant story.`,
+  // 注意:修改这里可以改变输入内容
+  `敏捷的棕色狐狸跳过了懒狗。多棒的故事啊。`,
 );
 
 let numberOfMatchingTokens = 0;
@@ -29,18 +29,18 @@ for (let i = 0; i < inputTokens.length; i++) {
   }
 }
 
-// The cached and uncached tokens
+// 已缓存和未缓存的 token
 const cachedTokens = tokensInCache.slice(
   0,
   numberOfMatchingTokens,
 );
 const uncachedTokens = inputTokens.slice(numberOfMatchingTokens);
 
-// The cached and uncached output text
+// 已缓存和未缓存的输出文本
 const cachedText = tokenizer.decode(cachedTokens);
 const uncachedText = tokenizer.decode(uncachedTokens);
 
-console.log('Cached tokens:', cachedTokens.length);
+console.log('已缓存 token 数:', cachedTokens.length);
 console.log(
   styleText(['bold', 'green'], cachedText) +
     styleText(['red'], uncachedText),

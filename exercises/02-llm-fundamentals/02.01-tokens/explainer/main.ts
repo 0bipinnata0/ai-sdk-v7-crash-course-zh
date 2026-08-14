@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 const tokenizer = new Tiktoken(
-  // NOTE: o200k_base is the tokenizer for GPT-4o
+  // 注意:o200k_base 是 GPT-4o 的分词器
   o200k_base,
 );
 
@@ -19,6 +19,6 @@ const input = readFileSync(
 
 const output = tokenize(input);
 
-console.log('Content length in characters:', input.length);
-console.log(`Number of tokens:`, output.length);
+console.log('内容长度(字符数):', input.length);
+console.log(`token 数量:`, output.length);
 console.dir(output, { depth: null, maxArrayLength: 20 });

@@ -1,8 +1,8 @@
-In this lesson, we'll explore how different data formats affect token efficiency when working with LLMs. Understanding token usage is crucial for optimizing your prompts and context windows.
+在本课中，我们将探讨在使用 LLM 时，不同的数据格式如何影响 token 效率。理解 token 使用量对于优化你的提示词和上下文窗口至关重要。
 
-## Comparing Different Data Formats
+## 比较不同的数据格式
 
-I want to demonstrate how you can pass different types of data to your LLMs and compare their token efficiency. Let's examine our starting point:
+我想演示一下如何向 LLM 传递不同类型的数据，并比较它们的 token 效率。让我们看看起点：
 
 ```ts
 const DATA = [
@@ -25,13 +25,13 @@ const DATA = [
 ];
 ```
 
-We have an array of URLs, each with a URL and a title. We might be passing these to an LLM for citations or similar purposes.
+我们有一个 URL 数组，每项都有一个 URL 和一个标题。我们可能会把这些传给 LLM，用于引用或类似的用途。
 
-We're creating three different representations of the same data:
+我们创建了同一数据的三种不同表示形式：
 
-1. XML format
-2. JSON format
-3. Markdown list format
+1. XML 格式
+2. JSON 格式
+3. Markdown 列表格式
 
 ```ts
 const asXML = DATA.map(
@@ -50,69 +50,69 @@ const asMarkdown = DATA.map(
 ).join('\n');
 ```
 
-## Token Comparison Results
+## Token 比较结果
 
-When we run this code, we log the token count for each format:
+运行这段代码时，我们记录了每种格式的 token 数量：
 
 ```ts
-console.log('Markdown tokens:', tokenize(asMarkdown).length);
+console.log('Markdown token 数:', tokenize(asMarkdown).length);
 console.log(asMarkdown);
 console.log('--------------------------------');
-console.log('XML tokens:', tokenize(asXML).length);
+console.log('XML token 数:', tokenize(asXML).length);
 console.log(asXML);
 console.log('--------------------------------');
-console.log('JSON tokens:', tokenize(asJSON).length);
+console.log('JSON token 数:', tokenize(asJSON).length);
 console.log(asJSON);
 ```
 
-The results show some interesting differences:
+结果显示了一些有趣的差异：
 
-| Format   | Token Count |
-| -------- | ----------- |
-| Markdown | 53 tokens   |
-| XML      | 77 tokens   |
-| JSON     | 103 tokens  |
+| 格式     | Token 数量 |
+| -------- | ---------- |
+| Markdown | 53 tokens  |
+| XML      | 77 tokens  |
+| JSON     | 103 tokens |
 
-## Understanding Format Efficiency
+## 理解格式效率
 
-It's important not to draw overly general conclusions from this specific example. It's not always true that:
+不要从这个具体例子中得出过于笼统的结论，这一点很重要。以下说法并不总是成立的：
 
-- JSON is always larger
-- XML is always medium-sized
-- Markdown is always the most efficient
+- JSON 总是更大
+- XML 总是中等大小
+- Markdown 总是最高效
 
-However, thinking about these representations in terms of token count is extremely valuable for optimization.
+然而，从 token 数量的角度思考这些表示形式，对于优化来说是极有价值的。
 
-A significant aspect of context engineering (which we'll cover later) involves getting retrieved data into your LLM efficiently.
+上下文工程（我们稍后会讲到）的一个重要方面，就是如何高效地把检索到的数据送进你的 LLM。
 
-Generally speaking, the fewer tokens you spend on getting that data into your context window, the better you're doing.
+一般来说，你把这些数据送进上下文窗口所花的 token 越少，你做得就越好。
 
-## Exercise Suggestions
+## 练习建议
 
-I recommend experimenting with these representations:
+我建议你对这些表示形式做些实验：
 
-1. Try adding markdown titles instead of just a normal list
-2. Make the XML more verbose to see how that affects token count
-3. Modify the JSON formatting (removing `null` and `2` to have it on a single line)
+1. 尝试添加 markdown 标题，而不仅仅是普通列表
+2. 让 XML 更冗长，看看这会如何影响 token 数量
+3. 修改 JSON 格式（去掉 `null` 和 `2` 参数，让它变成单行）
 
-The goal is to understand how data representation affects token counts and how different formats can be more or less token-efficient.
+目标是理解数据表示形式如何影响 token 数量，以及不同格式在 token 效率上的高低。
 
-Good luck, and I'll see you in the next one.
+祝你好运，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Run the existing code to observe the token counts for each format
-  - Use `pnpm run dev` to execute the code
-  - Note the token counts for markdown (53), XML (77), and JSON (103)
+- [ ] 运行现有代码，观察每种格式的 token 数量
+  - 使用 `pnpm run dev` 执行代码
+  - 记录 markdown(53)、XML(77）和 JSON(103）的 token 数量
 
-- [ ] Modify the markdown representation to include titles
-  - Try changing the format to include headers or other markdown elements
-  - Run the code again to see how this affects token count
+- [ ] 修改 markdown 表示形式，加入标题
+  - 尝试改变格式，加入标题或其他 markdown 元素
+  - 再次运行代码，看看这会如何影响 token 数量
 
-- [ ] Make the XML representation more verbose
-  - Add additional attributes or nested elements
-  - Compare the new token count with the original
+- [ ] 让 XML 表示形式更冗长
+  - 添加额外的属性或嵌套元素
+  - 将新的 token 数量与原来的比较
 
-- [ ] Experiment with the JSON formatting
-  - Remove the formatting parameters (`null, 2`) to have JSON on a single line
-  - Run the code again to see if this reduces token count
+- [ ] 试验 JSON 格式
+  - 去掉格式化参数（`null, 2`)，让 JSON 变成单行
+  - 再次运行代码，看看这是否会减少 token 数量

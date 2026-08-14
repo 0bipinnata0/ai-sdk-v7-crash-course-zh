@@ -4,7 +4,7 @@ import { Tiktoken } from 'js-tiktoken/lite';
 import o200k_base from 'js-tiktoken/ranks/o200k_base';
 
 const tokenizer = new Tiktoken(
-  // NOTE: o200k_base is the tokenizer for GPT-4o
+  // 注意:o200k_base 是 GPT-4o 的分词器
   o200k_base,
 );
 
@@ -22,12 +22,12 @@ for (let i = 0; i < NUMBER_OF_TOKENS; i++) {
 
 const tokens = tokenize(text);
 
-console.log(`Tokens length: ${tokens.length}`);
+console.log(`Token 长度:${tokens.length}`);
 
 await generateText({
   model: google('gemini-2.5-flash-lite'),
   prompt: text,
-  // NOTE: by default, the AI SDK retries the request 3 times
-  // if it fails. We can prevent this by setting maxRetries to 0.
+  // 注意:默认情况下,AI SDK 在请求失败时会重试 3 次。
+  // 我们可以通过将 maxRetries 设为 0 来阻止这一行为。
   maxRetries: 0,
 });

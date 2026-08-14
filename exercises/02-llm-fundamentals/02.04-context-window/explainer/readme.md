@@ -1,16 +1,16 @@
-Now that we understand tokens at a deeper level, let's talk about one of the biggest constraints on LLM applications today, which is the LLM's context window.
+现在我们对 token 有了更深入的理解，让我们来谈谈当今 LLM 应用最大的约束之一：LLM 的上下文窗口（context window)。
 
-Every LLM out there will have some kind of hard-coded context window - the limit of the number of tokens it can see at any one time. The context window represents the input tokens and the output tokens - in other words, the total number of tokens that the LLM can see.
+每个 LLM 都有某种硬编码的上下文窗口——它在任何时刻能看到的 token 数量上限。上下文窗口包括输入 token 和输出 token——换句话说，就是 LLM 能看到的 token 总数。
 
-In this exercise, I'm going to show you what happens when you overflow the context window.
+在本练习中，我将向你展示当超出上下文窗口时会发生什么。
 
-## Demonstrating Context Window Limits
+## 演示上下文窗口限制
 
-In our exercise, we're going to create an enormous input text of 10 million tokens. Each one is simply going to be "foo".
+在我们的练习中，我们将创建一个包含 1000 万个 token 的巨大输入文本。每一个都只是简单的 "foo"。
 
 ```typescript
 const tokenizer = new Tiktoken(
-  // NOTE: o200k_base is the tokenizer for GPT-4o
+  // 注意:o200k_base 是 GPT-4o 的分词器
   o200k_base,
 );
 
@@ -27,19 +27,19 @@ for (let i = 0; i < NUMBER_OF_TOKENS; i++) {
 }
 ```
 
-We're going to log out the number of those tokens, just to check their length. Then, we'll call an LLM with them.
+我们会打印出这些 token 的数量，只是为了确认它们的长度。然后，我们用它们调用一个 LLM。
 
 ```typescript
 const tokens = tokenize(text);
 
-console.log(`Tokens length: ${tokens.length}`);
+console.log(`Token 长度:${tokens.length}`);
 ```
 
-## A Note On `maxRetries`
+## 关于 `maxRetries` 的说明
 
-By default, `generateText` and `streamText` retry the LLM call three times if it fails. This is useful in a production setting, since it helps make the apps more resilient to failures.
+默认情况下，`generateText` 和 `streamText` 在调用失败时会重试 LLM 调用三次。这在生产环境中很有用，因为它能让应用对故障更有韧性。
 
-However, we're expecting it to fail, so we're going to set it to zero:
+不过，我们正预期它会失败，所以我们把它设置为零：
 
 ```typescript
 await generateText({
@@ -49,28 +49,28 @@ await generateText({
 });
 ```
 
-When I run this with Gemini, I end up with an error: "You have exceeded your current quota."
+当我用 Gemini 运行这个时，最终得到一个错误："You have exceeded your current quota."（你已超出当前配额。)
 
-Different model providers throw different errors. For instance, Anthropic will simply validate it and say the request is too large. But the concept here is the same: we have passed too much information to the LLM.
+不同的模型提供商抛出不同的错误。比如，Anthropic 会直接校验并说请求太大。但这里要表达的概念是一样的：我们传给 LLM 的信息太多了。
 
-## Understanding Context Window Limitations
+## 理解上下文窗口的限制
 
-So that is what a context window is: the total number of input and output tokens that the LLM can see at any one time.
+所以，上下文窗口就是：LLM 在任一时刻能看到的输入和输出 token 的总数。
 
-Different models have different sizes of context windows which make them better at different things. Some models are relatively simple, but have large context windows. Some models are much smarter, but can see relatively less.
+不同的模型有不同大小的上下文窗口，这让它们擅长不同的事情。有些模型相对简单，但有很大的上下文窗口。有些模型聪明得多，但能看到的相对较少。
 
-I recommend you try this out with one of your favorite models. BEAR IN MIND that if you get this wrong, if you, let's say, just add in just under the maximum number of tokens, then you will be billed for all of those tokens.
+我建议你用你最喜欢的模型之一试试这个练习。请注意，如果你搞错了——比如说，你加入了刚好低于最大数量的 token——那么你要为所有这些 token 付费。
 
-Good luck, and I will see you in the next one.
+祝你好运，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Examine the code to understand how we're creating a very large text to test context window limits
+- [ ] 查看代码，理解我们是如何创建一个非常大的文本来测试上下文窗口限制的
 
-- [ ] Run the code using `pnpm run dev` to see what happens when the context window is exceeded
-  - Observe the error message that appears in the terminal
+- [ ] 使用 `pnpm run dev` 运行代码，看看超出上下文窗口时会发生什么
+  - 观察终端中出现的错误信息
 
-- [ ] Try using a different model by changing the `model` parameter in the `generateText` call
-  - Different models have different context window sizes
+- [ ] 通过修改 `generateText` 调用中的 `model` 参数，尝试使用不同的模型
+  - 不同的模型有不同大小的上下文窗口
 
-- [ ] Notice how different model providers return different types of errors for context window overflows
+- [ ] 注意不同的模型提供商对上下文窗口溢出返回的不同类型的错误

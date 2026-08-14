@@ -1,14 +1,14 @@
-Now we understand a bit more about how the AI SDK works, let's dive a bit deeper into LLM fundamentals
+现在我们对 AI SDK 的工作方式有了更多了解，让我们更深入地探究 LLM 的基础知识。
 
-We need to understand a little bit about how LLMs work, because the constraints of how they work really, really impact how you build systems around them.
+我们需要了解一下 LLM 的工作原理，因为它们的工作方式所带来的约束，会真真切切地影响你如何围绕它们构建系统。
 
-The first concept we're going to get our heads around is tokens. For this we're going to be using tiktokenizer, specifically their [online playground](https://tiktokenizer.vercel.app).
+我们要搞懂的第一个概念是 token。为此我们将使用 tiktokenizer，具体来说是它的[在线游乐场](https://tiktokenizer.vercel.app)。
 
-Watch the video to see a demo of this in action.
+观看视频，看看它的实际演示。
 
-## Implementing Token Counting
+## 实现 token 计数
 
-Inside `main.ts` we've installed `js-tiktoken` which is a JavaScript implementation of the online playground:
+在 `main.ts` 中，我们安装了 `js-tiktoken`，这是那个在线游乐场的 JavaScript 实现：
 
 ```ts
 import { Tiktoken } from 'js-tiktoken/lite';
@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 const tokenizer = new Tiktoken(
-  // NOTE: o200k_base is the tokenizer for GPT-4o
+  // 注意:o200k_base 是 GPT-4o 的分词器
   o200k_base,
 );
 
@@ -32,21 +32,21 @@ const input = readFileSync(
 
 const output = tokenize(input);
 
-console.log('Content length in characters:', input.length);
-console.log(`Number of tokens:`, output.length);
+console.log('内容长度(字符数):', input.length);
+console.log(`token 数量:`, output.length);
 console.dir(output, { depth: null, maxArrayLength: 20 });
 ```
 
-We're going to take in some input text that's in [`input.md`](./input.md). Then we're going to call `tokenize` on it which is going to encode the text into tokens and return an array of numbers.
+我们将读取 [`input.md`](./input.md) 中的输入文本。然后对它调用 `tokenize`，它会把文本编码成 token 并返回一个数字数组。
 
-We should then be able to see some logs where we log out the tokens with the number of tokens and the content length in characters.
+然后我们能看到一些日志，打印出 token、token 数量以及以字符数表示的内容长度。
 
-When we run this we can see that the entire length of the text is nearly 2300 characters but the number of tokens is only 484.
+token 的工作方式是：你通常按 token 计费，所以 token——而不是单词或字符——才是 LLM 世界真正的货币。
 
-Now the way tokens work is you're often billed by the token and so tokens, not words or characters are really the currency of LLMs.
+值得注意的是，不同语言的分词效率差异很大——中文文本和英文文本产生的 token 数量会很不一样。试着对比一下！
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Open the [`main.ts`](./main.ts) file and review the existing implementation of the [`tokenize`](./main.ts) function.
+- [ ] 打开 [`main.ts`](./main.ts) 文件，查看 [`tokenize`](./main.ts) 函数的现有实现。
 
-- [ ] Try changing the input text in [`input.md`](./input.md) and see how many tokens it spits out.
+- [ ] 尝试修改 [`input.md`](./input.md) 中的输入文本，看看它会输出多少个 token。
