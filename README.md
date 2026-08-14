@@ -1,4 +1,19 @@
-# AI SDK v6 速成课程
+# AI SDK v6 速成课程(已升级至 v7)
+
+> ⚡ **本仓库已全量升级**:所有依赖(含 AI SDK **v7**)、代码示例与教程文档均已适配最新版本。你可以把本仓库的升级提交(`4fab49b` 起)当作一份 **AI SDK v6 → v7 的升级教程** 来参考,主要变更包括:
+>
+> - `system:` → `instructions:`
+> - `onFinish` → `onEnd`、`onStepFinish` → `onStepEnd`
+> - `stepCountIs` → `isStepCount`
+> - `fullStream` → `stream`
+> - `experimental_createMCPClient` → `createMCPClient`(`@ai-sdk/mcp` v2)
+> - `experimental_telemetry` → `telemetry`
+> - `ModelMessage` 使用 `content`(而非 `parts`)
+> - UIMessage part 的 `providerOptions` → `providerMetadata`
+> - `usage.cachedInputTokens` → `usage.inputTokenDetails.cacheReadTokens`
+> - zod 统一使用 v4 导入
+>
+> 官方迁移指南见 `node_modules/ai/docs/08-migration-guides/23-migration-guide-7-0.mdx`。
 
 <img src="https://res.cloudinary.com/total-typescript/image/upload/v1770220978/ai-sdk-v5-crash-course-github-thumbnail_3x.jpg" alt="AI SDK 6 Crash Course" />
 
