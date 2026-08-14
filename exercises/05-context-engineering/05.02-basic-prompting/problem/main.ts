@@ -1,17 +1,17 @@
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-const INPUT = `Do some research on induction hobs and how I can replace a 100cm wide AGA cooker with an induction range cooker. Which is the cheapest, which is the best?`;
+const INPUT = `帮我调研一下电磁灶,以及我该如何把一台 100cm 宽的 AGA 炉灶换成电磁集成灶。哪款最便宜,哪款最好?`;
 
-// NOTE: A good output would be: "Induction hobs vs AGA cookers"
+// 注意:好的输出应该是:“电磁灶 vs AGA 炉灶”
 
 const result = await streamText({
   model: google('gemini-2.5-flash-lite'),
-  // TODO: Rewrite this prompt using the Anthropic template from
-  // the previous exercise.
-  // You will NOT need all of the sections from the template.
+  // TODO:使用上一个练习中的 Anthropic 模板
+  // 重写这个提示词。
+  // 你不需要模板中的所有部分。
   prompt: `
-    Generate me a title:
+    给我生成一个标题:
     ${INPUT}
   `,
 });

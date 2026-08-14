@@ -1,16 +1,16 @@
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-const INPUT = `Do some research on induction hobs and how I can replace a 100cm wide AGA cooker with an induction range cooker. Which is the cheapest, which is the best?`;
+const INPUT = `帮我调研一下电磁灶,以及我该如何把一台 100cm 宽的 AGA 炉灶换成电磁集成灶。哪款最便宜,哪款最好?`;
 
 const exemplars = [
   {
-    input: `What's the difference between TypeScript and JavaScript? Should I learn TypeScript first or JavaScript?`,
-    expected: 'TypeScript vs JavaScript Comparison',
+    input: `TypeScript 和 JavaScript 有什么区别?我应该先学 TypeScript 还是 JavaScript?`,
+    expected: 'TypeScript 与 JavaScript 对比',
   },
   {
-    input: `I want to start investing but I'm a complete beginner. What are the safest options for someone with $5000 to invest?`,
-    expected: 'Beginner Investment Options',
+    input: `我想开始投资,但完全是新手。对于一个有 5000 元可投资的人来说,最安全的选择是什么?`,
+    expected: '新手投资选择',
   },
 ];
 
@@ -30,13 +30,13 @@ const result = await streamText({
         )
         .join('\n')}
     </examples>
-    
+
     <conversation-history>
     ${INPUT}
     </conversation-history>
 
     <the-ask>
-    Generate a title for the conversation.
+    为这段对话生成一个标题。
     </the-ask>
   `,
 });

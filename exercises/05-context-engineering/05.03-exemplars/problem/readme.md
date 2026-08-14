@@ -1,18 +1,18 @@
-In this exercise, we're building on our prompt engineering skills by adding exemplars to our prompt. Exemplars, or examples, are input-output pairs that show the model what kind of responses we want.
+在本练习中，我们将在提示词工程技能的基础上更进一步：给提示词添加示例（exemplars)。示例是输入-输出对，用来向模型展示我们想要什么样的响应。
 
-The existing prompt already has several components: task context, rules, conversation history, the ask, and output format. Now we need to add exemplars to make it even more effective.
+现有的提示词已经有几个组成部分：任务上下文、规则、对话历史、提问和输出格式。现在我们需要添加示例，让它更加有效。
 
-Let's look at the current code where we need to make changes:
+让我们看看需要修改的当前代码：
 
 ```typescript
 const exemplars = [
   {
-    input: `What's the difference between TypeScript and JavaScript? Should I learn TypeScript first or JavaScript?`,
-    expected: 'TypeScript vs JavaScript Comparison',
+    input: `TypeScript 和 JavaScript 有什么区别?我应该先学 TypeScript 还是 JavaScript?`,
+    expected: 'TypeScript 与 JavaScript 对比',
   },
   {
-    input: `I want to start investing but I'm a complete beginner. What are the safest options for someone with $5000 to invest?`,
-    expected: 'Beginner Investment Options',
+    input: `我想开始投资,但完全是新手。对于一个有 5000 元可投资的人来说,最安全的选择是什么?`,
+    expected: '新手投资选择',
   },
 ];
 
@@ -20,49 +20,49 @@ const result = await streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful assistant that can generate titles for conversations.
+    你是一个乐于助人的助手,可以为对话生成标题。
     </task-context>
 
     <rules>
-    Find the most concise title that captures the essence of the conversation.
-    Titles should be at most 30 characters.
-    Titles should be formatted in sentence case, with capital letters at the start of each word. Do not provide a period at the end.
+    找到能抓住对话精髓的最简洁标题。
+    标题最多 30 个字符。
+    标题使用句子式大小写,每个单词首字母大写。结尾不要句号。
     </rules>
 
-    ${TODO /* TODO: Add the exemplars here, formatted with XML */}
-    
+    ${TODO /* TODO:在这里添加示例,用 XML 格式化 */}
+
     <conversation-history>
     ${INPUT}
     </conversation-history>
 
     <the-ask>
-    Generate a title for the conversation.
+    为这段对话生成一个标题。
     </the-ask>
 
     <output-format>
-    Return only the title.
+    只返回标题。
     </output-format>
   `,
 });
 ```
 
-The task is to insert the exemplars into the prompt using XML tags. We need to replace the `TODO` with properly formatted exemplars.
+任务是使用 XML 标签把示例插入提示词中。我们需要把 `TODO` 替换为格式正确的示例。
 
-We should format each example with an `<example>` tag, and within that, use tags for the input and expected output.
+我们应该用 `<example>` 标签包裹每个示例，并在其中使用表示输入和预期输出的标签。
 
-Once we've added them, we might even be able to remove some other parts of the prompt because the examples alone can convey much of what we want. You may find you don't need to specify the rules or output format so explicitly.
+添加示例之后，我们甚至可以移除提示词中的其他部分，因为仅靠示例就能传达我们想要的大部分信息。你可能会发现不需要那么明确地指定规则或输出格式。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Replace the TODO comment with XML-formatted exemplars
-  - Use `<example>` tags to wrap each example
-  - Use `<input>` and `<expected>` tags inside each example
-  - Use the exemplars from the `exemplars` array
+- [ ] 用 XML 格式的示例替换 TODO 注释
+  - 使用 `<example>` 标签包裹每个示例
+  - 在每个示例内部使用 `<input>` 和 `<expected>` 标签
+  - 使用 `exemplars` 数组中的示例
 
-- [ ] Test the implementation by running the exercise
-  - Use `pnpm run exercise` to run the code
-  - Check if the output matches the expected format (a concise title for the conversation about induction hobs)
+- [ ] 通过运行练习来测试实现
+  - 使用 `pnpm run exercise` 运行代码
+  - 检查输出是否符合预期格式（为关于电磁灶的对话生成一个简洁的标题）
 
-- [ ] Try removing other parts of the prompt
-  - After adding exemplars, experiment with removing other sections
-  - See if the model still produces good results with fewer explicit instructions
+- [ ] 尝试移除提示词的其他部分
+  - 添加示例后，试验移除其他部分
+  - 看看在更少明确指令的情况下，模型是否仍然能产生好的结果

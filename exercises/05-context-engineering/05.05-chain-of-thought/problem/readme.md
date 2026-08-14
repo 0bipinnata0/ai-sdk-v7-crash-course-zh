@@ -1,122 +1,122 @@
-It's sometimes useful when you're talking to an LLM, when you want it to do something that's relatively complex, to get it to plan its work ahead of time. This was popularized by the idea of chain of thought, where you get the LLM to "think step by step".
+当你和 LLM 对话时，如果你想让它做一件相对复杂的事情，让它提前规划自己的工作有时会很有用。这个做法因"思维链"(chain of thought）的理念而流行起来，即让 LLM"一步一步地思考"。
 
-In practical terms, what this means is the LLM will:
+从实际角度来说，这意味着 LLM 会：
 
-- output tokens where it displays its thinking
-- only then will it go on to solve the problem
+- 输出展示其思考过程的 token
+- 只有在那之后，它才会继续解决问题
 
-The task we're going to try this out on is explaining TypeScript code.
+我们要尝试这个技术的任务是：解释 TypeScript 代码。
 
-(For those who don't know, a decent chunk of my career has been spent teaching TypeScript, so I'm sort of training an LLM to do my job. Whoops)
+（对不了解的人来说，我职业生涯中相当大一部分时间都在教 TypeScript，所以我算是在训练一个 LLM 来做我的工作。哎哟。)
 
-## The Existing Prompt
+## 现有提示词
 
-We've provided it some detailed task context here:
+我们在这里提供了详细的任务上下文：
 
 ```typescript
 const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful TypeScript expert that can explain complex TypeScript code for beginner TypeScript developers. You will be given a complex TypeScript code and you will need to explain it in a way that is easy to understand.
+    你是一位乐于助人的 TypeScript 专家,能够为 TypeScript 初学者解释复杂的 TypeScript 代码。你会收到一段复杂的 TypeScript 代码,你需要用易于理解的方式来解释它。
     </task-context>
 
     <background-data>
-    Here is the complex TypeScript code:
+    这是那段复杂的 TypeScript 代码:
     <code>
     ${COMPLEX_TS_CODE}
     </code>
 
-    And here is an article about the IIMT pattern:
+    还有一篇关于 IIMT 模式的文章:
     <article>
     ${IIMT_ARTICLE}
     </article>
     </background-data>
 
     <rules>
-    - Do not let the user know that you are using the article as a reference. Refer to the concepts as if you are an expert.
-    - Use section headers to organize the explanation.
+    - 不要让用户知道你在参考那篇文章。像专家一样谈论这些概念。
+    - 使用章节标题来组织解释。
     </rules>
 
     <the-ask>
-    Explain the code, using the article as a reference.
+    参考这篇文章来解释这段代码。
     </the-ask>
   `,
 });
 ```
 
-We're passing in some [`COMPLEX_TS_CODE`](./complex-ts-code.ts) into the background data as code, and I'm also passing in an article about the [immediately indexed map type pattern](https://www.totaltypescript.com/immediately-indexed-mapped-type).
+我们把 [`COMPLEX_TS_CODE`](./complex-ts-code.ts) 作为代码传入背景数据，我还传入了一篇关于[立即索引映射类型模式](https://www.totaltypescript.com/immediately-indexed-mapped-type)(immediately indexed mapped type）的文章。
 
-If you don't know what this is, don't worry. The idea here is for the LLM to produce some text that's going to explain it to you.
+如果你不知道这是什么，别担心。这里的想法是让 LLM 产出一段文字来解释给你听。
 
-We've got a couple of rules down here, and we've got the ask, which is to explain the code using the article as a reference.
+我们下面有几条规则，还有提问——参考文章来解释代码。
 
-Now, if we run this, we notice it generates an answer for a little bit and then writes to an `output.md` file.
+现在，如果我们运行这个，会发现它先生成一会儿答案，然后写入一个 `output.md` 文件。
 
 ```txt
 Generating answer
 ....................
 ```
 
-This produces a pretty decent article, really. I advise that you read through it and try to get a sense for the basics.
+这会产出一篇相当不错的文章。我建议你通读一遍，试着理解基础知识。
 
-## Improving The Prompt
+## 改进提示词
 
-From experience, the way that you optimally teach a complex piece of TypeScript like this is you break it down into its individual components. You then explain every single piece of code with different code samples, showing how every little bit works on its own, and then you bring it all together.
+根据经验，教这样一段复杂的 TypeScript 的最佳方式是把它拆解成一个个独立的部分。然后用不同的代码示例解释每一段代码，展示每一小部分如何独立工作，最后把它们组合起来。
 
-_This_ is why I want the LLM to burn a few tokens planning this ahead of time. Ideally, it would figure out the optimal path for the user to understand the code, including all of the syntax.
+_这_就是我想让 LLM 先烧一些 token 提前规划的原因。理想情况下，它会找出让用户理解这段代码（包括所有语法）的最优路径。
 
-The way we're going to do this is we're going to add some instructions telling the model to **think about its answer first** before it responds. That's our first TODO.
+我们要做的是添加一些指令，告诉模型**在回应之前先思考它的答案**。这是我们的第一个 TODO。
 
 ```ts
-// TODO: Add some instructions telling the model to think about its answer first before it responds. Consider the optimal path for the user to understand the code, including each individual piece of syntax.
+// TODO:添加一些指令,告诉模型在回应之前先思考它的答案。考虑让用户理解代码的最优路径,包括每一段单独的语法。
 ```
 
-## Output Format
+## 输出格式
 
-Now, if we just add the instruction to think harder and consider the optimal path, it will return that thinking as a block at the very start of the article:
+现在，如果我们只是添加"更深入地思考并考虑最优路径"的指令，它会把思考过程作为一大块内容返回到文章的最开头：
 
 ```txt
-OK, let me think about the output. Thinking...
+好,让我想想输出。思考中...
 
-Code explanation begins here.
+代码解释从这里开始。
 ```
 
-A better way to do that would be for it to wrap its thinking in thinking XML tags:
+更好的做法是让它把思考过程包裹在 thinking XML 标签中：
 
 ```txt
 <thinking>
-OK, let me think about the output. Thinking...
+好,让我想想输出。思考中...
 </thinking>
 
-Code explanation begins here.
+代码解释从这里开始。
 ```
 
-This way, we could make them visually distinct in the frontend.
+这样，我们就可以在前端把它们在视觉上区分开。
 
-So, we're going to specify an output format telling the model to return two sections, a thinking XML block and an answer.
+所以，我们要指定一个输出格式，告诉模型返回两个部分：一个 thinking XML 块和一个答案。
 
-Here's where we need to make the changes, at the TODOs in the code:
+这里是需要修改的地方，代码中的 TODO 处：
 
 ```typescript
-// TODO: Add an output format telling the model to return two sections - a <thinking> block and an answer. The answer should NOT be wrapped in an <answer> tag.
+// TODO:添加一个输出格式,告诉模型返回两个部分——一个 <thinking> 块和一个答案。答案不应该包裹在 <answer> 标签中。
 ```
 
-So that's the goal: get the model to break down the individual pieces of information that the user needs to know and return that in a thinking XML tag before the actual answer. And hopefully the eventual answer that gets produced will be of better quality than the one we initially got.
+所以目标就是：让模型拆解用户需要知道的每一块信息，并在实际答案之前把它们放进 thinking XML 标签中返回。希望最终产出的答案质量会比我们最初得到的更好。
 
-Good luck, and I will see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Add instructions to the prompt that tell the model to think about its answer first before responding
-  - Tell the model to plan the optimal path for user understanding
-  - Make sure to include instructions about breaking down individual syntax elements
+- [ ] 在提示词中添加指令，告诉模型在回应之前先思考它的答案
+  - 告诉模型规划让用户理解的最优路径
+  - 确保包含关于拆解各个语法元素的指令
 
-- [ ] Add an output format instruction to the prompt
-  - Specify that the output should include a `<thinking>` XML block
-  - Specify that after the thinking block should come the answer
-  - Make it clear that the answer should NOT be wrapped in an `<answer>` tag
+- [ ] 在提示词中添加输出格式指令
+  - 指定输出应包含一个 `<thinking>` XML 块
+  - 指定 thinking 块之后应该是答案
+  - 明确答案不应该包裹在 `<answer>` 标签中
 
-- [ ] Run the exercise using `pnpm run exercise` to test your implementation
-  - Check that the output in the terminal shows dots as the answer generates
-  - Verify that the output.md file contains a well-structured explanation
+- [ ] 使用 `pnpm run exercise` 运行练习来测试你的实现
+  - 检查终端输出是否在生成答案时显示圆点
+  - 验证 output.md 文件包含结构良好的解释

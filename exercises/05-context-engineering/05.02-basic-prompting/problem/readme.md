@@ -1,55 +1,55 @@
-In this lesson, we're taking what we've learned to improve a terrible prompt.
+在本课中，我们将运用所学的知识来改进一个糟糕的提示词。
 
-We're building something most chat applications need: a way to generate titles for threads. The idea is to take a conversation history and create a short, snappy title that helps people understand what the thread contains.
+我们正在构建大多数聊天应用都需要的东西：一种为对话线程生成标题的方式。思路是接收一段对话历史，生成一个简短、吸睛的标题，帮助人们理解这个线程包含什么内容。
 
-Looking at our current code:
+看看我们目前的代码：
 
 ```typescript
 const result = await streamText({
   model: google('gemini-2.5-flash-lite'),
-  // TODO: Rewrite this prompt using the Anthropic template from
-  // the previous exercise.
-  // You will NOT need all of the sections from the template.
+  // TODO:使用上一个练习中的 Anthropic 模板
+  // 重写这个提示词。
+  // 你不需要模板中的所有部分。
   prompt: `
-    Generate me a title:
+    给我生成一个标题:
     ${INPUT}
   `,
 });
 ```
 
-The issue with our current prompt is obvious - we're just saying "generate me a title" and passing in the conversation history (`INPUT`). But instead of getting a single title, we're getting back a very long piece of text with multiple title options and explanations:
+我们当前提示词的问题很明显——我们只是说"给我生成一个标题"，然后传入对话历史（`INPUT`)。但得到的不是单个标题，而是一段很长的文本，里面有多个标题选项和解释：
 
 ```
-Here are a few title options, ranging from informative to more click-baity:
+以下是几个标题选项,从信息性到更"标题党"的风格:
 
-**Informative & Direct:**
+**信息性 & 直接:**
 
-*   Replacing an AGA with Induction: A Guide to 100cm Range Cookers
-*   AGA to Induction: Comparing Range Cookers for Size and Performance
+*   用电磁炉替换 AGA:100cm 集成灶指南
+*   AGA 换电磁:集成灶尺寸与性能对比
 ...
 ```
 
-A good output would simply be: "Induction Hobs versus Aga Cookers."
+一个好的输出应该只是："电磁灶 vs AGA 炉灶"。
 
-The challenge is to improve this output using the prompt template discussed earlier. You won't need every section of the prompt template - probably just:
+挑战是使用之前讨论的提示词模板来改进这个输出。你不需要模板的每个部分——大概只需要：
 
-- High-level context
-- The conversation history
-- The ask
-- Output formatting (to ensure it only returns the title)
+- 高层次上下文
+- 对话历史
+- 提问
+- 输出格式（确保它只返回标题）
 
-We'll have multiple attempts at this over the next few exercises, so don't worry about getting it perfect. The goal is to apply the template, try it out, and see if we can get a better output.
+在接下来的几个练习中我们会多次尝试，所以不用担心做得不完美。目标是应用模板、试一试，看看能否得到更好的输出。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Modify the prompt by adding high-level context about what we're trying to do
-  - Explain that we need a short, concise title for a conversation
+- [ ] 修改提示词，添加关于我们要做什么的高层次上下文
+  - 解释我们需要为一段对话生成一个简短、简洁的标题
 
-- [ ] Include a clear "ask" section in the prompt
-  - Specify exactly what kind of title we want (short, descriptive, etc.)
+- [ ] 在提示词中包含一个清晰的"提问"部分
+  - 明确说明我们想要什么样的标题（简短、描述性等）
 
-- [ ] Add output formatting instructions
-  - Ensure the model only returns the title itself with no additional text
+- [ ] 添加输出格式指令
+  - 确保模型只返回标题本身，不带任何额外文本
 
-- [ ] Test your improved prompt by running the exercise with `pnpm run exercise`
-  - Check if the output is now just a single title like "Induction Hobs versus Aga Cookers"
+- [ ] 通过用 `pnpm run exercise` 运行练习来测试你改进后的提示词
+  - 检查输出现在是否只是单个标题，比如"电磁灶 vs AGA 炉灶"

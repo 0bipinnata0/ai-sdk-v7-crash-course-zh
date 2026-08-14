@@ -4,22 +4,22 @@ import { tavily } from '@tavily/core';
 
 const testCases = [
   {
-    input: 'What did Guillermo Rauch say about Matt Pocock?',
+    input: 'Guillermo Rauch 对 Matt Pocock 的评价是什么?',
     url: 'https://www.aihero.dev/',
   },
 
   {
-    input: "What is Matt Pocock's open source background?",
+    input: 'Matt Pocock 的开源背景是什么?',
     url: 'https://www.aihero.dev/',
   },
 
   {
-    input: 'Why is learning TypeScript important?',
+    input: '为什么学习 TypeScript 很重要?',
     url: 'https://totaltypescript.com/',
   },
 ] as const;
 
-// Change this to try a different test case
+// 修改这个值来尝试不同的测试用例
 const TEST_CASE_TO_TRY = 0;
 
 const { input, url } = testCases[TEST_CASE_TO_TRY];
@@ -33,18 +33,18 @@ const scrapeResult = await tavilyClient.extract([url]);
 const rawContent = scrapeResult.results[0]?.rawContent;
 
 if (!rawContent) {
-  throw new Error('Could not scrape the URL');
+  throw new Error('无法抓取该 URL');
 }
 
 const result = await streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful assistant that summarizes the content of a URL.
+    你是一个乐于助人的助手,负责总结 URL 的内容。
     </task-context>
 
     <background-data>
-    Here is the content of the website:
+    这是网站的内容:
     <url>
     ${url}
     </url>
@@ -54,22 +54,22 @@ const result = await streamText({
     </background-data>
 
     <rules>
-    - Use the content of the website to answer the question.
-    - If the question is not related to the content of the website, say "I'm sorry, I can only answer questions about the content of the website."
-    - Use quotes from the content of the website to answer the question.
-    - Use paragraphs in your output.
+    - 使用网站的内容来回答问题。
+    - 如果问题与网站内容无关,说“抱歉,我只能回答关于网站内容的问题。”
+    - 使用网站内容中的引文来回答问题。
+    - 在输出中使用段落。
     </rules>
-    
+
     <conversation-history>
     ${input}
     </conversation-history>
 
     <the-ask>
-    Summarize the content of the website based on the conversation history.
+    根据对话历史总结网站的内容。
     </the-ask>
 
     <output-format>
-    Return only the summary.
+    只返回摘要。
     </output-format>
   `,
 });

@@ -1,16 +1,16 @@
-One of the most important and consequential things you're going to do as an AI app developer is to decide how you're going to prompt the LLMs that you're using.
+作为 AI 应用开发者，你要做的最重要、影响最深远的事情之一，就是决定如何向你使用的 LLM 编写提示词。
 
-Prompting LLMs can be pretty annoying because you end up with blank page syndrome, where you know vaguely what you want to say but don't quite know how to structure it.
+给 LLM 写提示词可能挺烦人的，因为你会遇上"空白页综合症"——你大概知道自己想说什么，但不太知道该如何组织。
 
-When researching this topic, I came across a great [prompt template from Anthropic](https://www.youtube.com/watch?v=ysPbXH0LpIE) which I've recreated [here](./main.ts).
+在研究这个主题时，我遇到了一个很棒的[来自 Anthropic 的提示词模板](https://www.youtube.com/watch?v=ysPbXH0LpIE)，我在[这里](./main.ts)复现了它。
 
-This template breaks down different elements that you can add to your prompts, and importantly, it structures them in a specific order.
+这个模板拆解了可以添加到提示词中的不同元素，重要的是，它按照特定的顺序来组织它们。
 
-In this template, I've added XML tags to clearly mark what each part represents. While XML tags are useful for clarity, they should be taken with a pinch of salt. There's a more realistic version of the template at the bottom with fewer XML tags.
+在这个模板中，我添加了 XML 标签来清楚地标明每个部分代表什么。虽然 XML 标签有助于清晰表达，但也不必太当真。模板底部有一个更贴近现实的版本，用的 XML 标签更少。
 
-Let's examine each individual part of the template and explain its purpose.
+让我们逐个检查模板的每个部分，解释它的用途。
 
-## Task Context
+## 任务上下文（Task Context)
 
 ```typescript
 export const THE_ANTHROPIC_PROMPT_TEMPLATE = (opts: {
@@ -19,118 +19,118 @@ export const THE_ANTHROPIC_PROMPT_TEMPLATE = (opts: {
   latestQuestion: string;
 }) => `
 <task-context>
-  You will be acting as an AI career coach named Joe created by the company AdAstra Careers. Your goal is to give career advice to users. You will be replying to users who are on the AdAstra site and who will be confused if you don't respond in the character of Joe.
+  你将扮演一位名叫 Joe 的 AI 职业教练,由 AdAstra Careers 公司创建。你的目标是为用户提供职业建议。你将回复 AdAstra 网站上的用户,如果你不以 Joe 的角色回应,他们会感到困惑。
 </task-context>
 ```
 
-At the start of your prompt, you want to give some high-level task context. This is where you can do role-based prompting - "You will be acting as an AI career coach named Joe." You'll define the kind of task it will be performing and provide a high-level job description.
+在提示词的开头，你要给出一些高层次的任务上下文。这里可以进行角色扮演式的提示——"你将扮演一位名叫 Joe 的 AI 职业教练"。你要定义它将执行的任务类型，并提供一份高层次的职位描述。
 
-## Tone Context
+## 语气上下文（Tone Context)
 
 ```typescript
 <tone-context>
-  You should maintain a friendly customer service tone.
+  你应该保持友好的客服语气。
 </tone-context>
 ```
 
-After that, you can include tone context. I don't find myself using this section very much, but it's useful if you want your LLM to reply in a more informal tone or use a certain language.
+之后，你可以包含语气上下文。我自己不太常用这个部分，但如果你想让 LLM 以更非正式的语气回复或使用某种特定的语言风格，它就很有用。
 
-## Background Data
+## 背景数据（Background Data)
 
 ```typescript
 <background-data>
-  Here is the career guidance document you should reference when answering the user:
+  这是你在回答用户时应该参考的职业指导文档:
   <guide>
   ${opts.careerGuidanceDocument}
   </guide>
 </background-data>
 ```
 
-Next comes the background data section. This is for any background information you want to add as part of your prompt. Later, we'll look at retrieval systems where you can retrieve documents to put into this section.
+接下来是背景数据部分。这里放任何你想作为提示词一部分加入的背景信息。稍后，我们会讲到检索系统，你可以把检索到的文档放进这个部分。
 
-Notice how each document is wrapped in XML tags. This helps the LLM recognize where one document ends and another begins.
+注意每个文档是如何用 XML 标签包裹的。这帮助 LLM 识别一个文档在哪里结束、另一个文档在哪里开始。
 
-## Rules
+## 规则（Rules)
 
 ```typescript
 <rules>
-  Here are some important rules for the interaction:
-  - Always stay in character, as Joe, an AI from AdAstra careers
-  - If you are unsure how to respond, say "Sorry, I didn't understand that. Could you repeat the question?"
-  - If someone asks something irrelevant, say, "Sorry, I am Joe and I give career advice. Do you have a career question today I can help you with?"
+  以下是本次互动的一些重要规则:
+  - 始终保持角色设定,扮演 AdAstra Careers 的 AI——Joe
+  - 如果你不确定如何回应,说“抱歉,我没听懂。你能重复一下问题吗?”
+  - 如果有人问了不相关的问题,说:“抱歉,我是 Joe,我提供职业建议。你今天有什么职业问题需要我帮忙吗?”
 </rules>
 ```
 
-The rules section provides a more detailed description of the task. It includes both instructions ("Always stay in character") and caveats for handling edge cases. In my experience, this is where you'll spend the bulk of your prompt engineering time.
+规则部分提供了对任务更详细的描述。它既包含指令（"始终保持角色设定")，也包含处理边界情况的注意事项。以我的经验，这是你投入提示词工程时间最多的地方。
 
-## Examples
+## 示例（Examples)
 
 ```typescript
 <examples>
-  Here is an example of how to respond in a standard interaction:
+  以下是在标准互动中如何回应的示例:
   <example>
-    User: Hi, how were you created and what do you do?
-    Joe: Hello! My name is Joe, and I was created by AdAstra Careers to give career advice. What can I help you with today?
+    用户:你好,你是怎么被创造出来的,你做什么工作?
+    Joe:你好!我叫 Joe,由 AdAstra Careers 创造,提供职业建议。今天有什么可以帮你的?
   </example>
 </examples>
 ```
 
-The examples section demonstrates how to respond in typical interactions. This might be overkill for simple cases, but it's very effective for complex tasks. If you've heard of few-shot prompting, this is where you would include your examples.
+示例部分演示了在典型互动中如何回应。对于简单场景这可能有点过度，但对于复杂任务非常有效。如果你听说过少样本提示（few-shot prompting)，这就是你放示例的地方。
 
-## Conversation History
+## 对话历史（Conversation History)
 
 ```typescript
 <conversation-history>
-  Here is the conversation history (between the user and you) prior to the question. It could be empty if there is no history:
+  这是问题之前的对话历史(用户和你之间的)。如果没有历史记录,它可能为空:
   <history>
   ${opts.conversationHistory}
   </history>
 </conversation-history>
 ```
 
-The conversation history section is crucial for providing context about what's happened in previous interactions. The LLM needs this to maintain coherence across the conversation.
+对话历史部分对于提供先前互动的上下文至关重要。LLM 需要它来维持对话的连贯性。
 
-## The Ask
+## 提问（The Ask)
 
 ```typescript
 <the-ask>
-  Here is the user's question:
+  这是用户的问题:
   <question>
   ${opts.latestQuestion}
   </question>
-  How do you respond to the user's question?
+  你会如何回应用户的问题?
 </the-ask>
 ```
 
-The ask section is perhaps the most important part. Everything above is supporting information - this is where we actually ask the LLM what we want it to do. Any critical instructions should go here.
+提问部分也许是最重要的部分。上面的所有内容都是辅助信息——这里才是我们真正让 LLM 做我们想做的事的地方。任何关键指令都应该放在这里。
 
-## Thinking Instructions
+## 思考指令（Thinking Instructions)
 
 ```typescript
 <thinking-instructions>
-  Think about your answer first before you respond.
+  在回应之前,先思考你的答案。
 </thinking-instructions>
 
 <output-formatting>
-  Put your response in <response></response> tags.
+  把你的回复放在 <response></response> 标签中。
 </output-formatting>
 `;
 ```
 
-After the ask, we have two other important sections:
+在提问之后，我们还有另外两个重要的部分：
 
-1. Thinking instructions - for chain of thought processing
-2. Output formatting - critical for controlling what the LLM returns
+1. 思考指令——用于思维链（chain of thought）处理
+2. 输出格式——对于控制 LLM 返回的内容至关重要
 
-## Why This Template Works
+## 为什么这个模板有效
 
-This prompt template takes advantage of how LLMs work. When you pass input to an LLM, it tends to be biased toward the content at the beginning and end of the prompt. The middle sections are still important but not as influential.
+这个提示词模板利用了 LLM 的工作方式。当你向 LLM 传递输入时，它往往会偏向提示词开头和结尾的内容。中间部分仍然重要，但影响力没那么大。
 
-That's why this template puts high-level context at the start, background data in the middle, and the most critical elements (the ask, thinking instructions, and output formatting) at the end.
+这就是为什么这个模板把高层次上下文放在开头，背景数据放在中间，而把最关键的元素（提问、思考指令和输出格式）放在结尾。
 
-## More Realistic Template
+## 更贴近现实的模板
 
-The template also includes a more realistic version with fewer XML tags that accomplishes the same goals:
+模板还包含一个更贴近现实的版本，用更少的 XML 标签实现同样的目标：
 
 ```typescript
 export const MORE_REALISTIC_TEMPLATE = (opts: {
@@ -138,26 +138,26 @@ export const MORE_REALISTIC_TEMPLATE = (opts: {
   conversationHistory: string;
   latestQuestion: string;
 }) => `
-You will be acting as an AI career coach named Joe created by the company AdAstra Careers. Your goal is to give career advice to users. You will be replying to users who are on the AdAstra site and who will be confused if you don't respond in the character of Joe.
+你将扮演一位名叫 Joe 的 AI 职业教练,由 AdAstra Careers 公司创建。你的目标是为用户提供职业建议。你将回复 AdAstra 网站上的用户,如果你不以 Joe 的角色回应,他们会感到困惑。
 
-You should maintain a friendly customer service tone.
+你应该保持友好的客服语气。
 
-Here is the career guidance document you should reference when answering the user:
+这是你在回答用户时应该参考的职业指导文档:
 <guide>
 ${opts.careerGuidanceDocument}
 </guide>
 
-// More sections follow...
+// 更多部分紧随其后...
 ```
 
-The key advantage of this template is that it provides a section for virtually everything you might need in a prompt, positioned to leverage the LLM's natural biases.
+这个模板的关键优势在于，它几乎为提示词中可能需要的一切内容都提供了对应的部分，并且各部分的排布利用了 LLM 的天然偏好。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Read through the prompt template thoroughly to understand each section and its purpose
+- [ ] 通读整个提示词模板，理解每个部分及其用途
 
-- [ ] Pay special attention to the order of sections (beginning: high-level context, middle: background data, end: critical instructions)
+- [ ] 特别注意各部分的顺序（开头：高层次上下文；中间：背景数据；结尾：关键指令）
 
-- [ ] Consider how you might adapt this template for your own AI applications
+- [ ] 思考如何为你自己的 AI 应用调整这个模板
 
-- [ ] Think about what kinds of information would go in each section for your specific use cases
+- [ ] 想想在你的具体使用场景中，每个部分应该放什么信息

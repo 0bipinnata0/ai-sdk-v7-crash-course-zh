@@ -13,39 +13,39 @@ const IIMT_ARTICLE = readFileSync(
   'utf-8',
 );
 
-// TODO: Add some instructions telling the model to think about its answer first before it responds. Consider the optimal path for the user to understand the code, including each individual piece of syntax.
-// TODO: Add an output format telling the model to return two sections - a <thinking> block and an answer. The answer should NOT be wrapped in an <answer> tag.
+// TODO:添加一些指令,告诉模型在回应之前先思考它的答案。考虑让用户理解代码的最优路径,包括每一段单独的语法。
+// TODO:添加一个输出格式,告诉模型返回两个部分——一个 <thinking> 块和一个答案。答案不应该包裹在 <answer> 标签中。
 const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful TypeScript expert that can explain complex TypeScript code for beginner TypeScript developers. You will be given a complex TypeScript code and you will need to explain it in a way that is easy to understand.
+    你是一位乐于助人的 TypeScript 专家,能够为 TypeScript 初学者解释复杂的 TypeScript 代码。你会收到一段复杂的 TypeScript 代码,你需要用易于理解的方式来解释它。
     </task-context>
 
     <background-data>
-    Here is the complex TypeScript code:
+    这是那段复杂的 TypeScript 代码:
     <code>
     ${COMPLEX_TS_CODE}
     </code>
 
-    And here is an article about the IIMT pattern:
+    还有一篇关于 IIMT 模式的文章:
     <article>
     ${IIMT_ARTICLE}
     </article>
     </background-data>
 
     <rules>
-    - Do not let the user know that you are using the article as a reference. Refer to the concepts as if you are an expert.
-    - Use section headers to organize the explanation.
+    - 不要让用户知道你在参考那篇文章。像专家一样谈论这些概念。
+    - 使用章节标题来组织解释。
     </rules>
 
     <the-ask>
-    Explain the code, using the article as a reference.
+    参考这篇文章来解释这段代码。
     </the-ask>
   `,
 });
 
-console.log('Generating answer');
+console.log('正在生成答案');
 
 for await (const chunk of result.textStream) {
   process.stdout.write('.');
@@ -57,4 +57,4 @@ const outputPath = path.join(import.meta.dirname, 'output.md');
 
 writeFileSync(outputPath, output);
 
-console.log(`\nAnswer written to ${outputPath}!`);
+console.log(`\n答案已写入 ${outputPath}!`);

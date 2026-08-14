@@ -17,44 +17,44 @@ const result = streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful TypeScript expert that can explain complex TypeScript code for beginner TypeScript developers. You will be given a complex TypeScript code and you will need to explain it in a way that is easy to understand.
+    你是一位乐于助人的 TypeScript 专家,能够为 TypeScript 初学者解释复杂的 TypeScript 代码。你会收到一段复杂的 TypeScript 代码,你需要用易于理解的方式来解释它。
     </task-context>
 
     <background-data>
-    Here is the complex TypeScript code:
+    这是那段复杂的 TypeScript 代码:
     <code>
     ${COMPLEX_TS_CODE}
     </code>
 
-    And here is an article about the IIMT pattern:
+    还有一篇关于 IIMT 模式的文章:
     <article>
     ${IIMT_ARTICLE}
     </article>
     </background-data>
 
     <rules>
-    - Do not let the user know that you are using the article as a reference. Refer to the concepts as if you are an expert.
-    - Use section headers to organize the explanation.
+    - 不要让用户知道你在参考那篇文章。像专家一样谈论这些概念。
+    - 使用章节标题来组织解释。
     </rules>
 
     <the-ask>
-    Explain the code, using the article as a reference.
+    参考这篇文章来解释这段代码。
     </the-ask>
 
     <thinking-instructions>
-      Think about your answer first before you respond. Consider the optimal path for the user to understand the code. Consider all of the knowledge dependencies - the pieces of knowledge that rely on other pieces of knowledge. Assume the user knows very little about TypeScript. Create a list of the pieces of knowledge that the user needs to know, in order of dependency.
+      在回应之前,先思考你的答案。考虑让用户理解代码的最优路径。考虑所有的知识依赖——即那些依赖于其他知识的知识点。假设用户对 TypeScript 知之甚少。按依赖顺序列出用户需要了解的知识点清单。
     </thinking-instructions>
 
     <output-format>
-    Return two sections - a <thinking> block and an answer.
-    - The <thinking> block should contain your thought process, and be wrapped in a <thinking> tag.
-    - The answer should be unwrapped.
-    - The answer should be in markdown format, using code blocks for the TypeScript code.
+    返回两个部分——一个 <thinking> 块和一个答案。
+    - <thinking> 块应该包含你的思考过程,并包裹在 <thinking> 标签中。
+    - 答案不应该包裹在标签中。
+    - 答案应该使用 markdown 格式,TypeScript 代码用代码块表示。
     </output-format>
   `,
 });
 
-console.log('Generating answer');
+console.log('正在生成答案');
 
 for await (const chunk of result.textStream) {
   process.stdout.write('.');
@@ -66,4 +66,4 @@ const outputPath = path.join(import.meta.dirname, 'output.md');
 
 writeFileSync(outputPath, output);
 
-console.log(`\nAnswer written to ${outputPath}!`);
+console.log(`\n答案已写入 ${outputPath}!`);

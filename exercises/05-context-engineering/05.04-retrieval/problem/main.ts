@@ -4,22 +4,22 @@ import { tavily } from '@tavily/core';
 
 const testCases = [
   {
-    input: 'What did Guillermo Rauch say about Matt Pocock?',
+    input: 'Guillermo Rauch 对 Matt Pocock 的评价是什么?',
     url: 'https://www.aihero.dev/',
   },
 
   {
-    input: "What is Matt Pocock's open source background?",
+    input: 'Matt Pocock 的开源背景是什么?',
     url: 'https://www.aihero.dev/',
   },
 
   {
-    input: 'Why is learning TypeScript important?',
+    input: '为什么学习 TypeScript 很重要?',
     url: 'https://totaltypescript.com/',
   },
 ] as const;
 
-// Change this to try a different test case
+// 修改这个值来尝试不同的测试用例
 const TEST_CASE_TO_TRY = 0;
 
 const { input, url } = testCases[TEST_CASE_TO_TRY];
@@ -33,21 +33,21 @@ const scrapeResult = await tavilyClient.extract([url]);
 const rawContent = scrapeResult.results[0]?.rawContent;
 
 if (!rawContent) {
-  throw new Error('Could not scrape the URL');
+  throw new Error('无法抓取该 URL');
 }
 
-// TODO: Add the background data and the conversation history
-// TODO: Add some rules telling the model to use paragraphs in its output, and to use quotes from the content of the website to answer the question.
-// TODO: Add the output format telling the model to return only the summary, not any other text.
+// TODO:添加背景数据和对话历史
+// TODO:添加一些规则,告诉模型在输出中使用段落,并引用网站内容中的引文来回答问题。
+// TODO:添加输出格式,告诉模型只返回摘要,不要任何其他文本。
 const result = await streamText({
   model: google('gemini-2.5-flash-lite'),
   prompt: `
     <task-context>
-    You are a helpful assistant that summarizes the content of a URL.
+    你是一个乐于助人的助手,负责总结 URL 的内容。
     </task-context>
 
     <the-ask>
-    Summarize the content of the website based on the conversation history.
+    根据对话历史总结网站的内容。
     </the-ask>
   `,
 });
