@@ -9,9 +9,9 @@ import {
   type UIMessage,
 } from 'ai';
 
-// Wrap the model with DevTools middleware
-// Run `npx @ai-sdk/devtools@latest` in a separate terminal
-// Then open http://localhost:4983 to see LLM calls
+// 用 DevTools 中间件包装模型
+// 在单独的终端中运行 `npx @ai-sdk/devtools@latest`
+// 然后打开 http://localhost:4983 查看 LLM 调用
 const model = wrapLanguageModel({
   model: google('gemini-2.5-flash'),
   middleware: devToolsMiddleware(),

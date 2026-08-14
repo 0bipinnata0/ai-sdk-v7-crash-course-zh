@@ -1,26 +1,26 @@
-# V5 to V6 Breaking Changes
+# V5 到 V6 的破坏性变更
 
-This course uses AI SDK v6. If you're coming from v5, here are the key breaking changes to be aware of.
+本课程使用 AI SDK v6。如果你是从 v5 迁移过来的，以下是需要注意的关键破坏性变更。
 
-## `convertToModelMessages` is now async
+## `convertToModelMessages` 现在是异步的
 
-In v5, `convertToModelMessages` was synchronous:
+在 v5 中，`convertToModelMessages` 是同步的：
 
 ```ts
 // v5
 const modelMessages = convertToModelMessages(messages);
 ```
 
-In v6, it's async and must be awaited:
+在 v6 中，它是异步的，必须 await:
 
 ```ts
 // v6
 const modelMessages = await convertToModelMessages(messages);
 ```
 
-## MCP imports moved to `@ai-sdk/mcp`
+## MCP 导入移至 `@ai-sdk/mcp`
 
-MCP-related imports have moved to a dedicated package:
+MCP 相关的导入已移至专门的包：
 
 ```ts
 // v5
@@ -32,9 +32,9 @@ import { createMCPClient } from '@ai-sdk/mcp';
 import { StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 ```
 
-## `Output.object` for structured generation
+## 用于结构化生成的 `Output.object`
 
-v6 introduces `Output.object` as the new way to generate structured objects with `generateText` and `streamText`:
+v6 引入了 `Output.object`，作为使用 `generateText` 和 `streamText` 生成结构化对象的新方式：
 
 ```ts
 import { Output } from 'ai';
@@ -50,14 +50,14 @@ const result = await generateText({
   }),
 });
 
-console.log(result.object); // typed object
+console.log(result.object); // 类型化的对象
 ```
 
-`generateObject` and `streamObject` still work in v6.
+`generateObject` 和 `streamObject` 在 v6 中仍然可用。
 
-## `ToolLoopAgent` for agentic workflows
+## 用于智能体工作流的 `ToolLoopAgent`
 
-v6 adds `ToolLoopAgent` for multi-step tool calling:
+v6 新增了 `ToolLoopAgent`，用于多步骤工具调用：
 
 ```ts
 import { ToolLoopAgent } from 'ai';
@@ -69,8 +69,8 @@ const agent = new ToolLoopAgent({
 });
 ```
 
-This replaces manual `while` loops with `maxSteps`.
+这取代了使用 `maxSteps` 的手动 `while` 循环。
 
 ---
 
-This isn't exhaustive—check the [AI SDK changelog](https://ai-sdk.dev/changelog) for full details.
+这并不是全部内容——查看 [AI SDK 更新日志](https://ai-sdk.dev/changelog)了解完整细节。

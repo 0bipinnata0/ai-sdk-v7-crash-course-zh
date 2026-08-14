@@ -1,370 +1,370 @@
 [
   {
     "category": "create-section",
-    "description": "Create new section with correct naming convention",
+    "description": "使用正确的命名约定创建新章节",
     "steps": [
-      "Invoke /lesson create section",
-      "Provide section name (e.g., 'advanced-streaming')",
-      "Verify folder created with 2-digit prefix and kebab-case name",
-      "Verify section appears in correct numeric order"
+      "调用 /lesson create section",
+      "提供章节名称(例如 'advanced-streaming')",
+      "验证文件夹已创建,带 2 位数字前缀和 kebab-case 名称",
+      "验证章节按正确的数字顺序出现"
     ],
     "passes": false
   },
   {
     "category": "create-section",
-    "description": "Create section at specific position with auto-renumbering",
+    "description": "在指定位置创建章节并自动重新编号",
     "steps": [
-      "Invoke /lesson create section at position 3",
-      "Provide section name",
-      "Verify new section gets number 03",
-      "Verify existing sections 03+ are renumbered to 04+"
+      "调用 /lesson create section,位置为 3",
+      "提供章节名称",
+      "验证新章节获得编号 03",
+      "验证现有章节 03+ 被重新编号为 04+"
     ],
     "passes": false
   },
   {
     "category": "create-section",
-    "description": "Create section with initial lesson scaffold",
+    "description": "创建带有初始课程脚手架的章节",
     "steps": [
-      "Invoke /lesson create section with --scaffold flag",
-      "Provide section name and first lesson details",
-      "Verify section folder created",
-      "Verify first lesson created with problem/solution structure"
+      "调用 /lesson create section 并带 --scaffold 标志",
+      "提供章节名称和第一课详情",
+      "验证章节文件夹已创建",
+      "验证第一课以 problem/solution 结构创建"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create problem-solution lesson in existing section",
+    "description": "在现有章节中创建 problem-solution 课程",
     "steps": [
-      "Invoke /lesson create lesson in section 01",
-      "Provide lesson name (e.g., 'custom-providers')",
-      "Select problem-solution type",
-      "Verify lesson folder with correct naming (01.XX-custom-providers)",
-      "Verify problem/ and solution/ folders created",
-      "Verify main.ts and readme.md in problem folder"
+      "调用 /lesson create lesson,在章节 01 中",
+      "提供课程名称(例如 'custom-providers')",
+      "选择 problem-solution 类型",
+      "验证课程文件夹命名正确(01.XX-custom-providers)",
+      "验证 problem/ 和 solution/ 文件夹已创建",
+      "验证 problem 文件夹中有 main.ts 和 readme.md"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create explainer-only lesson",
+    "description": "创建仅 explainer 的课程",
     "steps": [
-      "Invoke /lesson create lesson",
-      "Select explainer type",
-      "Provide lesson name",
-      "Verify only explainer/ folder created",
-      "Verify readme.md has explainer structure"
+      "调用 /lesson create lesson",
+      "选择 explainer 类型",
+      "提供课程名称",
+      "验证只创建了 explainer/ 文件夹",
+      "验证 readme.md 具有 explainer 结构"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create lesson with multiple solutions",
+    "description": "创建带有多个解决方案的课程",
     "steps": [
-      "Invoke /lesson create lesson with --solutions 2 flag",
-      "Provide lesson details",
-      "Verify solution.1/ and solution.2/ folders created",
-      "Verify each has main.ts file"
+      "调用 /lesson create lesson 并带 --solutions 2 标志",
+      "提供课程详情",
+      "验证 solution.1/ 和 solution.2/ 文件夹已创建",
+      "验证每个文件夹都有 main.ts 文件"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create lesson with multiple explainers",
+    "description": "创建带有多个 explainer 的课程",
     "steps": [
-      "Invoke /lesson create lesson with --explainers 2 flag",
-      "Provide lesson details",
-      "Verify explainer.1/ and explainer.2/ folders created",
-      "Verify each has readme.md and main.ts"
+      "调用 /lesson create lesson 并带 --explainers 2 标志",
+      "提供课程详情",
+      "验证 explainer.1/ 和 explainer.2/ 文件夹已创建",
+      "验证每个文件夹都有 readme.md 和 main.ts"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create React dev server exercise with client/api folders",
+    "description": "创建带 client/api 文件夹的 React 开发服务器练习",
     "steps": [
-      "Invoke /lesson create lesson",
-      "Select 'react-dev-server' as main.ts type",
-      "Verify problem/client/ folder with root.tsx created",
-      "Verify problem/api/ folder created",
-      "Verify main.ts uses runLocalDevServer"
+      "调用 /lesson create lesson",
+      "选择 'react-dev-server' 作为 main.ts 类型",
+      "验证 problem/client/ 文件夹已创建且有 root.tsx",
+      "验证 problem/api/ 文件夹已创建",
+      "验证 main.ts 使用 runLocalDevServer"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create console output exercise",
+    "description": "创建控制台输出练习",
     "steps": [
-      "Invoke /lesson create lesson",
-      "Select 'console' as main.ts type",
-      "Verify main.ts uses generateText with console.log",
-      "Verify no client/api folders created"
+      "调用 /lesson create lesson",
+      "选择 'console' 作为 main.ts 类型",
+      "验证 main.ts 使用 generateText 和 console.log",
+      "验证没有创建 client/api 文件夹"
     ],
     "passes": false
   },
   {
     "category": "create-lesson",
-    "description": "Create evalite evaluation exercise",
+    "description": "创建 evalite 评估练习",
     "steps": [
-      "Invoke /lesson create lesson",
-      "Select 'evalite' as main.ts type",
-      "Verify main.ts uses runEvalite",
-      "Verify eval configuration file created"
+      "调用 /lesson create lesson",
+      "选择 'evalite' 作为 main.ts 类型",
+      "验证 main.ts 使用 runEvalite",
+      "验证评估配置文件已创建"
     ],
     "passes": false
   },
   {
     "category": "create-readme",
-    "description": "Generate problem readme with correct structure",
+    "description": "生成结构正确的 problem readme",
     "steps": [
-      "Invoke /lesson create readme for problem",
-      "Provide exercise context and goals",
-      "Verify readme has brief context section",
-      "Verify readme has problem setup with code blocks",
-      "Verify readme has TODO sections",
-      "Verify readme ends with Steps To Complete checkboxes"
+      "调用 /lesson create readme,针对 problem",
+      "提供练习背景和目标",
+      "验证 readme 有简短的背景部分",
+      "验证 readme 有带代码块的练习设置",
+      "验证 readme 有 TODO 部分",
+      "验证 readme 以 Steps To Complete 复选框结尾"
     ],
     "passes": false
   },
   {
     "category": "create-readme",
-    "description": "Generate explainer readme with correct structure",
+    "description": "生成结构正确的 explainer readme",
     "steps": [
-      "Invoke /lesson create readme for explainer",
-      "Provide topic and key concepts",
-      "Verify readme has introductory context",
-      "Verify readme has conceptual sections with headers",
-      "Verify readme has working code examples",
-      "Verify readme ends with Steps To Complete checkboxes"
+      "调用 /lesson create readme,针对 explainer",
+      "提供主题和关键概念",
+      "验证 readme 有介绍性背景",
+      "验证 readme 有带标题的概念性部分",
+      "验证 readme 有可运行的代码示例",
+      "验证 readme 以 Steps To Complete 复选框结尾"
     ],
     "passes": false
   },
   {
     "category": "create-readme",
-    "description": "Steps To Complete section uses proper checkbox format",
+    "description": "Steps To Complete 部分使用正确的复选框格式",
     "steps": [
-      "Generate any readme type",
-      "Verify ## Steps To Complete header exists",
-      "Verify uses - [ ] checkbox syntax",
-      "Verify sub-bullets are indented properly",
-      "Verify 3-8 actionable steps included"
+      "生成任意类型的 readme",
+      "验证存在 ## Steps To Complete 标题",
+      "验证使用 - [ ] 复选框语法",
+      "验证子项目符号缩进正确",
+      "验证包含 3-8 个可操作的步骤"
     ],
     "passes": false
   },
   {
     "category": "create-readme",
-    "description": "Reference existing README patterns from repo",
+    "description": "参考仓库中现有的 README 模式",
     "steps": [
-      "Invoke /lesson create readme",
-      "Skill reads 3+ existing READMEs for pattern matching",
-      "Generated readme follows established tone and structure",
-      "File links use proper markdown format"
+      "调用 /lesson create readme",
+      "skill 读取 3 个以上现有 README 进行模式匹配",
+      "生成的 readme 遵循既定的语气和结构",
+      "文件链接使用正确的 markdown 格式"
     ],
     "passes": false
   },
   {
     "category": "create-main-ts",
-    "description": "Generate runLocalDevServer main.ts",
+    "description": "生成 runLocalDevServer main.ts",
     "steps": [
-      "Create lesson with react-dev-server type",
-      "Verify imports runLocalDevServer from #shared/run-local-dev-server.ts",
-      "Verify await runLocalDevServer with root: import.meta.dirname",
-      "Verify client/root.tsx scaffold created"
+      "创建 react-dev-server 类型的课程",
+      "验证从 #shared/run-local-dev-server.ts 导入 runLocalDevServer",
+      "验证 await runLocalDevServer 带 root: import.meta.dirname",
+      "验证 client/root.tsx 脚手架已创建"
     ],
     "passes": false
   },
   {
     "category": "create-main-ts",
-    "description": "Generate console output main.ts",
+    "description": "生成控制台输出 main.ts",
     "steps": [
-      "Create lesson with console type",
-      "Verify imports from @ai-sdk/google and ai",
-      "Verify generateText call with model and prompt",
-      "Verify console.log(result.text)"
+      "创建 console 类型的课程",
+      "验证从 @ai-sdk/google 和 ai 导入",
+      "验证 generateText 调用带 model 和 prompt",
+      "验证 console.log(result.text)"
     ],
     "passes": false
   },
   {
     "category": "create-main-ts",
-    "description": "Generate evalite runner main.ts",
+    "description": "生成 evalite 运行器 main.ts",
     "steps": [
-      "Create lesson with evalite type",
-      "Verify imports runEvalite from evalite/runner",
-      "Verify runEvalite with cwd and mode options"
+      "创建 evalite 类型的课程",
+      "验证从 evalite/runner 导入 runEvalite",
+      "验证 runEvalite 带 cwd 和 mode 选项"
     ],
     "passes": false
   },
   {
     "category": "create-main-ts",
-    "description": "Generate readme pointer main.ts",
+    "description": "生成 readme 指针 main.ts",
     "steps": [
-      "Create explainer lesson with readme-pointer type",
-      "Verify imports path from node:path",
-      "Verify console.log with readme path"
+      "创建 readme-pointer 类型的 explainer 课程",
+      "验证从 node:path 导入 path",
+      "验证 console.log 输出 readme 路径"
     ],
     "passes": false
   },
   {
     "category": "read-structure",
-    "description": "List all sections with lesson counts",
+    "description": "列出所有章节及课程数量",
     "steps": [
-      "Invoke /lesson list sections",
-      "Verify all sections displayed with numbers",
-      "Verify lesson count shown for each section",
-      "Verify 99-reference section included"
+      "调用 /lesson list sections",
+      "验证所有章节连同编号一起显示",
+      "验证每个章节显示课程数量",
+      "验证包含 99-reference 章节"
     ],
     "passes": false
   },
   {
     "category": "read-structure",
-    "description": "Show lesson structure with problem/solution/explainer status",
+    "description": "显示课程结构及 problem/solution/explainer 状态",
     "steps": [
-      "Invoke /lesson show 01.05",
-      "Verify lesson name displayed",
-      "Verify problem/ folder status shown",
-      "Verify solution/ folder status shown",
-      "Verify variant folders listed if present"
+      "调用 /lesson show 01.05",
+      "验证显示课程名称",
+      "验证显示 problem/ 文件夹状态",
+      "验证显示 solution/ 文件夹状态",
+      "验证列出变体文件夹(如果存在)"
     ],
     "passes": false
   },
   {
     "category": "read-structure",
-    "description": "Find lessons by topic keyword",
+    "description": "按主题关键词查找课程",
     "steps": [
-      "Invoke /lesson find 'streaming'",
-      "Verify matching lessons returned",
-      "Verify search includes lesson names",
-      "Verify results show section and lesson numbers"
+      "调用 /lesson find 'streaming'",
+      "验证返回匹配的课程",
+      "验证搜索包含课程名称",
+      "验证结果显示章节和课程编号"
     ],
     "passes": false
   },
   {
     "category": "read-structure",
-    "description": "Show lesson dependencies and prerequisites",
+    "description": "显示课程依赖和前置要求",
     "steps": [
-      "Invoke /lesson deps 03.05",
-      "Verify related lessons identified",
-      "Verify references to 99-reference shown if applicable"
+      "调用 /lesson deps 03.05",
+      "验证识别出相关课程",
+      "验证显示对 99-reference 的引用(如适用)"
     ],
     "passes": false
   },
   {
     "category": "update-lesson",
-    "description": "Rename lesson and update internal references",
+    "description": "重命名课程并更新内部引用",
     "steps": [
-      "Invoke /lesson rename 01.05 to 'text-generation'",
-      "Verify folder renamed to 01.05-text-generation",
-      "Verify internal file references updated"
+      "调用 /lesson rename 01.05 为 'text-generation'",
+      "验证文件夹重命名为 01.05-text-generation",
+      "验证内部文件引用已更新"
     ],
     "passes": false
   },
   {
     "category": "update-lesson",
-    "description": "Move lesson to different section",
+    "description": "将课程移动到不同章节",
     "steps": [
-      "Invoke /lesson move 01.05 to section 02",
-      "Verify lesson moved to 02-llm-fundamentals",
-      "Verify lesson renumbered appropriately (02.07 or next available)",
-      "Verify original section lessons renumbered"
+      "调用 /lesson move 01.05 到章节 02",
+      "验证课程移动到 02-llm-fundamentals",
+      "验证课程适当重新编号(02.07 或下一个可用编号)",
+      "验证原章节课程重新编号"
     ],
     "passes": false
   },
   {
     "category": "update-lesson",
-    "description": "Add solution variant to existing lesson",
+    "description": "为现有课程添加解决方案变体",
     "steps": [
-      "Invoke /lesson add solution to 01.05",
-      "If solution/ exists, create solution.1/ from existing and solution.2/ new",
-      "If no solution exists, create solution/",
-      "Verify main.ts created in new solution folder"
+      "调用 /lesson add solution 到 01.05",
+      "如果 solution/ 存在,从现有的创建 solution.1/ 并新建 solution.2/",
+      "如果没有 solution,创建 solution/",
+      "验证在新 solution 文件夹中创建了 main.ts"
     ],
     "passes": false
   },
   {
     "category": "update-lesson",
-    "description": "Convert explainer to problem-solution",
+    "description": "将 explainer 转换为 problem-solution",
     "steps": [
-      "Invoke /lesson convert 01.01 to problem-solution",
-      "Verify problem/ folder created",
-      "Verify solution/ folder created",
-      "Verify explainer content preserved or moved"
+      "调用 /lesson convert 01.01 为 problem-solution",
+      "验证创建了 problem/ 文件夹",
+      "验证创建了 solution/ 文件夹",
+      "验证 explainer 内容被保留或移动"
     ],
     "passes": false
   },
   {
     "category": "delete-lesson",
-    "description": "Delete lesson and update sibling numbering",
+    "description": "删除课程并更新同级编号",
     "steps": [
-      "Invoke /lesson delete 01.05",
-      "Confirm deletion with user",
-      "Verify lesson folder removed",
-      "Verify lessons 01.06+ renumbered to 01.05+"
+      "调用 /lesson delete 01.05",
+      "与用户确认删除",
+      "验证课程文件夹已移除",
+      "验证课程 01.06+ 重新编号为 01.05+"
     ],
     "passes": false
   },
   {
     "category": "delete-lesson",
-    "description": "Delete section and handle lesson relocation",
+    "description": "删除章节并处理课程迁移",
     "steps": [
-      "Invoke /lesson delete section 03",
-      "Prompt for lesson disposition (delete all or move)",
-      "If move, relocate lessons to specified section",
-      "Verify remaining sections renumbered"
+      "调用 /lesson delete section 03",
+      "提示课程处置方式(全部删除或移动)",
+      "如果移动,将课程迁移到指定章节",
+      "验证其余章节重新编号"
     ],
     "passes": false
   },
   {
     "category": "validate",
-    "description": "Validate naming conventions across repo",
+    "description": "验证整个仓库的命名约定",
     "steps": [
-      "Invoke /lesson validate",
-      "Check all sections follow NN-kebab-case pattern",
-      "Check all lessons follow NN.NN-kebab-case pattern",
-      "Report any violations found"
+      "调用 /lesson validate",
+      "检查所有章节遵循 NN-kebab-case 模式",
+      "检查所有课程遵循 NN.NN-kebab-case 模式",
+      "报告发现的任何违规"
     ],
     "passes": false
   },
   {
     "category": "validate",
-    "description": "Check for missing required files",
+    "description": "检查缺失的必需文件",
     "steps": [
-      "Invoke /lesson validate files",
-      "Check problem/ folders have readme.md and main.ts",
-      "Check explainer/ folders have readme.md and main.ts",
-      "Check solution/ folders have main.ts",
-      "Report missing files"
+      "调用 /lesson validate files",
+      "检查 problem/ 文件夹有 readme.md 和 main.ts",
+      "检查 explainer/ 文件夹有 readme.md 和 main.ts",
+      "检查 solution/ 文件夹有 main.ts",
+      "报告缺失的文件"
     ],
     "passes": false
   },
   {
     "category": "validate",
-    "description": "Verify main.ts matches folder structure type",
+    "description": "验证 main.ts 与文件夹结构类型匹配",
     "steps": [
-      "Invoke /lesson validate main-ts",
-      "If client/ folder exists, verify runLocalDevServer usage",
-      "If evalite exercise, verify runEvalite usage",
-      "Report mismatches"
+      "调用 /lesson validate main-ts",
+      "如果存在 client/ 文件夹,验证 runLocalDevServer 用法",
+      "如果是 evalite 练习,验证 runEvalite 用法",
+      "报告不匹配项"
     ],
     "passes": false
   },
   {
     "category": "reference",
-    "description": "Add explainer to 99-reference section",
+    "description": "向 99-reference 章节添加 explainer",
     "steps": [
-      "Invoke /lesson create reference",
-      "Provide reference topic name",
-      "Verify created in 99-reference with next available number",
-      "Verify explainer-only structure"
+      "调用 /lesson create reference",
+      "提供参考主题名称",
+      "验证在 99-reference 中以下一个可用编号创建",
+      "验证仅 explainer 结构"
     ],
     "passes": false
   },
   {
     "category": "reference",
-    "description": "Link reference from other lessons",
+    "description": "从其他课程链接参考",
     "steps": [
-      "Invoke /lesson link-reference 99.03 to 01.05",
-      "Add reference link in lesson readme",
-      "Use consistent link format"
+      "调用 /lesson link-reference 99.03 到 01.05",
+      "在课程 readme 中添加参考链接",
+      "使用一致的链接格式"
     ],
     "passes": false
   }

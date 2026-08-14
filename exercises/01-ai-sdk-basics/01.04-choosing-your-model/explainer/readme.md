@@ -1,42 +1,42 @@
-During this course, we are going to be using some AI models. You can either choose a model you already have access to, or you can use the models that I default to during the course.
+在本课程中，我们将使用一些 AI 模型。你可以选择一个你已经能访问的模型，也可以使用我在课程中默认使用的模型。
 
-## AI SDK Model Providers
+## AI SDK 模型提供商
 
-The way the AI SDK works is you have different packages for each different provider. I've installed the three most common ones here, OpenAI, Google, and Anthropic.
+AI SDK 的工作方式是：每个不同的提供商对应不同的包。我在这里安装了三个最常见的：OpenAI、Google 和 Anthropic。
 
-But the AI SDK comes with dozens and dozens of [different providers](https://ai-sdk.dev/providers/ai-sdk-providers) that you can potentially hook into, including, if you want to, using local models.
+但 AI SDK 附带了几十个[不同的提供商](https://ai-sdk.dev/providers/ai-sdk-providers)供你接入，如果你愿意的话，甚至包括使用本地模型。
 
-## Setting Up a Model
+## 设置模型
 
-Using a model requires doing two things:
+使用一个模型需要做两件事：
 
-1. Installing the relevant package
-2. Adding the correct environment variable to your `.env` file
+1. 安装相关的包
+2. 将正确的环境变量添加到你的 `.env` 文件
 
-Let's look at the packages we have installed:
+让我们看看已安装的包：
 
 ```ts
-// Requires an OPENAI_API_KEY environment variable in .env
+// 需要在 .env 中设置 OPENAI_API_KEY 环境变量
 import { openai } from '@ai-sdk/openai';
 
-// Requires a GOOGLE_GENERATIVE_AI_API_KEY environment variable in .env
+// 需要在 .env 中设置 GOOGLE_GENERATIVE_AI_API_KEY 环境变量
 import { google } from '@ai-sdk/google';
 
-// Requires an ANTHROPIC_API_KEY environment variable in .env
+// 需要在 .env 中设置 ANTHROPIC_API_KEY 环境变量
 import { anthropic } from '@ai-sdk/anthropic';
 ```
 
-For each provider, you need a specific environment variable:
+每个提供商都需要一个特定的环境变量：
 
-| Provider  | Environment Variable           |
+| 提供商    | 环境变量                       |
 | --------- | ------------------------------ |
 | OpenAI    | `OPENAI_API_KEY`               |
 | Google    | `GOOGLE_GENERATIVE_AI_API_KEY` |
 | Anthropic | `ANTHROPIC_API_KEY`            |
 
-## Instantiating a Model
+## 实例化模型
 
-You can then instantiate the model by just calling this `openai` or `google` or `anthropic` here:
+然后你可以通过直接调用这里的 `openai`、`google` 或 `anthropic` 来实例化模型：
 
 ```ts
 const model = openai('gpt-4o-mini');
@@ -44,35 +44,35 @@ const model = openai('gpt-4o-mini');
 console.dir(model, { depth: null });
 ```
 
-I'm console logging the model down below just so we can see what it looks like. And we can see that you get an OpenAI responses language model.
+我在下面打印了模型，只是为了让我们能看到它长什么样。可以看到你得到了一个 OpenAI responses 语言模型。
 
-You also get autocomplete on the model ID, so you can see all of the available options.
+你还会在模型 ID 上获得自动补全，所以你可以看到所有可用的选项。
 
-## Default Model for the Course
+## 课程默认模型
 
-Now, I've chosen Google as our default option. So most of the code in the exercises, by default, will be using Gemini models from Google. The reasons for that are:
+现在，我选择了 Google 作为我们的默认选项。所以练习中的大部分代码默认会使用 Google 的 Gemini 模型。原因是：
 
-- They are extremely cheap
-- There is even a free tier to just get an API key and get started
-- They run very, very quickly
-- They are good enough for our purposes
+- 它们极其便宜
+- 甚至有免费套餐，只需获取一个 API 密钥即可开始
+- 它们运行速度非常非常快
+- 对我们的用途来说足够好
 
-However, if you want to use OpenAI and Anthropic for your models, all you'll need to do is just swap them out before you start the exercise. If you want to do it across the whole repo, you can probably do a pretty smart find and replace too.
+不过，如果你想使用 OpenAI 和 Anthropic 的模型，你只需要在开始练习之前把它们换掉。如果你想在整个仓库中替换，做一个智能的查找替换应该也可以。
 
-So take this as your opportunity to set up your environment variables and choose your model. If you're not sure which one to go for, just get yourself a [Gemini API key](https://aistudio.google.com/apikey).
+所以，抓住这个机会设置好你的环境变量并选择你的模型。如果你不确定选哪个，直接获取一个 [Gemini API 密钥](https://aistudio.google.com/apikey)就行。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Decide which AI model provider you want to use (Google Gemini is recommended for beginners)
+- [ ] 决定你想使用哪个 AI 模型提供商（推荐初学者使用 Google Gemini)
 
-- [ ] Create an API key for your chosen provider
-  - For Google: [Sign up for Google AI Studio](https://aistudio.google.com/apikey)
-  - For OpenAI: [Create an account and generate an API key](https://platform.openai.com/api-keys)
-  - For Anthropic: [Sign up and obtain an API key](https://console.anthropic.com/)
+- [ ] 为你选择的提供商创建 API 密钥
+  - Google:[注册 Google AI Studio](https://aistudio.google.com/apikey)
+  - OpenAI:[创建账户并生成 API 密钥](https://platform.openai.com/api-keys)
+  - Anthropic:[注册并获取 API 密钥](https://console.anthropic.com/)
 
-- [ ] Add the appropriate environment variable to your `.env` file
-  - For OpenAI: `OPENAI_API_KEY=your-key-here`
-  - For Google: `GOOGLE_GENERATIVE_AI_API_KEY=your-key-here`
-  - For Anthropic: `ANTHROPIC_API_KEY=your-key-here`
+- [ ] 将相应的环境变量添加到你的 `.env` 文件
+  - OpenAI:`OPENAI_API_KEY=your-key-here`
+  - Google:`GOOGLE_GENERATIVE_AI_API_KEY=your-key-here`
+  - Anthropic:`ANTHROPIC_API_KEY=your-key-here`
 
-- [ ] In the next exercise, we'll verify the setup is working.
+- [ ] 在下一个练习中，我们将验证设置是否正常工作。

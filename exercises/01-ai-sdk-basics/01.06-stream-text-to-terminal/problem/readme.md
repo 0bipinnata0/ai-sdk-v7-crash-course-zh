@@ -1,8 +1,8 @@
-Generating text with AI is powerful, but waiting for the entire output can make applications feel unresponsive. Modern AI applications stream text to users as it's being generated, creating a more dynamic experience.
+用 AI 生成文本很强大，但等待整个输出完成会让应用感觉反应迟钝。现代 AI 应用会在文本生成的同时将其流式传输给用户，创造更动态的体验。
 
-This streaming process is complex, but the AI SDK simplifies it for us. In this exercise, we'll use the Google model to generate a story about an imaginary planet and stream the output directly to our terminal.
+这个流式传输过程很复杂，但 AI SDK 为我们简化了它。在本练习中，我们将使用 Google 模型生成一个关于假想星球的故事，并将输出直接流式传输到终端。
 
-Let's look at the problem we need to solve:
+让我们看看需要解决的问题：
 
 ```ts
 import { google } from '@ai-sdk/google';
@@ -10,36 +10,35 @@ import { streamText } from 'ai';
 
 const model = google('gemini-2.5-flash');
 
-const prompt =
-  'Give me the first paragraph of a story about an imaginary planet.';
+const prompt = '给我写一个关于假想星球的故事的第一段。';
 
-const stream = TODO; // TODO - stream some text with the model above.
+const stream = TODO; // TODO - 用上面的模型流式输出一些文本。
 
 for await (const chunk of stream.textStream) {
   process.stdout.write(chunk);
 }
 ```
 
-We need to replace the `TODO` with code that creates a text stream using the [`streamText`](./main.ts) function from the AI SDK.
+我们需要将 `TODO` 替换为使用 AI SDK 中的 [`streamText`](./main.ts) 函数创建文本流的代码。
 
-The `streamText` function requires a `model` and a `prompt`. We already have both of these defined in our code.
+`streamText` 函数需要一个 `model` 和一个 `prompt`。我们的代码中已经定义好了这两个。
 
-We need to pass these values to [`streamText`](./main.ts) to create our `stream` object, which will then allow us to access the `textStream` property.
+我们需要将这些值传给 [`streamText`](./main.ts) 来创建我们的 `stream` 对象，然后就能访问 `textStream` 属性。
 
-The `for await` loop will iterate through each chunk of text as it's generated, and `process.stdout.write()` will display it in the terminal without adding new lines (unlike `console.log`).
+`for await` 循环会遍历生成的每个文本块，`process.stdout.write()` 会将其显示在终端中而不添加换行（与 `console.log` 不同）。
 
-This approach allows us to see the text appearing incrementally as the AI generates it, creating that responsive streaming effect you see in modern AI applications.
+这种方式让我们能看到文本随着 AI 生成逐步出现，创造出你在现代 AI 应用中看到的那种响应式流式效果。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Replace the `TODO` with a call to the `streamText` function.
+- [ ] 将 `TODO` 替换为对 `streamText` 函数的调用。
 
-- [ ] Make sure to pass an object containing the `model` and `prompt` variables to `streamText`.
+- [ ] 确保将一个包含 `model` 和 `prompt` 变量的对象传给 `streamText`。
 
-- [ ] Run the code in your terminal to see the text streaming in real-time.
+- [ ] 在终端中运行代码，观察文本实时流式输出。
 
-- [ ] Observe how the text appears incrementally rather than all at once.
+- [ ] 观察文本是如何逐步出现而不是一次性全部出现的。
 
-- [ ] If everything is working correctly, you should see a paragraph about an imaginary planet appear gradually in your terminal.
+- [ ] 如果一切正常，你应该会看到一个关于假想星球的段落逐渐出现在终端中。
 
-- [ ] If you get stuck, check the solution.
+- [ ] 如果卡住了，查看解答。

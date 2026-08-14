@@ -1,59 +1,59 @@
 [
   {
     "category": "functional",
-    "description": "New chat button creates a fresh conversation",
+    "description": "新建聊天按钮创建全新对话",
     "steps": [
-      "Navigate to main interface",
-      "Click the 'New Chat' button",
-      "Verify a new conversation is created",
-      "Check that chat area shows welcome state",
-      "Verify conversation appears in sidebar"
+      "导航到主界面",
+      "点击'新建聊天'按钮",
+      "验证创建了新对话",
+      "检查聊天区域显示欢迎状态",
+      "验证对话出现在侧边栏中"
     ],
     "passes": false
   },
   {
     "category": "functional",
-    "description": "User can send a message and receive a response",
+    "description": "用户可以发送消息并收到回复",
     "steps": [
-      "Open an existing conversation",
-      "Type a message in the input field",
-      "Press Enter or click Send button",
-      "Verify message appears in chat history",
-      "Verify response is received and displayed"
+      "打开一个现有对话",
+      "在输入框中输入消息",
+      "按回车或点击发送按钮",
+      "验证消息出现在聊天记录中",
+      "验证收到并显示了回复"
     ],
     "passes": false
   },
   {
     "category": "functional",
-    "description": "Conversation history persists across page reloads",
+    "description": "对话历史在页面刷新后保持",
     "steps": [
-      "Send several messages in a conversation",
-      "Refresh the page",
-      "Navigate back to the same conversation",
-      "Verify all previous messages are displayed"
+      "在对话中发送几条消息",
+      "刷新页面",
+      "导航回同一个对话",
+      "验证所有之前的消息都显示了"
     ],
     "passes": false
   },
   {
     "category": "ui",
-    "description": "Sidebar collapses and expands correctly",
+    "description": "侧边栏正确折叠和展开",
     "steps": [
-      "Click the sidebar toggle button",
-      "Verify sidebar collapses with animation",
-      "Click toggle again",
-      "Verify sidebar expands to original width"
+      "点击侧边栏切换按钮",
+      "验证侧边栏带动画折叠",
+      "再次点击切换按钮",
+      "验证侧边栏展开到原始宽度"
     ],
     "passes": false
   },
   {
     "category": "error-handling",
-    "description": "Network error displays appropriate message",
+    "description": "网络错误显示适当的提示信息",
     "steps": [
-      "Disable network connection",
-      "Attempt to send a message",
-      "Verify error message is displayed",
-      "Re-enable network",
-      "Verify retry option works"
+      "禁用网络连接",
+      "尝试发送消息",
+      "验证显示了错误信息",
+      "重新启用网络",
+      "验证重试选项可用"
     ],
     "passes": false
   }

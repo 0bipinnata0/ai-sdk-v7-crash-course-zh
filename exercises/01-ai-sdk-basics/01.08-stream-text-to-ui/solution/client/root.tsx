@@ -8,7 +8,7 @@ const App = () => {
   const { messages, sendMessage } = useChat();
 
   const [input, setInput] = useState(
-    `What's the capital of France?`,
+    `法国的首都是哪里?`,
   );
 
   return (

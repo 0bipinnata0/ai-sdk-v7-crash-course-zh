@@ -1,1 +1,1 @@
-To be explained by Matt in person.
+本节课将由 Matt 亲自讲解。

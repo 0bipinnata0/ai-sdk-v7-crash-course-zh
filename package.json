@@ -1,7 +1,7 @@
 {
   "name": "ai-sdk-v6-crash-course",
   "version": "1.0.0",
-  "description": "Companion repository for the AI SDK v6 Crash Course on aihero.dev",
+  "description": "aihero.dev 上 AI SDK v6 速成课程的配套仓库",
   "repository": "https://github.com/ai-hero-dev/ai-sdk-v6-crash-course",
   "type": "module",
   "scripts": {

@@ -1,12 +1,12 @@
-# Tool Approval Lesson (end of agents)
+# 工具审批课程(智能体章节末尾)
 
-**Format: problem-solution**
-**Setup: client-server with frontend partially built**
+**格式:problem-solution**
+**设置:客户端-服务器,前端已部分构建**
 
-## Scenario
-User wants to preview an email before sending. Approve or reject the send.
+## 场景
+用户想在发送邮件前预览邮件。批准或拒绝发送。
 
-## Backend: needsApproval on tool
+## 后端:工具上的 needsApproval
 
 ```ts
 import { tool } from 'ai';
@@ -19,15 +19,15 @@ export const sendEmailTool = tool({
     subject: z.string(),
     body: z.string(),
   }),
-  needsApproval: true, // Require user approval
+  needsApproval: true, // 需要用户批准
   execute: async ({ to, subject, body }) => {
-    // Send email logic
+    // 发送邮件逻辑
     return { sent: true };
   },
 });
 ```
 
-## Frontend: approval UI component
+## 前端:审批 UI 组件
 
 ```tsx
 export function EmailToolView({ invocation, addToolApprovalResponse }) {
@@ -68,7 +68,7 @@ export function EmailToolView({ invocation, addToolApprovalResponse }) {
 }
 ```
 
-## useChat hook setup
+## useChat hook 设置
 
 ```ts
 import { useChat } from '@ai-sdk/react';
@@ -79,12 +79,12 @@ const { messages, addToolApprovalResponse } = useChat({
 });
 ```
 
-## Problem setup
-- Frontend component partially built (shows email preview)
-- User needs to:
-  1. Add `needsApproval: true` to tool
-  2. Hook up `addToolApprovalResponse` from useChat
-  3. Wire up approve/reject buttons
+## 练习设置
+- 前端组件已部分构建(显示邮件预览)
+- 用户需要:
+  1. 给工具添加 `needsApproval: true`
+  2. 从 useChat 接上 `addToolApprovalResponse`
+  3. 连接批准/拒绝按钮
 
-## Open Questions
-- When does reject reason come in? (need to investigate API)
+## 待解决问题
+- 拒绝原因什么时候传入?(需要研究 API)

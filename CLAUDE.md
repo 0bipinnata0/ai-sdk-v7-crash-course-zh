@@ -1,3 +1,3 @@
-## Writing README.md files
+## 编写 README.md 文件
 
-When writing README.md files for problems or explainers, look for inspiration from others in the repo first. Read at least 3 other README.md files before writing your own. This is because they have a unique, highly precise structure you'll need to copy.
+在为 problem 或 explainer 编写 README.md 文件时，先参考仓库中的其他文件寻找灵感。在动手写自己的文件之前，至少阅读 3 个其他的 README.md 文件。因为它们具有一套独特、高度精确的结构，你需要照搬。

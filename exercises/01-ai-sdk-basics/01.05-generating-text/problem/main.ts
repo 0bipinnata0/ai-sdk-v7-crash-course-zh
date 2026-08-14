@@ -1,12 +1,12 @@
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
-// TODO: Choose a model. I recommend using the Google Gemini model:
+// TODO:选择一个模型。我推荐使用 Google Gemini 模型:
 // gemini-2.5-flash-lite
 const model = TODO;
 
-const prompt = 'What is the capital of France?';
+const prompt = '法国的首都是哪里?';
 
-const result = TODO; // TODO: Use generateText to get the result
+const result = TODO; // TODO:使用 generateText 获取结果
 
 console.log(result.text);

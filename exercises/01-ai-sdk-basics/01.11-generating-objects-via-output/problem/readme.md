@@ -1,20 +1,19 @@
-Most of the time, you don't just want text back from an LLM—you want that text in a structured format. Imagine generating a story about an imaginary planet, then extracting facts from it as a clean array of strings.
+大多数时候，你想要的不仅仅是 LLM 返回的文本——你希望这些文本以结构化的格式呈现。想象一下，生成一个关于假想星球的故事，然后从中提取事实，作为一个干净的字符串数组。
 
-The [AI SDK](https://ai-sdk.dev/docs/introduction) makes this incredibly easy. Instead of asking the model for text and then parsing it yourself (or validating it with a library like [Zod](https://zod.dev)), you can use structured output support built right into the framework.
+[AI SDK](https://ai-sdk.dev/docs/introduction) 让这件事变得极其简单。你不需要先让模型返回文本然后自己解析（或用 [Zod](https://zod.dev) 这样的库验证），而是可以直接使用框架内置的结构化输出支持。
 
-There are actually two ways to do this in the AI SDK. One approach is more aligned with version 5, the other with version 6—but both work in version 6. Your task is to implement the structured output generation.
+在 AI SDK 中实际上有两种方法可以做到这一点。一种方式更接近版本 5 的风格，另一种更接近版本 6——但两者在版本 6 中都能用。你的任务是实现结构化输出的生成。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Stream text to the terminal using [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [ ] 使用 [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) 将文本流式传输到终端
 
-Start by streaming a paragraph of a story about an imaginary planet to the terminal.
+首先，将一个关于假想星球的故事段落流式传输到终端。
 
 ```ts
 const stream = streamText({
   model,
-  prompt:
-    'Give me the first paragraph of a story about an imaginary planet.',
+  prompt: '给我写一个关于假想星球的故事的第一段。',
 });
 
 for await (const chunk of stream.textStream) {
@@ -24,27 +23,27 @@ for await (const chunk of stream.textStream) {
 const finalText = await stream.text;
 ```
 
-- [ ] Call [`generateText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text) with structured output support
+- [ ] 调用带有结构化输出支持的 [`generateText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text)
 
-After the text finishes streaming, call `generateText()` with a prompt asking for facts about the planet. Pass in the `finalText` from the previous step.
+文本流式输出完成后，调用 `generateText()`，传入一个询问关于该星球的事实的提示词。传入上一步的 `finalText`。
 
 ```ts
-// TODO: Replace this with a call to generateText, passing:
-// - The model, same as above
-// - The prompt, asking for facts about the imaginary planet,
-//   passing in the finalText as the story
-// - The output, which should be Output.object({}), passing
-//   the schema: z.object({
-//     facts: z.array(z.string()).describe('The facts about the imaginary planet. Write as if you are a scientist.'),
+// TODO:将其替换为对 generateText 的调用,传入:
+// - model,与上面相同
+// - prompt,询问关于假想星球的事实,
+//   并将 finalText 作为故事传入
+// - output,应该是 Output.object({}),传入
+//   schema: z.object({
+//     facts: z.array(z.string()).describe('关于这个假想星球的事实。以科学家的口吻来写。'),
 //   })
 const factsResult = TODO;
 ```
 
-You'll need to import [`Output`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) from the AI SDK alongside `generateText`.
+你需要从 AI SDK 中导入 [`Output`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data)，与 `generateText` 一起使用。
 
-- [ ] Use the [`Output.object()`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) method to define structured output
+- [ ] 使用 [`Output.object()`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) 方法定义结构化输出
 
-Pass an object with a `schema` property. The schema should be a [Zod](https://zod.dev) object with a `facts` field containing an array of strings.
+传入一个带有 `schema` 属性的对象。schema 应该是一个 [Zod](https://zod.dev) 对象，其中 `facts` 字段包含一个字符串数组。
 
 <Spoiler>
 
@@ -54,7 +53,7 @@ output: Output.object({
     facts: z
       .array(z.string())
       .describe(
-        'The facts about the imaginary planet. Write as if you are a scientist.',
+        '关于这个假想星球的事实。以科学家的口吻来写。',
       ),
   }),
 });
@@ -62,24 +61,24 @@ output: Output.object({
 
 </Spoiler>
 
-Remember to use [`.describe()`](https://zod.dev/metadata) on your fields to guide the model toward better outputs.
+记得在你的字段上使用 [`.describe()`](https://zod.dev/metadata) 来引导模型产出更好的输出。
 
-- [ ] Log the structured result
+- [ ] 打印结构化结果
 
-Access the output from your result object and log it to the terminal.
+从结果对象中访问输出并将其打印到终端。
 
 ```ts
 console.log(factsResult.output);
 ```
 
-- [ ] Run your solution
+- [ ] 运行你的方案
 
-Execute your code with `pnpm run dev` and verify that:
+用 `pnpm run dev` 执行你的代码，并验证：
 
-1. The planet story streams to the terminal
-2. The facts are returned as a structured object with an array of strings
-3. The facts sound like they're written by a scientist
+1. 星球故事流式输出到终端
+2. 事实以带有字符串数组的结构化对象返回
+3. 事实读起来像是科学家写的
 
-- [ ] (Optional) Try the alternative approach
+- [ ] （可选）尝试替代方案
 
-Once you've completed the exercise, check if you can implement the version 6 solution using [`generateObject()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-object) instead of `generateText()` with `Output.object()`. Both approaches work, but one is the newer pattern.
+完成练习后，看看你是否能用 [`generateObject()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-object) 代替 `generateText()` 加 `Output.object()` 来实现版本 6 的方案。两种方法都可行，但其中一种是更新的模式。

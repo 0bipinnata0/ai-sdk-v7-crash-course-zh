@@ -1,16 +1,16 @@
-Many language models can process more than just text—they can analyze images, PDFs, and other files. The [AI SDK](https://ai-sdk.dev/docs/introduction) provides built-in support for sending files to your LLM provider's API.
+许多语言模型可以处理的不仅仅是文本——它们还能分析图像、PDF 和其他文件。[AI SDK](https://ai-sdk.dev/docs/introduction) 为向你的 LLM 提供商 API 发送文件提供了内置支持。
 
-Right now, your chat application has a file upload button on the frontend, but it doesn't actually do anything with the file. The backend is expecting only text messages, so uploading an image won't work.
+现在，你的聊天应用前端有一个文件上传按钮，但它实际上没有对文件做任何处理。后端只接收文本消息，所以上传图片是行不通的。
 
-You need to modify the form submission handler to capture the uploaded file and send it along with the user's text message to the LLM.
+你需要修改表单提交处理器，捕获上传的文件，并将它与用户的文本消息一起发送给 LLM。
 
-## Steps To Complete
+## 完成步骤
 
-### Convert the File to a Data URL
+### 将文件转换为 Data URL
 
-- [ ] Look at the `fileToDataURL` helper function already provided in your code
+- [ ] 查看代码中已经提供的 `fileToDataURL` 辅助函数
 
-This function converts a `File` object from the form into a string that the [AI SDK](https://ai-sdk.dev/docs/introduction) can send over the network.
+这个函数将表单中的 `File` 对象转换为 [AI SDK](https://ai-sdk.dev/docs/introduction) 可以通过网络发送的字符串。
 
 ```ts
 const fileToDataURL = (file: File) => {
@@ -23,11 +23,11 @@ const fileToDataURL = (file: File) => {
 };
 ```
 
-### Update the Form Submission Handler
+### 更新表单提交处理器
 
-- [ ] Modify the `onSubmit` callback in the `ChatInput` component
+- [ ] 修改 `ChatInput` 组件中的 `onSubmit` 回调
 
-Instead of passing only `text` to `sendMessage()`, you need to pass a `parts` array that includes both a text part and an optional file part.
+不要只把 `text` 传给 `sendMessage()`，你需要传一个 `parts` 数组，其中同时包含文本部分和可选的文件部分。
 
 ```ts
 onSubmit={async (e) => {
@@ -38,19 +38,19 @@ onSubmit={async (e) => {
   );
   const file = formData.get('file') as File | null;
 
-  // TODO: figure out how to pass the file
-  // _as well as the text_ to the
-  // /api/chat route!
+  // TODO:想办法把文件
+  // _连同文本一起_传给
+  // /api/chat 路由!
 
-  // NOTE: You have a helpful function below
-  // called fileToDataURL that you can use to
-  // convert the file to a data URL. This
-  // will be useful!
+  // 注意:下面有一个好用的函数
+  // 叫 fileToDataURL,你可以用它
+  // 把文件转换为 data URL。
+  // 这会很有用!
 
-  // NOTE: Make sure you handle the case where
-  // `file` is null!
+  // 注意:确保处理好
+  // `file` 为 null 的情况!
   sendMessage({
-    // NOTE: 'parts' will be useful
+    // 注意:'parts' 会很有用
     text: input,
   });
 
@@ -59,36 +59,36 @@ onSubmit={async (e) => {
 }}
 ```
 
-Look at the [message parts documentation](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message) to understand the structure you need to create.
+查看[消息部件文档](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message)，了解你需要创建的结构。
 
-### Handle the Optional File Part
+### 处理可选的文件部分
 
-- [ ] Create a file part object only if a file exists
+- [ ] 仅在文件存在时创建文件部分对象
 
-Use the `fileToDataURL` function to convert the file to a data URL string. Include the file's `mediaType` property so the LLM knows what kind of file it is.
+使用 `fileToDataURL` 函数将文件转换为 data URL 字符串。包含文件的 `mediaType` 属性，让 LLM 知道这是什么类型的文件。
 
-- [ ] Update the `sendMessage()` call to use a `parts` array
+- [ ] 更新 `sendMessage()` 调用，改用 `parts` 数组
 
-The `parts` array should always include a text part with the user's input. If a file was selected, add a file part to the array as well.
+`parts` 数组应始终包含一个带有用户输入的文本部分。如果选择了文件，也要在数组中添加一个文件部分。
 
-Look at the solution code to see what the `FileUIPart` type looks like.
+查看解答代码，看看 `FileUIPart` 类型长什么样。
 
-### Test Your Implementation
+### 测试你的实现
 
-- [ ] Run the development server with `pnpm run dev`
+- [ ] 用 `pnpm run dev` 运行开发服务器
 
-Open http://localhost:3000 in your browser.
+在浏览器中打开 http://localhost:3000。
 
-- [ ] Click the Upload File button and select the `image.png` file from the problem folder
+- [ ] 点击上传文件按钮，从 problem 文件夹中选择 `image.png` 文件
 
-This is an image of Lake Bled in Slovenia.
+这是一张斯洛文尼亚布莱德湖的图片。
 
-- [ ] Type "Could you describe this image?" in the chat input
+- [ ] 在聊天输入框中输入“你能描述一下这张图片吗?”
 
-- [ ] Submit the form and check that the LLM successfully analyzes the image
+- [ ] 提交表单，检查 LLM 是否成功分析了图片
 
-The model should describe what it sees in the image rather than failing silently.
+模型应该描述它在图片中看到的内容，而不是静默失败。
 
-- [ ] Make sure you're using a model that supports image analysis
+- [ ] 确保你使用的模型支持图像分析
 
-[Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models) has this capability built in.
+[Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models) 内置了这个能力。

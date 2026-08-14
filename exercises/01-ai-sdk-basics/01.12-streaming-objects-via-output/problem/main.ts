@@ -6,8 +6,7 @@ const model = google('gemini-2.5-flash');
 
 const stream = streamText({
   model,
-  prompt:
-    'Give me the first paragraph of a story about an imaginary planet.',
+  prompt: '给我写一个关于假想星球的故事的第一段。',
 });
 
 for await (const chunk of stream.textStream) {
@@ -16,23 +15,23 @@ for await (const chunk of stream.textStream) {
 
 const finalText = await stream.text;
 
-// TODO: Replace generateText with streamText, keeping the same
-// Output.object with the facts schema from 01.10
-// Then use partialOutputStream to iterate over streaming chunks
+// TODO:将 generateText 替换为 streamText,保留 01.10 中
+// 带有 facts schema 的同一个 Output.object
+// 然后使用 partialOutputStream 遍历流式块
 const factsResult = await generateText({
   model,
-  prompt: `Give me some facts about the imaginary planet. Here's the story: ${finalText}`,
+  prompt: `给我一些关于这个假想星球的事实。这是故事:${finalText}`,
   output: Output.object({
     schema: z.object({
       facts: z
         .array(z.string())
         .describe(
-          'The facts about the imaginary planet. Write as if you are a scientist.',
+          '关于这个假想星球的事实。以科学家的口吻来写。',
         ),
     }),
   }),
 });
 
-// TODO: Replace this with a for-await loop over factsResult.partialOutputStream
-// Log each partial object as it arrives
+// TODO:将其替换为对 factsResult.partialOutputStream 的 for-await 循环
+// 打印每个到达的部分对象
 console.log(factsResult.output);

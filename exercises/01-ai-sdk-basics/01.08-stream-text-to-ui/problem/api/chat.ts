@@ -9,18 +9,18 @@ import {
 export const POST = async (req: Request): Promise<Response> => {
   const body = await req.json();
 
-  // TODO: get the UIMessage[] from the body
+  // TODO:从 body 中获取 UIMessage[]
   const messages: UIMessage[] = TODO;
 
-  // TODO: convert the UIMessage[] to ModelMessage[]
+  // TODO:将 UIMessage[] 转换为 ModelMessage[]
   const modelMessages: ModelMessage[] = TODO;
 
-  // TODO: pass the modelMessages to streamText
+  // TODO:将 modelMessages 传给 streamText
   const streamTextResult = streamText({
     model: google('gemini-2.5-flash'),
   });
 
-  // TODO: create a UIMessageStream from the streamTextResult
+  // TODO:从 streamTextResult 创建一个 UIMessageStream
   const stream = TODO;
 
   return createUIMessageStreamResponse({

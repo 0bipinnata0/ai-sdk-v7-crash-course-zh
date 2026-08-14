@@ -1,1 +1,1 @@
-You are creating a Claude skill using @plans/prd.json and @plans/lesson-skill-reference.md.
+你正在使用 @plans/prd.json 和 @plans/lesson-skill-reference.md 创建一个 Claude skill。

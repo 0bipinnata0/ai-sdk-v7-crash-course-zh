@@ -1,50 +1,50 @@
-Let's look at the most basic functionality of the AI SDK, generating some text. You need two inputs to generate some text. You need:
+让我们看看 AI SDK 最基础的功能：生成文本。生成文本需要两个输入：
 
-- a model that you're going to use
-- a prompt that you're going to pass to that model
+- 一个你要使用的模型
+- 一个你要传给该模型的提示词（prompt)
 
-I've given you a couple of to-dos inside the [`main.ts`](./main.ts) file. The first to-do is to choose a model and then instantiate it. This means going up to the `@ai-sdk/google` import here, grabbing the `google` function and then calling it with the model that you want to choose.
+我在 [`main.ts`](./main.ts) 文件里给你留了几个 TODO。第一个 TODO 是选择一个模型并实例化它。这意味着从这里的 `@ai-sdk/google` 导入中取出 `google` 函数，然后用你想选择的模型来调用它。
 
 ```ts
-// Import the necessary functions
+// 导入必要的函数
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
-// TODO: Choose a model. I recommend using the Google Gemini model:
+// TODO:选择一个模型。我推荐使用 Google Gemini 模型:
 // gemini-2.5-flash
 const model = TODO;
 ```
 
-We've got a prompt here asking what is the capital of France:
+我们这里有一个询问法国首都是哪里的提示词：
 
 ```ts
-const prompt = 'What is the capital of France?';
+const prompt = '法国的首都是哪里?';
 ```
 
-And then this `result` is going to be the result of this [`generateText`](./main.ts) call that we get from the `ai` package here. You're going to call `generateText`, passing in the model that you chose and passing in the prompt and then you're going to await it and get the result back.
+然后这个 `result` 将是我们从这里从 `ai` 包中调用的 [`generateText`](./main.ts) 的结果。你要调用 `generateText`，传入你选择的模型和提示词，然后 await 它并拿到结果。
 
 ```ts
-const result = TODO; // TODO: Use generateText to get the result
+const result = TODO; // TODO:使用 generateText 获取结果
 ```
 
-Finally, we're going to `console.log` the text:
+最后，我们将 `console.log` 输出文本：
 
 ```ts
 console.log(result.text);
 ```
 
-This means that when you run this exercise, you should see the LLM that we contacted answering the question that we asked it.
+这意味着当你运行这个练习时，你应该能看到我们调用的 LLM 回答我们提出的问题。
 
-That's it, a nice, simple exercise to start with.
+就是这样，一个不错、简单的入门练习。
 
-Good luck and I will see you in the solution.
+祝你好运，我们解答部分见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Choose a model by replacing the `TODO` in the model declaration with the Google Gemini model.
+- [ ] 通过将模型声明中的 `TODO` 替换为 Google Gemini 模型来选择一个模型。
 
-- [ ] Use the `generateText` function to get the result by replacing the `TODO` in the result declaration.
+- [ ] 通过替换 result 声明中的 `TODO`，使用 `generateText` 函数获取结果。
 
-- [ ] Run the code and check the terminal output to verify that you get a response about the capital of France.
+- [ ] 运行代码并检查终端输出，验证你是否得到了关于法国首都的回答。
 
-- [ ] If you get stuck, check the solution.
+- [ ] 如果卡住了，查看解答。

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 console.log(
-  `Check out the readme at ${path.join(
+  `查看 readme,位于 ${path.join(
     import.meta.dirname,
     'readme.md',
   )}`,

@@ -9,14 +9,14 @@ for ((i=1; i<=$1; i++)); do
   echo "Iteration $i"
   echo "--------------------------------"
   result=$(claude --permission-mode acceptEdits -p "@plans/prd.json @progress.txt \
-1. Find the highest-priority feature to work on and work only on that feature. \
-This should be the one YOU decide has the highest priority - not necessarily the first in the list. \
-3. Update the PRD with the work that was done. \
-4. Append your progress to the progress.txt file. \
-Use this to leave a note for the next person working in the codebase. \
-5. Make a git commit of that feature. \
-ONLY WORK ON A SINGLE FEATURE. \
-If, while implementing the feature, you notice the PRD is complete, output <promise>COMPLETE</promise>. \
+1. 找到优先级最高的特性,只处理那个特性。\
+应该是由你决定优先级最高的那个——不一定是列表中的第一个。\
+3. 用完成的工作更新 PRD。\
+4. 将你的进度追加到 progress.txt 文件中。\
+用这个给下一个在代码库中工作的人留个便条。\
+5. 为该特性创建一个 git 提交。\
+一次只处理一个特性。\
+如果在实现特性时,你注意到 PRD 已完成,输出 <promise>COMPLETE</promise>。\
 ")
 
   echo "$result"

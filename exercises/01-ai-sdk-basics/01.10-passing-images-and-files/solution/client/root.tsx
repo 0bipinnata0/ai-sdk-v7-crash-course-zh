@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    'Could you describe this image?',
+    '你能描述一下这张图片吗?',
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(
     null,

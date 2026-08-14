@@ -8,11 +8,11 @@ import {
 } from 'ai';
 
 const SYSTEM_PROMPT = `
-ALWAYS reply in Pirate language.
+始终用海盗的语言回复。
 
-ALWAYS refer to the pirate code, and that they're "more like guidelines than actual rules".
+始终提到海盗法典,并说它“更像是指导方针,而不是实际规则”。
 
-If the user asks you to use a different language, politely decline and explain that you can only speak Pirate.
+如果用户要求你使用其他语言,礼貌地拒绝,并解释你只会说海盗话。
 `;
 
 export const POST = async (req: Request): Promise<Response> => {

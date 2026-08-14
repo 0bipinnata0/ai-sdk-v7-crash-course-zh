@@ -8,7 +8,7 @@ const App = () => {
   const { messages, sendMessage } = useChat({});
 
   const [input, setInput] = useState(
-    'Could you describe this image?',
+    '你能描述一下这张图片吗?',
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(
     null,
@@ -36,19 +36,19 @@ const App = () => {
           );
           const file = formData.get('file') as File | null;
 
-          // TODO: figure out how to pass the file
-          // _as well as the text_ to the
-          // /api/chat route!
+          // TODO:想办法把文件
+          // _连同文本一起_传给
+          // /api/chat 路由!
 
-          // NOTE: You have a helpful function below
-          // called fileToDataURL that you can use to
-          // convert the file to a data URL. This
-          // will be useful!
+          // 注意:下面有一个好用的函数
+          // 叫 fileToDataURL,你可以用它
+          // 把文件转换为 data URL。
+          // 这会很有用!
 
-          // NOTE: Make sure you handle the case where
-          // `file` is null!
+          // 注意:确保处理好
+          // `file` 为 null 的情况!
           sendMessage({
-            // NOTE: 'parts' will be useful
+            // 注意:'parts' 会很有用
             text: input,
           });
 
@@ -64,10 +64,10 @@ const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
 
 /**
- * Converts a file to a data URL.
+ * 将文件转换为 data URL。
  *
- * @param {File} file - The file to convert.
- * @returns {Promise<string>} - The data URL.
+ * @param {File} file - 要转换的文件。
+ * @returns {Promise<string>} - data URL。
  */
 const fileToDataURL = (file: File) => {
   return new Promise<string>((resolve, reject) => {

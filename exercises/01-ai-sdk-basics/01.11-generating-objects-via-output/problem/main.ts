@@ -6,8 +6,7 @@ const model = google('gemini-2.5-flash');
 
 const stream = streamText({
   model,
-  prompt:
-    'Give me the first paragraph of a story about an imaginary planet.',
+  prompt: '给我写一个关于假想星球的故事的第一段。',
 });
 
 for await (const chunk of stream.textStream) {
@@ -16,15 +15,15 @@ for await (const chunk of stream.textStream) {
 
 const finalText = await stream.text;
 
-// TODO: Replace this with a call to generateText, passing:
-// - The model, same as above
-// - The prompt, asking for facts about the imaginary planet,
-//   passing in the finalText as the story
-// - The output, which should be Output.object({}), passing
-//   the schema: z.object({
-//     facts: z.array(z.string()).describe('The facts about the imaginary planet. Write as if you are a scientist.'),
+// TODO:将其替换为对 generateText 的调用,传入:
+// - model,与上面相同
+// - prompt,询问关于假想星球的事实,
+//   并将 finalText 作为故事传入
+// - output,应该是 Output.object({}),传入
+//   schema: z.object({
+//     facts: z.array(z.string()).describe('关于这个假想星球的事实。以科学家的口吻来写。'),
 //   })
 const factsResult = TODO;
 
-// TODO: Log the output of the result
+// TODO:打印结果的输出
 console.log(factsResult.output);

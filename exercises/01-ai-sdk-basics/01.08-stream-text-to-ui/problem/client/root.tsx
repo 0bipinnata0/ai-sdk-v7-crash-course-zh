@@ -4,11 +4,11 @@ import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 
 const App = () => {
-  // TODO: use the useChat hook to get the messages and sendMessage function
+  // TODO:使用 useChat hook 获取 messages 和 sendMessage 函数
   const { messages, sendMessage } = TODO;
 
   const [input, setInput] = useState(
-    `What's the capital of France?`,
+    `法国的首都是哪里?`,
   );
 
   return (
@@ -25,7 +25,7 @@ const App = () => {
         onChange={(e) => setInput(e.target.value)}
         onSubmit={(e) => {
           e.preventDefault();
-          // TODO: send the message
+          // TODO:发送消息
         }}
       />
     </Wrapper>

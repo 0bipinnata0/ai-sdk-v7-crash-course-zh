@@ -1,20 +1,20 @@
-You can use special prompts called system prompts to encourage the LLM that you're speaking to, to behave in a certain way.
+你可以使用一种叫做系统提示词（system prompt）的特殊提示词，来引导你正在对话的 LLM 以某种特定方式行事。
 
-In our case, I've added an extremely annoying behavior, which is our LLM is always going to reply in pirate language. They're always going to refer to the pirate code and that the pirate code is more like guidelines than actual rules.
+在我们的例子中，我添加了一个极其烦人的行为：我们的 LLM 总是会用海盗语言回复。它们总是会提到海盗法典，还说海盗法典"更像是指导方针而不是实际规则"。
 
-Here's the system prompt that's being used:
+这是正在使用的系统提示词:
 
 ```ts
 const SYSTEM_PROMPT = `
-ALWAYS reply in Pirate language.
+始终用海盗的语言回复。
 
-ALWAYS refer to the pirate code, and that they're "more like guidelines than actual rules".
+始终提到海盗法典,并说它“更像是指导方针,而不是实际规则”。
 
-If the user asks you to use a different language, politely decline and explain that you can only speak Pirate.
+如果用户要求你使用其他语言,礼貌地拒绝,并解释你只会说海盗话。
 `;
 ```
 
-We're then passing the system prompt into [`streamText`](./api/chat.ts) here under the system attribute:
+然后我们在 [`streamText`](./api/chat.ts) 中通过 system 属性传入系统提示词：
 
 ```ts
 const streamTextResult = streamText({
@@ -24,18 +24,18 @@ const streamTextResult = streamText({
 });
 ```
 
-We don't need to do anything funny here like prepending it to `modelMessages` to make sure it comes up at the start. The AI SDK just gives us a nice little property called `system` that we can pass in.
+我们不需要做任何花哨的操作，比如把它拼接到 `modelMessages` 前面来确保它出现在开头。AI SDK 直接给了我们一个叫做 `system` 的便捷属性，我们可以直接传入。
 
-We're going to be using this system prompt in future exercises to customize the LLM that we're talking to and configure its behavior. So, have a go now.
+我们将在未来的练习中使用这个系统提示词来定制我们对话的 LLM 并配置它的行为。所以，现在就来试试吧。
 
-Try asking for some financial advice, and see what it says - see if you can break it out of pirate mode. Enjoy!
+试着问一些理财建议，看看它说什么——看看你能不能让它脱离海盗模式。玩得开心！
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Modify the `SYSTEM_PROMPT` constant in the `api/chat.ts` file to create your own custom behavior
+- [ ] 修改 `api/chat.ts` 文件中的 `SYSTEM_PROMPT` 常量，创建你自己的自定义行为
 
-- [ ] Try creating a system prompt that makes the AI speak in a different persona or style
+- [ ] 尝试创建一个让 AI 以不同的人设或风格说话的系统提示词
 
-- [ ] Test your changes by running the local dev server and interacting with the chat interface
+- [ ] 通过运行本地开发服务器并与聊天界面交互来测试你的修改
 
-- [ ] Try asking the AI to break character and see if your system prompt successfully prevents it from doing so
+- [ ] 尝试让 AI 脱离角色，看看你的系统提示词是否成功阻止了它这样做

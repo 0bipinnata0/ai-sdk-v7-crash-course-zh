@@ -1,82 +1,82 @@
-Okay, now you know what we're learning, let's actually look at how you're going to learn it. All of the interactive stuff you're going to do in this course is going to be done inside a GitHub repo.
+好了，现在你已经知道我们要学什么了，接下来看看你将如何学习。本课程中所有需要动手操作的互动内容，都会在一个 GitHub 仓库中完成。
 
-## Setting Up the GitHub Repository
+## 设置 GitHub 仓库
 
-Before you clone the repo, make sure you have:
+在克隆仓库之前，请确保你已安装：
 
-- [Node.js](https://nodejs.org/en/download) version 22 or higher
-- [pnpm](https://pnpm.io/installation) version 9.12.3 or higher
+- [Node.js](https://nodejs.org/en/download) 22 或更高版本
+- [pnpm](https://pnpm.io/installation) 9.12.3 或更高版本
 
-So your first job is to clone the [repo](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course) down:
+所以你的第一项任务是把[仓库](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course)克隆下来：
 
 ```bash
 git clone https://github.com/ai-hero-dev/ai-sdk-v6-crash-course.git
 cd ai-sdk-v6-crash-course
 ```
 
-Next, let's install the dependencies via `pnpm install`:
+接下来，通过 `pnpm install` 安装依赖：
 
 ```bash
 pnpm install
 ```
 
-If you don't have pnpm installed, install it first via [this link](https://pnpm.io/installation).
+如果你还没有安装 pnpm，先通过[这个链接](https://pnpm.io/installation)安装。
 
-Next, let's copy the `.env.example` file to `.env`:
+接下来，把 `.env.example` 文件复制为 `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-## Running Exercises
+## 运行练习
 
-Finally, let me show you how to run an exercise. You go into the terminal and you run:
+最后，让我演示一下如何运行一个练习。打开终端，运行：
 
 ```bash
 pnpm dev
 ```
 
-Check out the video above for a demo for what gets shown.
+查看上方的视频，了解会显示什么内容的演示。
 
-## Troubleshooting
+## 故障排查
 
-If you encounter any issues with this setup, then I recommend you run:
+如果在这个设置过程中遇到任何问题，我建议你运行：
 
 ```bash
 pnpm dev --simple
 ```
 
-This will give you a slightly more robust experience, which is useful when you're doing this from an unusual operating system.
+这会给你一个稍微更稳健的体验，当你在不常见的操作系统上操作时很有用。
 
-Of course if you have any issues with this setup then let me know in the [Discord](https://aihero.dev/discord) and I will help you out.
+当然，如果你在设置中遇到任何问题，请在 [Discord](https://aihero.dev/discord) 中告诉我，我会帮你解决。
 
-## Taking the Course
+## 学习本课程
 
-The process for taking the course is to either watch the video or read the text below. Every single one of these exercise texts also has a steps to complete section at the bottom, which gives you a really clear step-by-step guide to follow.
+学习本课程的方式是看视频或阅读下面的文字。每一个练习文本的底部都有一个"完成步骤"部分，为你提供了非常清晰的分步指南。
 
-Keep working through the exercises, and before you know it, you'll have mastered the AI SDK. And if you have any questions or queries or any confusions at all, then ping them into the Discord. That is what it's for.
+持续完成这些练习，不知不觉中，你就会掌握 AI SDK。如果你有任何问题、疑问或困惑，把它们发到 Discord 里。Discord 就是为此而设的。
 
-Thanks so much for taking the course and I will see you in the next one.
+非常感谢你学习本课程，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Make sure Node.js 22+ and pnpm 9.12.3+ are installed
+- [ ] 确保已安装 Node.js 22+ 和 pnpm 9.12.3+
 
-- [ ] Clone the GitHub repository to your local machine
-  - Clone it locally using your preferred method
-  - [Repo](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course)
+- [ ] 将 GitHub 仓库克隆到你的本地机器
+  - 使用你偏好的方式在本地克隆
+  - [仓库](https://github.com/ai-hero-dev/ai-sdk-v6-crash-course)
 
-- [ ] Install dependencies by running `pnpm install`
-  - If you don't have pnpm, install it first following [this link](https://pnpm.io/installation)
+- [ ] 运行 `pnpm install` 安装依赖
+  - 如果你没有 pnpm，先按照[这个链接](https://pnpm.io/installation)安装
 
-- [ ] Set up environment variables
-  - Copy the `.env.example` file to `.env`
-  - We'll configure API keys in the next lesson
+- [ ] 设置环境变量
+  - 将 `.env.example` 文件复制为 `.env`
+  - 我们将在下一课中配置 API 密钥
 
-- [ ] Test running an exercise with `pnpm dev`
-  - Navigate the exercise menu using arrow keys or typing to search
-  - Select an exercise to run
+- [ ] 用 `pnpm dev` 测试运行一个练习
+  - 使用方向键或输入搜索来导航练习菜单
+  - 选择一个练习运行
 
-- [ ] If you have any setup issues, try running `pnpm dev --simple` for a more robust experience
+- [ ] 如果你遇到任何设置问题，尝试运行 `pnpm dev --simple` 以获得更稳健的体验
 
-- [ ] Join the [Discord](https://aihero.dev/discord) if you have any questions or need help
+- [ ] 如果你有任何问题或需要帮助，加入 [Discord](https://aihero.dev/discord)

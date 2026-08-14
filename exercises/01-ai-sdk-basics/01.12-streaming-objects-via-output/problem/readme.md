@@ -1,43 +1,43 @@
-Generating objects is useful, but we can do better. When working with LLMs, we should always consider streaming - since LLMs generate tokens one at a time, waiting for the entire response can feel slow to users.
+生成对象很有用，但我们可以做得更好。在使用 LLM 时，我们应该始终考虑流式传输——因为 LLM 是一个 token 一个 token 地生成的，等待整个响应完成会让用户感觉缓慢。
 
-Instead of waiting for the complete object to be generated, we can stream the partial results as they arrive. This gives users immediate feedback and a more satisfying experience.
+我们可以不必等待完整的对象生成完毕，而是在部分结果到达时就将其流式输出。这能给用户即时的反馈和更令人满意的体验。
 
-The good news? Making this change requires minimal modifications to your existing code.
+好消息是？做出这个改变只需要对现有代码做极少的修改。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Replace `generateText` with [`streamText`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) in your facts generation code
+- [ ] 在你的事实生成代码中，将 `generateText` 替换为 [`streamText`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
 
-Keep the same [`Output.object()`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) configuration with your facts schema.
+保持相同的 [`Output.object()`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) 配置和你的 facts schema。
 
 ```ts
-// Change from generateText to streamText
+// 从 generateText 改为 streamText
 const factsResult = streamText({
   model,
-  prompt: `Give me some facts about the imaginary planet. Here's the story: ${finalText}`,
+  prompt: `给我一些关于这个假想星球的事实。这是故事:${finalText}`,
   output: Output.object({
     schema: z.object({
       facts: z
         .array(z.string())
         .describe(
-          'The facts about the imaginary planet. Write as if you are a scientist.',
+          '关于这个假想星球的事实。以科学家的口吻来写。',
         ),
     }),
   }),
 });
 ```
 
-- [ ] Replace the console.log with a [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of) loop over [`partialObjectStream`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)
+- [ ] 用遍历 [`partialObjectStream`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) 的 [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of) 循环替换 console.log
 
-Instead of logging the final output once, iterate over the streaming chunks as they arrive.
+不要只打印一次最终输出，而是在流式块到达时遍历它们。
 
 ```ts
-// TODO: Replace this with a for-await loop over factsResult.partialObjectStream
-// Log each partial object as it arrives
+// TODO:将其替换为对 factsResult.partialObjectStream 的 for-await 循环
+// 打印每个到达的部分对象
 console.log(factsResult.output);
 ```
 
-Each iteration will log a partial object that's been built up so far. You might see an empty facts array initially, then a few facts, then more facts - all arriving progressively.
+每次迭代都会打印一个到目前为止构建出来的部分对象。你可能一开始会看到一个空的 facts 数组，然后出现几个事实，然后更多事实——全部逐步到达。
 
 <Spoiler>
 
@@ -49,6 +49,6 @@ for await (const chunk of factsResult.partialObjectStream) {
 
 </Spoiler>
 
-- [ ] Run the file and observe the streaming behavior
+- [ ] 运行文件并观察流式行为
 
-Execute your code with `pnpm run dev` and watch as the facts array is built up over time instead of appearing all at once at the end.
+用 `pnpm run dev` 执行你的代码，观察 facts 数组是如何随时间逐步构建的，而不是在最后一次性全部出现。

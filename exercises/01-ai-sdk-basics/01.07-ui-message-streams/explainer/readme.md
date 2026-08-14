@@ -1,17 +1,17 @@
-So far we've seen how you can stream text from an LLM response, but LLMs can return more than just text parts.
+到目前为止，我们已经看到了如何从 LLM 的响应中流式传输文本，但 LLM 能返回的不只是文本部分。
 
-They can return reasoning tokens, they can return sources, they can return tool calls and tool results - and much more.
+它们可以返回推理 token，可以返回来源（sources)，可以返回工具调用和工具结果——还有更多。
 
-The stream is the thing that connects your front end to your back end. And all of these different parts can't just be represented by a single text stream. We need something a bit more complex.
+流（stream）是连接你的前端和后端的东西。而所有这些不同类型的部件，无法只用单一的文本流来表示。我们需要更复杂一点的东西。
 
-In the AI SDK, this is a `UIMessageStream`. A `UIMessage` is a really important type in the AI SDK. It represents the messages as they appear in your UI. And so a [`UIMessageStream`](./main.ts) is your back end constructing one of these `UIMessage`s in real time.
+在 AI SDK 中，这就是 `UIMessageStream`。`UIMessage` 是 AI SDK 中一个非常重要的类型。它代表消息在 UI 中呈现的样子。所以 [`UIMessageStream`](./main.ts) 就是你的后端实时构建一个 `UIMessage` 的过程。
 
-In this example, we're passing a Google model into [`streamText`](./main.ts) with a prompt saying, "Give me a sonnet about a cat called Steven." And instead of referring to `textStream` here, we are calling `toUIMessageStream` and streaming down the chunks.
+在这个例子中,我们把一个 Google 模型传给 [`streamText`](./main.ts),提示词是“给我写一首关于一只叫 Steven 的猫的十四行诗”。这里没有使用 `textStream`,而是调用 `toUIMessageStream` 并逐块流式输出。
 
 ```ts
 const stream = streamText({
   model,
-  prompt: 'Give me a sonnet about a cat called Steven.',
+  prompt: '给我写一首关于一只叫 Steven 的猫的十四行诗。',
 });
 
 for await (const chunk of stream.toUIMessageStream()) {
@@ -19,38 +19,38 @@ for await (const chunk of stream.toUIMessageStream()) {
 }
 ```
 
-If we run this exercise, we'll see that we get a whole list of objects being streamed out here, starting with a start, then a start step, then text start, text delta, and all sorts of stuff, all the way to the finish and finish step.
+如果我们运行这个练习，会看到一连串对象被流式输出，以 start 开始，然后是 start step，接着是 text start、text delta，以及各种各样的东西，一直到 finish 和 finish step。
 
-The output looks like this:
+输出看起来像这样：
 
 ```txt
 { type: 'start' }
 { type: 'start-step' }
 { type: 'text-start', id: '0' }
-{ type: 'text-delta', id: '0', delta: 'A' }
-{ type: 'text-delta', id: '0', delta: ' feline friend,' }
-// ... more deltas ...
+{ type: 'text-delta', id: '0', delta: '一' }
+{ type: 'text-delta', id: '0', delta: '只叫 Steven 的猫,' }
+// ... 更多 delta ...
 { type: 'text-end', id: '0' }
 { type: 'finish-step' }
 { type: 'finish' }
 ```
 
-These objects represent the [`UIMessageStream`](./main.ts) and all their various parts. Streaming to a terminal, which we saw before is relatively simple, but streaming to a UI means you need a little bit more complexity. And that's what the `UIMessageStream` gives you.
+这些对象代表了 [`UIMessageStream`](./main.ts) 及其各种不同的部件。我们之前看到，流式传输到终端相对简单，但流式传输到 UI 意味着你需要更多的复杂性。而这正是 `UIMessageStream` 提供给你的。
 
-We're going to see it more and more in the next few exercises, especially when we look in the network tab to see what streaming from our back end to our front end. And so I hope this little intro gives you an idea for what it looks like.
+在接下来的几个练习中我们会越来越多地看到它，特别是当我们查看网络标签页，观察从后端流式传输到前端的内容时。希望这个简短的介绍能让你对它的样子有个概念。
 
-Try messing about with this prompt here, see if you can get some different outputs and run the exercise a few times with different inputs to see what the outputs look like. Get used to the shape of the `UIMessageStream`. We're going to be seeing it a lot. Good luck, and I'll see you in the next one.
+试着修改这里的提示词，看看能否得到一些不同的输出，用不同的输入多运行几次这个练习，看看输出是什么样子。熟悉 `UIMessageStream` 的结构。我们接下来会经常见到它。祝你好运，我们下一课见。
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Examine the code that uses `toUIMessageStream()` instead of directly working with `textStream`
+- [ ] 查看使用 `toUIMessageStream()` 而不是直接操作 `textStream` 的代码
 
-- [ ] Run the exercise to see the different object types in the `UIMessageStream` output
+- [ ] 运行练习，观察 `UIMessageStream` 输出中的不同对象类型
 
-- [ ] Try changing the prompt in the `streamText` function to see how different inputs affect the output format
+- [ ] 尝试修改 `streamText` 函数中的提示词，看看不同的输入如何影响输出格式
 
-- [ ] Look at the structure of the response objects with their various types: 'start', 'start-step', 'text-start', 'text-delta', etc.
+- [ ] 观察响应对象的结构及其各种类型：'start'、'start-step'、'text-start'、'text-delta' 等
 
-- [ ] Get familiar with this format as it will be used extensively in future exercises
+- [ ] 熟悉这种格式，因为它将在未来的练习中被大量使用
 
-- [ ] Try to understand how these structured messages could be used to build a more complex UI
+- [ ] 试着理解这些结构化消息如何被用来构建更复杂的 UI

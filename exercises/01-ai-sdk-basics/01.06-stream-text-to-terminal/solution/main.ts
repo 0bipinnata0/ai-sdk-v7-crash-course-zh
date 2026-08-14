@@ -5,8 +5,7 @@ const model = google('gemini-2.5-flash');
 
 const stream = streamText({
   model,
-  prompt:
-    'Give me the first paragraph of a story about an imaginary planet.',
+  prompt: '给我写一个关于假想星球的故事的第一段。',
 });
 
 for await (const chunk of stream.textStream) {

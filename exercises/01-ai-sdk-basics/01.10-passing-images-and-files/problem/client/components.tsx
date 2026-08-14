@@ -25,7 +25,7 @@ export const Message = ({
   role: string;
   parts: UIMessagePart<UIDataTypes, UITools>[];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -88,7 +88,7 @@ export const ChatInput = ({
           type="button"
           onClick={handleFileButtonClick}
           className="flex items-center justify-center w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
-          title="Upload file"
+          title="上传文件"
         >
           <Upload className="w-5 h-5 text-gray-300" />
         </button>
@@ -116,7 +116,7 @@ export const ChatInput = ({
         <input
           className="w-full outline-0"
           value={input}
-          placeholder="Say something..."
+          placeholder="说点什么..."
           onChange={onInputChange}
           autoFocus
         />

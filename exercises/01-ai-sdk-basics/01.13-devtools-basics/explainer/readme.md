@@ -1,20 +1,20 @@
-Up until now, we've been flying blind with the AI SDK. We send requests to the LLM and get responses back, but we haven't had much visibility into what's actually happening under the hood.
+到目前为止，我们在使用 AI SDK 时一直是在"盲飞"。我们向 LLM 发送请求并收到响应，但我们对底层实际发生的事情几乎没有可见性。
 
-The [AI SDK](https://ai-sdk.dev/docs/introduction) V6 shipped with [DevTools](https://ai-sdk.dev/docs/ai-sdk-core/devtools) - a powerful local development tool that lets you inspect every interaction with your language model. You can see request payloads, response streams, token usage, and even watch reasoning tokens get consumed in real-time.
+[AI SDK](https://ai-sdk.dev/docs/introduction) V6 随附了 [DevTools](https://ai-sdk.dev/docs/ai-sdk-core/devtools)——一个强大的本地开发工具，让你可以检查与语言模型的每一次交互。你可以看到请求负载、响应流、token 使用量，甚至实时观察推理 token 的消耗过程。
 
-This observability is critical when building with LLMs. It helps you debug issues, understand what's being sent to the provider, and optimize your prompts based on actual usage data.
+在使用 LLM 构建应用时，这种可观测性至关重要。它能帮助你调试问题、了解发送给提供商的内容，并根据实际使用数据优化你的提示词。
 
-## Steps To Complete
+## 完成步骤
 
-### Set Up DevTools Middleware
+### 设置 DevTools 中间件
 
-- [ ] Import `devToolsMiddleware` from `@ai-sdk/devtools`
+- [ ] 从 `@ai-sdk/devtools` 导入 `devToolsMiddleware`
 
-The middleware comes from the [AI SDK DevTools](https://ai-sdk.dev/docs/ai-sdk-core/devtools) package and allows you to intercept and inspect LLM calls.
+该中间件来自 [AI SDK DevTools](https://ai-sdk.dev/docs/ai-sdk-core/devtools) 包，允许你拦截和检查 LLM 调用。
 
-- [ ] Wrap your language model with `wrapLanguageModel()`
+- [ ] 用 `wrapLanguageModel()` 包装你的语言模型
 
-Use the [`wrapLanguageModel()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/wrap-language-model) function from the [AI SDK](https://ai-sdk.dev/docs/introduction) to add the middleware to your model. Pass the model and the middleware to it:
+使用来自 [AI SDK](https://ai-sdk.dev/docs/introduction) 的 [`wrapLanguageModel()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/wrap-language-model) 函数为你的模型添加中间件。把模型和中间件传给它：
 
 ```ts
 import { google } from '@ai-sdk/google';
@@ -27,52 +27,52 @@ const model = wrapLanguageModel({
 });
 ```
 
-### Launch DevTools
+### 启动 DevTools
 
-- [ ] Run your development server with `pnpm run dev`
+- [ ] 用 `pnpm run dev` 运行你的开发服务器
 
-This starts your local dev server which will be instrumented with DevTools.
+这会启动你的本地开发服务器，它将被 DevTools 检测（instrument)。
 
-- [ ] Open a new terminal window and run `npx @ai-sdk/devtools@latest`
+- [ ] 打开一个新的终端窗口，运行 `npx @ai-sdk/devtools@latest`
 
-This launches the DevTools UI at `http://localhost:4983`.
+这会在 `http://localhost:4983` 启动 DevTools UI。
 
-- [ ] Keep both terminal windows open side-by-side
+- [ ] 让两个终端窗口并排保持打开
 
-One terminal runs your app, the other runs the DevTools interface.
+一个终端运行你的应用，另一个运行 DevTools 界面。
 
-### Test the Integration
+### 测试集成
 
-- [ ] Navigate to `http://localhost:3000` in your browser
+- [ ] 在浏览器中导航到 `http://localhost:3000`
 
-This is where your application is running.
+这是你的应用运行的地方。
 
-- [ ] Make a request to your LLM (like asking "What's the capital of France?")
+- [ ] 向你的 LLM 发出请求(比如问“法国的首都是哪里?”)
 
-Send a message through your application UI.
+通过你的应用 UI 发送一条消息。
 
-- [ ] Switch to the DevTools tab at `http://localhost:4983`
+- [ ] 切换到 `http://localhost:4983` 的 DevTools 标签页
 
-You should now see a new run appear in the DevTools interface.
+你现在应该能在 DevTools 界面中看到一个新的运行记录。
 
-- [ ] Click into the run to inspect its details
+- [ ] 点击进入该运行记录，检查其详细信息
 
-Explore the different tabs available:
+探索可用的不同标签页：
 
-- **General**: See how long the request took and basic metrics
-- **Usage**: View detailed token counts, including reasoning tokens if applicable
-- **Request/Response**: Inspect the raw request payload and streaming response
+- **General**：查看请求耗时和基本指标
+- **Usage**：查看详细的 token 计数，包括推理 token（如适用）
+- **Request/Response**：检查原始请求负载和流式响应
 
-### Verify Full Observability
+### 验证完整的可观测性
 
-- [ ] Check the token usage breakdown
+- [ ] 检查 token 使用明细
 
-Notice the input tokens, output tokens, and any reasoning tokens that were consumed.
+注意输入 token、输出 token 以及被消耗的任何推理 token。
 
-- [ ] Review the request payload
+- [ ] 查看请求负载
 
-Confirm you can see exactly what was sent to the LLM provider.
+确认你能看到发送给 LLM 提供商的确切内容。
 
-- [ ] Examine the streaming response
+- [ ] 检查流式响应
 
-Understand how the response was streamed back from the provider.
+理解响应是如何从提供商流式返回的。
