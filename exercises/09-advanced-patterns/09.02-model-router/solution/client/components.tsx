@@ -22,7 +22,7 @@ export const Message = ({
   parts: UIMessagePart<UIDataTypes, UITools>[];
   metadata: MyMessage['metadata'];
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
 
   const text = parts
     .map((part) => {
@@ -37,7 +37,7 @@ export const Message = ({
       <ReactMarkdown>{prefix + text}</ReactMarkdown>
       {metadata?.model && (
         <div className="text-sm text-gray-500 mt-1">
-          Model: {metadata.model}
+          模型:{metadata.model}
         </div>
       )}
     </div>
@@ -57,7 +57,7 @@ export const ChatInput = ({
     <input
       className="fixed bottom-0 w-full max-w-md p-2 mb-8 border-2 border-zinc-700 rounded shadow-xl bg-gray-800"
       value={input}
-      placeholder="Say something..."
+      placeholder="说点什么..."
       onChange={onChange}
       autoFocus
     />

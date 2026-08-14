@@ -26,19 +26,19 @@ const generateQueriesForTavily = (
   const queriesResult = streamObject({
     model: google('gemini-2.5-flash'),
     system: `
-      You are a helpful assistant that generates queries to search the web for information.
+      你是一个乐于助人的助手,负责生成用于在网上搜索信息的查询。
 
       <rules>
-        Make a plan before you generate the queries. The plan should identify the groups of information required to answer the question.
-        The plan should list pieces of information that are required to answer the question, then consider how to break down the information into queries.
+        在生成查询之前先制定计划。计划应该识别出回答问题所需的信息分组。
+        计划应该列出回答问题所需的信息点,然后考虑如何把这些信息拆解成查询。
       </rules>
 
-      Generate 3-5 queries that are relevant to the conversation history.
-      
+      生成 3-5 个与对话历史相关的查询。
+
       <output-format>
-        Reply as a JSON object with the following properties:
-        - plan: A string describing the plan for the queries.
-        - queries: An array of strings, each representing a query.
+        以 JSON 对象回复,包含以下属性:
+        - plan:描述查询计划的字符串。
+        - queries:字符串数组,每个元素代表一个查询。
       </output-format>
     `,
     schema: z.object({
@@ -128,20 +128,20 @@ const streamFinalSummary = async (
 
   const answerResult = streamText({
     model: google('gemini-2.5-flash'),
-    system: `You are a helpful assistant that answers questions based on the search results.
+    system: `你是一个乐于助人的助手,基于搜索结果回答问题。
       <rules>
-      You should use the search results to answer the question.
-      Use sources from the search results to answer the question.
-      Sources should be cited as markdown links.
+      你应该使用搜索结果来回答问题。
+      使用搜索结果中的来源来回答问题。
+      来源应该以 markdown 链接的形式引用。
 
       <markdown-link-example>
-        You might consider looking at [this article](https://www.example.com) to answer the question.
+        你可以看看[这篇文章](https://www.example.com)来回答这个问题。
       </markdown-link-example>
-      
-      Sources should not be cited with the full URL visible to the user. Instead, use a short description of the source:
+
+      引用来源时不应该把完整的 URL 显示给用户。相反,使用对来源的简短描述:
 
       <bad-markdown-link-example>
-        This site will be useful to you: [https://www.example.com](https://www.example.com)
+        这个网站对你有用:[https://www.example.com](https://www.example.com)
       </bad-markdown-link-example>
 
       </rules>
@@ -151,7 +151,7 @@ const streamFinalSummary = async (
       </sources>
 
       <output-format>
-        Use markdown formatting.
+        使用 markdown 格式。
       </output-format>
     `,
     messages,

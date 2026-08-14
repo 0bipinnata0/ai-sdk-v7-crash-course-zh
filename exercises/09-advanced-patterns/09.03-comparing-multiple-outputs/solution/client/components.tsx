@@ -22,7 +22,7 @@ export const Message = ({
   parts: MyMessage['parts'];
   onSelectModel: (partId: string) => void;
 }) => {
-  const prefix = role === 'user' ? 'User: ' : 'AI: ';
+  const prefix = role === 'user' ? '用户: ' : 'AI: ';
   return (
     <div className="my-6">
       {parts.map((part) => {
@@ -48,7 +48,7 @@ export const Message = ({
                     className="bg-gray-700 text-white px-2 py-1 rounded"
                     onClick={() => onSelectModel(part.id!)}
                   >
-                    Select
+                    选择
                   </button>
                 </div>
               </div>

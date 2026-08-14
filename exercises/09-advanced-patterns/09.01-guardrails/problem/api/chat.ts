@@ -21,8 +21,8 @@ export const POST = async (req: Request): Promise<Response> => {
   const stream = createUIMessageStream<UIMessage>({
     execute: async ({ writer }) => {
       console.time('Guardrail Time');
-      // TODO: Use generateText to call a model, passing in the modelMessages
-      // and the GUARDRAIL_SYSTEM prompt.
+      // TODO:使用 generateText 调用一个模型,
+      // 传入 modelMessages 和 GUARDRAIL_SYSTEM 提示词。
       //
       const guardrailResult = TODO;
 
@@ -33,11 +33,10 @@ export const POST = async (req: Request): Promise<Response> => {
         guardrailResult.text.trim(),
       );
 
-      // TODO: If the guardrailResult is '0', write a standard reply
-      // to the frontend using text-start, text-delta, and text-end
-      // parts. Then, do an early return to prevent the rest of the
-      // stream from running.
-      // (make sure you trim the guardrailResult.text before checking it)
+      // TODO:如果 guardrailResult 是 '0',使用 text-start、
+      // text-delta 和 text-end 部件向前端写一条标准回复。
+      // 然后提前返回,阻止流的其余部分运行。
+      // (检查前确保 trim 一下 guardrailResult.text)
       if (TODO) {
       }
 

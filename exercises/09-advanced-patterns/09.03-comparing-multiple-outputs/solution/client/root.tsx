@@ -10,7 +10,7 @@ const App = () => {
     useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    `How many R's are in the word strawberry?`,
+    `“strawberry” 这个单词里有几个字母 R?`,
   );
 
   const latestMessage = messages[messages.length - 1];
@@ -54,8 +54,8 @@ const App = () => {
       <ChatInput
         placeholder={
           latestMessageIsAwaitingResponse
-            ? 'Select a response to continue...'
-            : 'Say something...'
+            ? '请选择一个回复以继续...'
+            : '说点什么...'
         }
         input={input}
         onChange={(e) => setInput(e.target.value)}

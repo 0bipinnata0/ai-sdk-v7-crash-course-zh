@@ -25,7 +25,7 @@ export const Message = ({
         return (
           <div key={part.id} className="mb-4">
             <h2 className="text-gray-300 text-sm mb-1">
-              Queries
+              查询
             </h2>
             <ul className="text-gray-400 text-xs monospace">
               {Object.values(part.data).map((query) => (
@@ -39,7 +39,7 @@ export const Message = ({
       if (part.type === 'data-plan') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">Plan</h2>
+            <h2 className="text-gray-300 text-sm mb-1">计划</h2>
             <div className="prose prose-invert text-gray-400 text-xs">
               <ReactMarkdown>{part.data}</ReactMarkdown>
             </div>
@@ -51,7 +51,7 @@ export const Message = ({
         return (
           <div className="prose prose-invert">
             <ReactMarkdown>
-              {(role === 'user' ? 'User: ' : 'AI: ') + part.text}
+              {(role === 'user' ? '用户: ' : 'AI: ') + part.text}
             </ReactMarkdown>
           </div>
         );
@@ -80,8 +80,8 @@ export const ChatInput = ({
       value={input}
       placeholder={
         disabled
-          ? 'Please handle tool calls first...'
-          : 'Say something...'
+          ? '请先处理工具调用...'
+          : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

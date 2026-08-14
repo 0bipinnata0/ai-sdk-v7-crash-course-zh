@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    `Which are better? Gas, electric, or induction hobs? Please provide a detailed answer.`,
+    `燃气灶、电陶炉和电磁灶,哪个更好?请给出详细的回答。`,
   );
 
   return (

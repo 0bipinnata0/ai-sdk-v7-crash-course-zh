@@ -9,7 +9,7 @@ const App = () => {
   const { messages, sendMessage } = useChat<MyMessage>({});
 
   const [input, setInput] = useState(
-    `How many R's are in the word strawberry?`,
+    `“strawberry” 这个单词里有几个字母 R?`,
   );
 
   return (

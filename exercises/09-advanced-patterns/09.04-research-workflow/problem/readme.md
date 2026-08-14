@@ -1,21 +1,21 @@
-In this exercise, we're going to build a research workflow. We should be able to ask questions of our system, and it will search the web and provide a response for us - after synthesizing a ton of information.
+在本练习中，我们将构建一个研究工作流。我们应该能向系统提问，它会搜索网络并在综合大量信息之后为我们提供回答。
 
-This will be much more freeform than previous exercises, giving you more license to solve the problem in your own way.
+这将比之前的练习更加自由，给你更多按自己的方式解决问题的空间。
 
-You'll need a [Tavily API key](https://tavily.com/) to make the search functionality work - it's free to sign up for.
+你需要一个 [Tavily API 密钥](https://tavily.com/)来让搜索功能工作——注册是免费的。
 
-## The Setup
+## 设置
 
-Our system follows a four-step process:
+我们的系统遵循四步流程：
 
-1. Generate search queries for [Tavily](https://tavily.com/) (similar to Google searches)
-2. Stream those queries and a research plan to the frontend
-3. Call Tavily to get search results
-4. Stream a final summary to the user
+1. 为 [Tavily](https://tavily.com/) 生成搜索查询（类似于谷歌搜索）
+2. 把这些查询和一个研究计划流式传输到前端
+3. 调用 Tavily 获取搜索结果
+4. 向用户流式输出最终总结
 
-Let's look at the code structure to understand what needs to be implemented.
+让我们看看代码结构，了解需要实现什么。
 
-The main functionality is defined in the `chat.ts` file, which contains several functions that need to be implemented:
+主要功能定义在 `chat.ts` 文件中，其中包含几个需要实现的函数：
 
 ```ts
 const stream = createUIMessageStream<MyMessage>({
@@ -40,33 +40,31 @@ const stream = createUIMessageStream<MyMessage>({
 
 ## `generateQueriesForTavily`
 
-The first function needs to use `streamObject` to generate a plan and queries based on the conversation history:
+第一个函数需要使用 `streamObject`，基于对话历史生成一个计划和查询：
 
 ```ts
 const generateQueriesForTavily = (
   modelMessages: ModelMessage[],
 ) => {
-  // TODO: Use streamObject to generate a plan for the search,
-  // AND the queries to search the web for information.
-  // The plan should identify the groups of information required
-  // to answer the question.
-  // The plan should list pieces of information that are required
-  // to answer the question, then consider how to break down the
-  // information into queries.
-  // Generate 3-5 queries that are relevant to the conversation history.
-  // Reply as a JSON object with the following properties:
-  // - plan: A string describing the plan for the queries.
-  // - queries: An array of strings, each representing a query.
+  // TODO:使用 streamObject 生成搜索计划,
+  // 以及用于在网上搜索信息的查询。
+  // 计划应该识别出回答问题所需的信息分组。
+  // 计划应该列出回答问题所需的信息点,
+  // 然后考虑如何把这些信息拆解成查询。
+  // 生成 3-5 个与对话历史相关的查询。
+  // 以 JSON 对象回复,包含以下属性:
+  // - plan:描述查询计划的字符串。
+  // - queries:字符串数组,每个元素代表一个查询。
   const queriesResult = TODO;
 
   return queriesResult;
 ```
 
-You'll need to replace the `TODO` with code that uses `streamObject` to generate an object with `plan` and `queries` properties.
+你需要用 `streamObject` 生成一个带有 `plan` 和 `queries` 属性的对象来替换 `TODO`。
 
 ## `displayQueriesInFrontend`
 
-Next, you need to implement the function to stream the queries and plan to the frontend:
+接下来，你需要实现把查询和计划流式传输到前端的函数：
 
 ```ts
 const displayQueriesInFrontend = async (
@@ -77,17 +75,17 @@ const displayQueriesInFrontend = async (
   const planPartId = crypto.randomUUID();
 
   for await (const part of queriesResult.partialObjectStream) {
-    // TODO: Stream the queries and plan to the frontend
+    // TODO:把查询和计划流式传输到前端
     TODO;
   }
 };
 ```
 
-You'll need to use the `writer` to stream the partial objects as they become available.
+你需要使用 `writer`，在部分对象可用时把它们流式传输出去。
 
 ## `callTavilyToGetSearchResults`
 
-One function I've already implemented for you is `callTavilyToGetSearchResults`, which calls the Tavily API to get search results:
+有一个函数我已经为你实现好了：`callTavilyToGetSearchResults`，它调用 Tavily API 来获取搜索结果：
 
 ```ts
 const callTavilyToGetSearchResults = async (
@@ -114,11 +112,11 @@ const callTavilyToGetSearchResults = async (
 };
 ```
 
-Note how we're getting `5` results per query - this might be a number you want to mess around with.
+注意我们每个查询获取 `5` 条结果——你可能想试试调整这个数字。
 
 ## `streamFinalSummary`
 
-Finally, you need to implement the summary generation:
+最后，你需要实现总结生成：
 
 ```ts
 const streamFinalSummary = async (
@@ -128,56 +126,55 @@ const streamFinalSummary = async (
   messages: ModelMessage[],
   writer: UIMessageStreamWriter<MyMessage>,
 ) => {
-  // TODO: Use streamText to generate a final response to the user.
-  // The response should be a summary of the search results,
-  // and the sources of the information.
+  // TODO:使用 streamText 生成给用户的最终回复。
+  // 回复应该是搜索结果的总结,
+  // 并附上信息来源。
   const answerResult = TODO;
 
   writer.merge(
-    // NOTE: We send sendStart: false because we've already
-    // sent the 'start' message part to the frontend.
-    // Without this, we'd end up with two assistant messages
-    // in the frontend.
+    // 注意:我们传入 sendStart: false,因为我们已经
+    // 向前端发送过 'start' 消息部件了。
+    // 否则,我们最终会在前端得到两条助手消息。
     answerResult.toUIMessageStream({ sendStart: false }),
   );
 };
 ```
 
-This function should use `streamText` to generate a comprehensive summary based on the search results.
+这个函数应该使用 `streamText`，基于搜索结果生成一份全面的总结。
 
-One way to improve your implementation is to include markdown links in the summary. This allows users to click through to the original sources, which enhances the user experience.
+改进实现的一种方式是：在总结中包含 markdown 链接。这允许用户点击跳转到原始来源，提升用户体验。
 
-The summary should include references to the sources, formatted as clickable links that the user can follow to verify the information.
+总结应该包含对来源的引用，格式化为可点击的链接，让用户可以顺着它们去验证信息。
 
-## Testing
+## 测试
 
-Once you've implemented all the functions, you can test your solution with different queries. The example query provided is:
+实现所有函数之后，你可以用不同的查询测试你的方案。提供的示例查询是：
 
 ```tsx
 const [input, setInput] = useState(
-  `Which are better? Gas, electric, or induction hobs? Please provide a detailed answer.`,
+  `燃气灶、电陶炉和电磁灶,哪个更好?请给出详细的回答。`,
 );
 ```
 
-## Steps To Complete
+## 完成步骤
 
-- [ ] Set up your Tavily API key (if you haven't already)
-  - Sign up at [Tavily](https://tavily.com/)
-  - Add your API key to the environment variables under `TAVILY_API_KEY`
+- [ ] 设置你的 Tavily API 密钥（如果还没有的话）
+  - 在 [Tavily](https://tavily.com/) 注册
+  - 把你的 API 密钥添加到环境变量 `TAVILY_API_KEY` 中
 
-- [ ] Implement `generateQueriesForTavily` function
-  - Use `streamObject` to generate a plan and queries
-  - The object should have `plan` (string) and `queries` (string array) properties
+- [ ] 实现 `generateQueriesForTavily` 函数
+  - 使用 `streamObject` 生成计划和查询
+  - 对象应该有 `plan`（字符串）和 `queries`（字符串数组）属性
 
-- [ ] Implement `displayQueriesInFrontend` function
-  - Stream the plan and queries to the frontend
-  - Use the `writer` to update parts with the appropriate IDs
+- [ ] 实现 `displayQueriesInFrontend` 函数
+  - 把计划和查询流式传输到前端
+  - 使用 `writer` 以相应的 ID 更新部件
 
-- [ ] Implement `streamFinalSummary` function
-  - Use `streamText` to generate a summary based on search results
-  - Include markdown links to sources in the summary
+- [ ] 实现 `streamFinalSummary` 函数
+  - 使用 `streamText` 基于搜索结果生成总结
+  - 在总结中包含指向来源的 markdown 链接
 
-- [ ] Test your implementation
-  - Run the exercise with `pnpm run exercise`
-  - Test with different queries to ensure it works correctly
-  - Verify that the frontend displays the plan, queries, and summary correctly
+- [ ] 测试你的实现
+  - 用 `pnpm run exercise` 运行练习
+  - 用不同的查询测试，确保它正常工作
+  - 验证前端是否正确显示计划、查询和总结

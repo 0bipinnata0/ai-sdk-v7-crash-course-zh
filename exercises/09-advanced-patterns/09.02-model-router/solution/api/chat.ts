@@ -30,19 +30,19 @@ export const POST = async (req: Request): Promise<Response> => {
       const modelRouterResult = await generateText({
         model: BASIC_MODEL,
         system: `
-          You are a model router. Your job is to figure out whether to use an advanced model or a basic model.
+          你是一个模型路由器。你的工作是判断应该使用高级模型还是基础模型。
 
-          You will be given a conversation history. You will need to determine whether to use an advanced model or a basic model, based on the question being asked.
+          你会收到一段对话历史。你需要根据提出的问题,判断应该使用高级模型还是基础模型。
 
           <rules>
-            - If the question is about something trivial, use the basic model.
-            - If the question involves any kind of counting or math, use the advanced model.
+            - 如果问题是关于琐碎的事情,使用基础模型。
+            - 如果问题涉及任何形式的计数或数学,使用高级模型。
           </rules>
 
           <output-format>
-            Return a single number: 0 or 1.
-            Return 0 to choose the basic model.
-            Return 1 to choose the advanced model.
+            返回单个数字:0 或 1。
+            返回 0 表示选择基础模型。
+            返回 1 表示选择高级模型。
           </output-format>
         `,
         messages: modelMessages,
@@ -57,7 +57,7 @@ export const POST = async (req: Request): Promise<Response> => {
       const modelSelected =
         modelRouterResult.text.trim() === '1'
           ? 'advanced'
-          : // Note that the fallback is the basic model
+          : // 注意,兜底是基础模型
             'basic';
 
       const streamTextResult = streamText({

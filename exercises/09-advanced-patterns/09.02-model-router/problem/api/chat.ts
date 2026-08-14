@@ -27,8 +27,8 @@ export const POST = async (req: Request): Promise<Response> => {
   const stream = createUIMessageStream<MyMessage>({
     execute: async ({ writer }) => {
       console.time('Model Calculation Time');
-      // TODO: Use generateText to call a model, passing in the modelMessages
-      // and writing your own system prompt.
+      // TODO:使用 generateText 调用一个模型,
+      // 传入 modelMessages,并自己编写系统提示词。
       const modelRouterResult = TODO;
 
       console.timeEnd('Model Calculation Time');
@@ -37,8 +37,8 @@ export const POST = async (req: Request): Promise<Response> => {
         modelRouterResult.text.trim(),
       );
 
-      // TODO: Use the modelRouterResult to determine which model to use.
-      // If we can't determine which model to use, use the basic model.
+      // TODO:使用 modelRouterResult 来决定使用哪个模型。
+      // 如果无法确定使用哪个模型,就使用基础模型。
       const modelSelected: 'advanced' | 'basic' = TODO;
 
       const streamTextResult = streamText({
@@ -51,8 +51,8 @@ export const POST = async (req: Request): Promise<Response> => {
 
       writer.merge(
         streamTextResult.toUIMessageStream({
-          // TODO: Add the model to the message metadata, so that
-          // the frontend can display it.
+          // TODO:把模型添加到消息 metadata 中,
+          // 让前端可以显示它。
           messageMetadata: TODO,
         }),
       );
