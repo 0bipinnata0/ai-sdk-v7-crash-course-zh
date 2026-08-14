@@ -7,7 +7,7 @@ import {
   type ModelMessage,
   type UIMessage,
 } from 'ai';
-import { langfuse } from './langfuse.ts';
+import { langfuseSpanProcessor } from './langfuse.ts';
 
 export const POST = async (req: Request): Promise<Response> => {
   const body = await req.json();
@@ -17,11 +17,10 @@ export const POST = async (req: Request): Promise<Response> => {
   const modelMessages: ModelMessage[] =
     await convertToModelMessages(messages);
 
-  // TODO:使用 langfuse.trace 方法声明 trace 变量,
-  // 并传入以下参数:
+  // TODO:使用 @langfuse/tracing 包中的 propagateAttributes 函数
+  // 把下面的所有处理逻辑包起来,并传入以下属性:
   // - sessionId: body.id
-  const trace = TODO;
-
+  // (这样本次请求的所有模型调用都会归属到同一个 trace)
   const mostRecentMessage = messages[messages.length - 1];
 
   if (!mostRecentMessage) {
@@ -59,9 +58,9 @@ export const POST = async (req: Request): Promise<Response> => {
       只返回标题。
     `,
     // TODO:使用以下对象声明 telemetry 属性:
-    // - isEnabled: true
     // - functionId: 'your-name-here'
-    // - metadata: { langfuseTraceId: trace.id }
+    // (AI SDK v7 中,注册遥测集成后默认就会上报,
+    //  不再需要 isEnabled)
     telemetry: TODO,
   });
 
@@ -69,9 +68,7 @@ export const POST = async (req: Request): Promise<Response> => {
     model: openai.chat('gpt-5.5'),
     messages: modelMessages,
     // TODO:使用以下对象声明 telemetry 属性:
-    // - isEnabled: true
     // - functionId: 'your-name-here'
-    // - metadata: { langfuseTraceId: trace.id }
     telemetry: TODO,
   });
 
@@ -81,8 +78,8 @@ export const POST = async (req: Request): Promise<Response> => {
 
       console.log('标题: ', title.text);
 
-      // TODO:使用 langfuse.flushAsync 方法刷新 langfuse 的 trace,
-      // 并 await 结果
+      // TODO:使用 langfuseSpanProcessor.forceFlush 方法
+      // 刷新待发送的 trace,并 await 结果
       TODO;
     },
   });

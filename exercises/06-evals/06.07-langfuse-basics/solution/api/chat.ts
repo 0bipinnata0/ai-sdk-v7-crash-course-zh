@@ -1,4 +1,5 @@
 import { openai } from '@ai-sdk/openai';
+import { propagateAttributes } from '@langfuse/tracing';
 import {
   convertToModelMessages,
   createUIMessageStreamResponse,
@@ -7,7 +8,7 @@ import {
   type ModelMessage,
   type UIMessage,
 } from 'ai';
-import { langfuse } from './langfuse.ts';
+import { langfuseSpanProcessor } from './langfuse.ts';
 
 export const POST = async (req: Request): Promise<Response> => {
   const body = await req.json();
@@ -17,28 +18,29 @@ export const POST = async (req: Request): Promise<Response> => {
   const modelMessages: ModelMessage[] =
     await convertToModelMessages(messages);
 
-  const trace = langfuse.trace({
-    sessionId: body.id,
-  });
+  return propagateAttributes(
+    {
+      sessionId: body.id,
+    },
+    async () => {
+      const mostRecentMessage = messages[messages.length - 1];
 
-  const mostRecentMessage = messages[messages.length - 1];
-
-  if (!mostRecentMessage) {
-    return new Response('未提供消息', { status: 400 });
-  }
-
-  const mostRecentMessageText = mostRecentMessage.parts
-    .map((part) => {
-      if (part.type === 'text') {
-        return part.text;
+      if (!mostRecentMessage) {
+        return new Response('未提供消息', { status: 400 });
       }
-      return '';
-    })
-    .join('');
 
-  const titleResult = generateText({
-    model: openai.chat('gpt-5.5'),
-    prompt: `
+      const mostRecentMessageText = mostRecentMessage.parts
+        .map((part) => {
+          if (part.type === 'text') {
+            return part.text;
+          }
+          return '';
+        })
+        .join('');
+
+      const titleResult = generateText({
+        model: openai.chat('gpt-5.5'),
+        prompt: `
       你是一个乐于助人的助手,可以为对话生成标题。
 
       <conversation-history>
@@ -57,42 +59,32 @@ export const POST = async (req: Request): Promise<Response> => {
       为这段对话生成一个标题。
       只返回标题。
     `,
-    telemetry: {
-      isEnabled: true,
-      functionId: 'title-generation',
-      // @ts-expect-error AI SDK v7 移除了 telemetry.metadata;
-      // langfuse-vercel v3 尚未适配 v7 的遥测机制
-      metadata: {
-        langfuseTraceId: trace.id,
-      },
+        telemetry: {
+          functionId: 'title-generation',
+        },
+      });
+
+      const streamTextResult = streamText({
+        model: openai.chat('gpt-5.5'),
+        messages: modelMessages,
+        telemetry: {
+          functionId: 'chat',
+        },
+      });
+
+      const stream = streamTextResult.toUIMessageStream({
+        onEnd: async () => {
+          const title = await titleResult;
+
+          console.log('标题: ', title.text);
+
+          await langfuseSpanProcessor.forceFlush();
+        },
+      });
+
+      return createUIMessageStreamResponse({
+        stream,
+      });
     },
-  });
-
-  const streamTextResult = streamText({
-    model: openai.chat('gpt-5.5'),
-    messages: modelMessages,
-    telemetry: {
-      isEnabled: true,
-      functionId: 'chat',
-      // @ts-expect-error AI SDK v7 移除了 telemetry.metadata;
-      // langfuse-vercel v3 尚未适配 v7 的遥测机制
-      metadata: {
-        langfuseTraceId: trace.id,
-      },
-    },
-  });
-
-  const stream = streamTextResult.toUIMessageStream({
-    onEnd: async () => {
-      const title = await titleResult;
-
-      console.log('标题: ', title.text);
-
-      await langfuse.flushAsync();
-    },
-  });
-
-  return createUIMessageStreamResponse({
-    stream,
-  });
+  );
 };

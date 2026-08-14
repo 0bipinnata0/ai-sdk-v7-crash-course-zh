@@ -1,15 +1,16 @@
-// TODO:使用 @opentelemetry/sdk-node 包中的 NodeSDK 类
-// 声明 otelSDK 变量,
-// 并把 langfuse-vercel 包中的 LangfuseExporter 实例
-// 作为 traceExporter 传给它
+// TODO:搭建 Langfuse 的 OpenTelemetry 导出:
+// 1. 使用 @langfuse/otel 包中的 LangfuseSpanProcessor 类,
+//    创建实例并导出为 langfuseSpanProcessor
+// 2. 使用 @opentelemetry/sdk-node 包中的 NodeSDK 类
+//    声明 otelSDK 变量,
+//    并把 span processor 传入 spanProcessors 数组
+export const langfuseSpanProcessor = TODO;
+
 export const otelSDK = TODO;
 
 otelSDK.start();
 
-// TODO:使用 langfuse 包中的 Langfuse 类
-// 声明 langfuse 变量,并传入以下参数:
-// - environment: process.env.NODE_ENV
-// - publicKey: process.env.LANGFUSE_PUBLIC_KEY
-// - secretKey: process.env.LANGFUSE_SECRET_KEY
-// - baseUrl: process.env.LANGFUSE_BASE_URL
-export const langfuse = TODO;
+// TODO:使用 ai 包中的 registerTelemetry 函数,
+// 注册 @langfuse/vercel-ai-sdk 包中的
+// LangfuseVercelAiSdkIntegration 实例
+TODO;

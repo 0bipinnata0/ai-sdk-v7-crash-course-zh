@@ -26,52 +26,56 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 在这个实现中，我们将让标题生成与聊天并行运行。这意味着如果我们要持久化聊天，就能立即把生成的标题一起持久化。
 
-我们的第一项任务是打开 [`langfuse.ts`](./api/langfuse.ts) 文件做一些配置。在 `otelSDK` 变量中，我们将实例化来自 `@opentelemetry/sdk-node` 包的 `NodeSDK` 类。然后我们把来自 `langfuse-vercel` 包的 `LangfuseExporter` 实例作为 `traceExporter` 属性传给它。
+我们的第一项任务是打开 [`langfuse.ts`](./api/langfuse.ts) 文件做一些配置。Langfuse 的新版 SDK(`@langfuse/*` 系列包）基于 OpenTelemetry。我们需要：
 
-`otelSDK` 的 `TODO` 看起来像这样：
+1. 实例化来自 `@langfuse/otel` 包的 `LangfuseSpanProcessor`——它负责把 span 发送给 Langfuse
+2. 实例化来自 `@opentelemetry/sdk-node` 包的 `NodeSDK` 类，把 span processor 放进 `spanProcessors` 数组
+3. 调用 `otelSDK.start()`
+4. 使用 `ai` 包中的 `registerTelemetry` 注册来自 `@langfuse/vercel-ai-sdk` 包的 `LangfuseVercelAiSdkIntegration`——这是专为 AI SDK v7 打造的遥测集成
+
+这些 `TODO` 看起来像这样：
 
 ```ts
 // langfuse.ts
+import { LangfuseSpanProcessor } from '@langfuse/otel';
+import { LangfuseVercelAiSdkIntegration } from '@langfuse/vercel-ai-sdk';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import { LangfuseExporter } from 'langfuse-vercel';
+import { registerTelemetry } from 'ai';
 
-// TODO:使用 @opentelemetry/sdk-node 包中的 NodeSDK 类
-// 声明 otelSDK 变量,
-// 并把 langfuse-vercel 包中的 LangfuseExporter 实例
-// 作为 traceExporter 传给它
+// TODO:创建 LangfuseSpanProcessor 实例并导出
+export const langfuseSpanProcessor = TODO;
+
+// TODO:创建 NodeSDK 实例,把 span processor
+// 传入 spanProcessors 数组
 export const otelSDK = TODO;
+
+otelSDK.start();
+
+// TODO:注册 Langfuse 的 AI SDK v7 遥测集成
+TODO;
 ```
 
-其次，在文件底部，我们将使用 `langfuse` 包中的 `Langfuse` 类实例化 `langfuse` 变量，并传入以下属性：`environment`、`publicKey`、`secretKey` 和 `baseUrl`:
-
-```ts
-// langfuse.ts
-import { Langfuse } from 'langfuse';
-
-// TODO:使用 langfuse 包中的 Langfuse 类
-// 声明 langfuse 变量,并传入以下参数:
-// - environment: process.env.NODE_ENV
-// - publicKey: process.env.LANGFUSE_PUBLIC_KEY
-// - secretKey: process.env.LANGFUSE_SECRET_KEY
-// - baseUrl: process.env.LANGFUSE_BASE_URL
-export const langfuse = TODO;
-```
+`langfuseSpanProcessor` 和 `otelSDK` 会从环境变量中自动读取 Langfuse 的密钥配置，不需要手动实例化客户端。
 
 ## 追踪代码
 
-完成这些之后，我们就可以进入有趣的部分：真正追踪我们的代码。我们的第一项工作在 [`chat.ts`](./api/chat.ts) 的 `POST` 路由中。我们将使用 `langfuse.trace` 方法声明一个 trace:
+完成这些之后，我们就可以进入有趣的部分：真正追踪我们的代码。我们的第一项工作在 [`chat.ts`](./api/chat.ts) 的 `POST` 路由中。我们将使用 `@langfuse/tracing` 包中的 `propagateAttributes` 函数，把请求处理逻辑包起来，并传入 `sessionId`（也就是聊天的 ID):
 
 ```ts
-// 把这个:
-const trace = TODO;
+import { propagateAttributes } from '@langfuse/tracing';
 
-// 替换成类似这样的:
-const trace = langfuse.trace({
-  sessionId: body.id,
-});
+return propagateAttributes(
+  {
+    sessionId: body.id,
+  },
+  async () => {
+    // 这里面的所有模型调用
+    // 都会归属到同一个 trace
+  },
+);
 ```
 
-然后我们可以传入 `sessionId` 属性，也就是聊天的 ID。
+这样，`propagateAttributes` 回调内部进行的所有 AI SDK 调用都会被关联到同一个 trace 中。
 
 ### Trace 和 Span
 
@@ -94,9 +98,9 @@ trace 则像是一个装 span 的容器。它像是整个事情经过的完整�
 
 ### 给 `streamText` 和 `generateText` 调用传入 `telemetry`
 
-创建 trace 之后，我们应该进入 `streamText` 调用和 `generateText` 调用，查看 `telemetry` 属性。
+设置好 `propagateAttributes` 之后，我们应该进入 `streamText` 调用和 `generateText` 调用，查看 `telemetry` 属性。
 
-AI SDK 内置了对 telemetry 的支持。我们只需要把这个 `TODO` 替换成一个带有 `isEnabled` 属性、`functionId` 属性，以及一些用于关联到 `langfuse.trace.id` 的 metadata 的对象。
+AI SDK v7 内置了对 telemetry 的支持——注册了遥测集成之后，所有调用默认都会上报，不再需要 `isEnabled: true`。我们只需要把这个 `TODO` 替换成一个带有 `functionId` 属性的对象：
 
 ```ts
 // 把这个:
@@ -104,26 +108,22 @@ telemetry: TODO,
 
 // 替换成类似这样的:
 telemetry: {
-  isEnabled: true,
   functionId: 'your-name-here',
-  metadata: {
-    langfuseTraceId: trace.id,
-  },
 },
 ```
 
-`functionId` 应该用来描述正在执行的动作。
+`functionId` 应该用来描述正在执行的动作，它会作为 observation 的名称显示在 Langfuse 中。
 
 ### 刷新 trace
 
 完成之后，我们可以一直到代码末尾的 `onEnd`。
 
-在 `onFinish` 中，我们需要使用 `langfuse.flushAsync` 方法刷新 LangFuse 的 trace。这里的"刷新"意思是把 trace 发送给 LangFuse，这样我们就能在它的云端查看器中查看它们。
+在 `onEnd` 中，我们需要使用 `langfuseSpanProcessor.forceFlush` 方法刷新 LangFuse 的 trace。这里的"刷新"意思是把缓冲的 span 立即发送给 LangFuse，这样我们就能在它的云端查看器中查看它们。
 
 ```ts
 onEnd: async () => {
-  // TODO:使用 langfuse.flushAsync 方法刷新 langfuse 的 trace,
-  // 并 await 结果
+  // TODO:使用 langfuseSpanProcessor.forceFlush 方法
+  // 刷新待发送的 trace,并 await 结果
   TODO;
 };
 ```
@@ -148,15 +148,15 @@ onEnd: async () => {
   LANGFUSE_BASE_URL=https://cloud.langfuse.com
   ```
 
-- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中实现 `otelSDK`
+- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中实现 `langfuseSpanProcessor` 和 `otelSDK`
 
-- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中实现 `langfuse` 实例
+- [ ] 在 [`langfuse.ts`](./api/langfuse.ts) 中用 `registerTelemetry` 注册 `LangfuseVercelAiSdkIntegration`
 
-- [ ] 在 [`chat.ts`](./api/chat.ts) 中实现 trace 变量
+- [ ] 在 [`chat.ts`](./api/chat.ts) 中用 `propagateAttributes` 包裹请求处理逻辑并传入 `sessionId`
 
 - [ ] 给 [`chat.ts`](./api/chat.ts) 中的 `streamText` 调用和 `generateText` 调用添加 `telemetry`
 
-- [ ] 在 `onEnd` 处理器中实现 `langfuse.flushAsync()` 调用
+- [ ] 在 `onEnd` 处理器中实现 `langfuseSpanProcessor.forceFlush()` 调用
 
 - [ ] 通过运行本地开发服务器测试你的应用
 

@@ -1,16 +1,14 @@
-import { Langfuse } from 'langfuse';
-import { LangfuseExporter } from 'langfuse-vercel';
+import { LangfuseSpanProcessor } from '@langfuse/otel';
+import { LangfuseVercelAiSdkIntegration } from '@langfuse/vercel-ai-sdk';
 import { NodeSDK } from '@opentelemetry/sdk-node';
+import { registerTelemetry } from 'ai';
+
+export const langfuseSpanProcessor = new LangfuseSpanProcessor();
 
 export const otelSDK = new NodeSDK({
-  traceExporter: new LangfuseExporter(),
+  spanProcessors: [langfuseSpanProcessor],
 });
 
 otelSDK.start();
 
-export const langfuse = new Langfuse({
-  environment: process.env.NODE_ENV,
-  publicKey: process.env.LANGFUSE_PUBLIC_KEY,
-  secretKey: process.env.LANGFUSE_SECRET_KEY,
-  baseUrl: process.env.LANGFUSE_BASE_URL,
-});
+registerTelemetry(new LangfuseVercelAiSdkIntegration());
