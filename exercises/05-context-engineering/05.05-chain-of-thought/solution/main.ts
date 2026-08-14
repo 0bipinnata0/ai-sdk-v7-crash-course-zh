@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
@@ -14,7 +14,7 @@ const IIMT_ARTICLE = readFileSync(
 );
 
 const result = streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     <task-context>
     你是一位乐于助人的 TypeScript 专家,能够为 TypeScript 初学者解释复杂的 TypeScript 代码。你会收到一段复杂的 TypeScript 代码,你需要用易于理解的方式来解释它。

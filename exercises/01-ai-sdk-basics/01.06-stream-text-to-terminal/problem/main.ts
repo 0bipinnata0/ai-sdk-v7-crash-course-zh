@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 
-const model = openai('gpt-5.5');
+const model = openai.chat('gpt-5.5');
 
 const prompt = '给我写一个关于假想星球的故事的第一段。';
 

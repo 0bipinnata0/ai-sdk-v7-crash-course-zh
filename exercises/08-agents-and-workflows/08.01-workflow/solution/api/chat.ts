@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText, streamText, type UIMessage } from 'ai';
 
 const formatMessageHistory = (messages: UIMessage[]) => {
@@ -35,7 +35,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
   // 写 Slack 消息
   const writeSlackResult = await generateText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: WRITE_SLACK_MESSAGE_FIRST_DRAFT_SYSTEM,
     prompt: `
       对话历史:
@@ -45,7 +45,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
   // 评估 Slack 消息
   const evaluateSlackResult = await generateText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: EVALUATE_SLACK_MESSAGE_SYSTEM,
     prompt: `
       对话历史:
@@ -58,7 +58,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
   // 写最终版 Slack 消息
   const finalSlackAttempt = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: WRITE_SLACK_MESSAGE_FINAL_SYSTEM,
     prompt: `
       对话历史:

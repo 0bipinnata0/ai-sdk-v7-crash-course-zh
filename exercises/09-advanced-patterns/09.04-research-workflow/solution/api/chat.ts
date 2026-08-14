@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -24,7 +24,7 @@ const generateQueriesForTavily = (
   modelMessages: ModelMessage[],
 ) => {
   const queriesResult = streamObject({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: `
       你是一个乐于助人的助手,负责生成用于在网上搜索信息的查询。
 
@@ -127,7 +127,7 @@ const streamFinalSummary = async (
     .join('\n');
 
   const answerResult = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     instructions: `你是一个乐于助人的助手,基于搜索结果回答问题。
       <rules>
       你应该使用搜索结果来回答问题。

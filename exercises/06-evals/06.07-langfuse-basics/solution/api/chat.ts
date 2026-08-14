@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   createUIMessageStreamResponse,
@@ -37,7 +37,7 @@ export const POST = async (req: Request): Promise<Response> => {
     .join('');
 
   const titleResult = generateText({
-    model: google('gemini-2.5-flash-lite'),
+    model: openai.chat('gpt-5.5'),
     prompt: `
       你是一个乐于助人的助手,可以为对话生成标题。
 
@@ -69,7 +69,7 @@ export const POST = async (req: Request): Promise<Response> => {
   });
 
   const streamTextResult = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     messages: modelMessages,
     telemetry: {
       isEnabled: true,

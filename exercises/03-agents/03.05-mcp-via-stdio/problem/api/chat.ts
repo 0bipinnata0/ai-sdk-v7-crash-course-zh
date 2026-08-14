@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   isStepCount,
@@ -21,7 +21,7 @@ export const POST = async (req: Request): Promise<Response> => {
   const mcpClient = TODO;
 
   const result = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     messages: await convertToModelMessages(messages),
     instructions: `
       你是一个乐于助人的助手,可以使用 GitHub API 与用户的 GitHub 账户交互。

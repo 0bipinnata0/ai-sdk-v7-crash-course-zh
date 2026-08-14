@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateObject } from 'ai';
 import { createScorer } from 'evalite';
 import { readFileSync } from 'fs';
@@ -33,7 +33,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
   name: 'Attribution',
   scorer: async ({ input, output }) => {
     const result = await generateObject({
-      model: google('gemini-2.5-flash'),
+      model: openai.chat('gpt-5.5'),
       instructions: ATTRIBUTION_PROMPT,
       messages: TODO, // TODO:传入思维链论文、问题和给出的答案
       schema: TODO, // TODO:定义响应的 schema

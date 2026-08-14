@@ -3,7 +3,7 @@ import {
   streamText,
   type UIMessage,
 } from 'ai';
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   createChat,
   getChat,
@@ -38,7 +38,7 @@ export const POST = async (req: Request): Promise<Response> => {
   // TODO:等待流完成,并把最后一条消息
   // 追加到聊天中
   const result = streamText({
-    model: google('gemini-2.5-flash'),
+    model: openai.chat('gpt-5.5'),
     messages: await convertToModelMessages(messages),
   });
 

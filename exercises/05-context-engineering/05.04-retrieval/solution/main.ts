@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { tavily } from '@tavily/core';
 
@@ -37,7 +37,7 @@ if (!rawContent) {
 }
 
 const result = streamText({
-  model: google('gemini-2.5-flash-lite'),
+  model: openai.chat('gpt-5.5'),
   prompt: `
     <task-context>
     你是一个乐于助人的助手,负责总结 URL 的内容。

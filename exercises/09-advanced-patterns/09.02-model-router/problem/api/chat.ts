@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -9,8 +9,8 @@ import {
   type UIMessage,
 } from 'ai';
 
-const ADVANCED_MODEL = google('gemini-2.5-flash');
-const BASIC_MODEL = google('gemini-2.5-flash-lite');
+const ADVANCED_MODEL = openai.chat('gpt-5.5');
+const BASIC_MODEL = openai.chat('gpt-5.5');
 
 export type MyMessage = UIMessage<{
   model: 'advanced' | 'basic';

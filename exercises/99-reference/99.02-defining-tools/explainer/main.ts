@@ -1,10 +1,10 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { streamText, tool } from 'ai';
 import { styleText } from 'node:util';
 import { z } from 'zod';
 
 const result = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '把消息“你好,世界!”打印到控制台',
   tools: {
     logToConsole: tool({

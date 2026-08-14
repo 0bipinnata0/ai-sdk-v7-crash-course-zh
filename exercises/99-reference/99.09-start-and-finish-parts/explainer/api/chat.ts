@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -47,7 +47,7 @@ export const POST = async (req: Request): Promise<Response> => {
       writeTextPart(writer, '第 1 段: ');
 
       const firstParagraphResult = streamText({
-        model: google('gemini-2.5-flash-lite'),
+        model: openai.chat('gpt-5.5'),
         messages: [
           ...modelMessages,
           {
@@ -74,7 +74,7 @@ export const POST = async (req: Request): Promise<Response> => {
       writeTextPart(writer, '第 2 段: ');
 
       const secondParagraphResult = streamText({
-        model: google('gemini-2.5-flash-lite'),
+        model: openai.chat('gpt-5.5'),
         messages: [
           ...modelMessages,
           {
@@ -104,7 +104,7 @@ export const POST = async (req: Request): Promise<Response> => {
       writeTextPart(writer, '第 3 段: ');
 
       const thirdParagraphResult = streamText({
-        model: google('gemini-2.5-flash-lite'),
+        model: openai.chat('gpt-5.5'),
         messages: [
           ...modelMessages,
           {

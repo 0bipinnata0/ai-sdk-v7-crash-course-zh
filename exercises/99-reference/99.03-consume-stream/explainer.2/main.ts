@@ -1,10 +1,10 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { consumeStream, streamText } from 'ai';
 
 console.log('进程启动中...');
 
 const streamTextResult = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   prompt: '你好,世界!',
   onEnd: () => {
     console.log('流已完成!');

@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { evalite } from 'evalite';
 
@@ -19,7 +19,7 @@ evalite('Capitals', {
   ],
   task: async (input) => {
     const capitalResult = await generateText({
-      model: google('gemini-2.5-flash-lite'),
+      model: openai.chat('gpt-5.5'),
       prompt: `
         你是一个乐于助人的助手,可以回答关于国家首都的问题。
 

@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { evalite } from 'evalite';
 import { readFileSync } from 'fs';
@@ -31,7 +31,7 @@ evalite('Chat Title Generation', {
   data: () => dataForEvalite,
   task: async (input) => {
     const result = await generateText({
-      model: google('gemini-2.5-flash-lite'),
+      model: openai.chat('gpt-5.5'),
       prompt: `
         给我生成一个标题:
         ${input}

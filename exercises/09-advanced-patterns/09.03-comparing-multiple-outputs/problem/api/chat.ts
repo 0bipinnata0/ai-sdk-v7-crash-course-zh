@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -43,12 +43,12 @@ export const POST = async (req: Request): Promise<Response> => {
   const stream = createUIMessageStream<MyMessage>({
     execute: async ({ writer }) => {
       const firstStreamResult = streamText({
-        model: google('gemini-2.5-flash-lite'),
+        model: openai.chat('gpt-5.5'),
         messages: modelMessages,
       });
 
       const secondStreamResult = streamText({
-        model: google('gemini-2.5-flash'),
+        model: openai.chat('gpt-5.5'),
         messages: modelMessages,
       });
 

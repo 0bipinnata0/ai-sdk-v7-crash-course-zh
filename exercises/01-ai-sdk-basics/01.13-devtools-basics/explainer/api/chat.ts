@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { devToolsMiddleware } from '@ai-sdk/devtools';
 import {
   convertToModelMessages,
@@ -13,7 +13,7 @@ import {
 // 在单独的终端中运行 `npx @ai-sdk/devtools@latest`
 // 然后打开 http://localhost:4983 查看 LLM 调用
 const model = wrapLanguageModel({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   middleware: devToolsMiddleware(),
 });
 

@@ -1,7 +1,7 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 
-const model = google('gemini-2.5-flash-lite');
+const model = openai.chat('gpt-5.5');
 
 const prompt = '法国的首都是哪里?';
 

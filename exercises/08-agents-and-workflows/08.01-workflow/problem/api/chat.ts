@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { generateText, streamText, type UIMessage } from 'ai';
 
 const formatMessageHistory = (messages: UIMessage[]) => {

@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { isStepCount, streamText, tool } from 'ai';
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
@@ -8,7 +8,7 @@ const PROMPT = `
 `;
 
 const result = streamText({
-  model: google('gemini-2.5-flash'),
+  model: openai.chat('gpt-5.5'),
   instructions: `
     你是一个乐于助人的助手,可以使用沙箱文件系统来创建、编辑和删除文件。
 
