@@ -6,6 +6,8 @@ import {
   tool,
   type InferUITools,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 import { z } from 'zod';
 
@@ -17,7 +19,6 @@ const tools = {
       subject: z.string().describe('邮件的主题'),
       body: z.string().describe('邮件的正文'),
     }),
-    // TODO:添加 needsApproval: true,在发送前要求用户批准
     execute: async ({ to, subject, body }) => {
       // 在真实应用中,这里会发送邮件
       console.log(`正在发送邮件给 ${to}:${subject}`);
@@ -46,8 +47,12 @@ export const POST = async (req: Request): Promise<Response> => {
       发送前务必确认邮件详情。
     `,
     tools,
+    // TODO:添加 toolApproval 选项,要求发送前由用户批准:
+    // toolApproval: { sendEmail: 'user-approval' }
     stopWhen: [isStepCount(10)],
   });
 
-  return result.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: result.stream }),
+  });
 };

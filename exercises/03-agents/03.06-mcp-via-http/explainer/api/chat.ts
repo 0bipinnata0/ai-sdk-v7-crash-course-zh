@@ -4,6 +4,8 @@ import {
   isStepCount,
   streamText,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 
 import { createMCPClient } from '@ai-sdk/mcp';
@@ -36,9 +38,12 @@ export const POST = async (req: Request): Promise<Response> => {
     stopWhen: [isStepCount(10)],
   });
 
-  return result.toUIMessageStreamResponse({
-    onEnd: async () => {
-      await mcpClient.close();
-    },
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: result.stream,
+      onEnd: async () => {
+        await mcpClient.close();
+      },
+    }),
   });
 };

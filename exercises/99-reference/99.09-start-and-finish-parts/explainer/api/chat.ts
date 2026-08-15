@@ -7,6 +7,7 @@ import {
   type ModelMessage,
   type UIMessage,
   type UIMessageStreamWriter,
+  toUIMessageStream,
 } from 'ai';
 
 const writeTextPart = (
@@ -53,16 +54,19 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
 
-            content: [{
-              type: 'text',
-              text: '根据上面的对话历史,写出故事的第一段。写得短一点。'
-            }]
+            content: [
+              {
+                type: 'text',
+                text: '根据上面的对话历史,写出故事的第一段。写得短一点。',
+              },
+            ],
           },
         ],
       });
 
       writer.merge(
-        firstParagraphResult.toUIMessageStream({
+        toUIMessageStream({
+          stream: firstParagraphResult.stream,
           // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
           // sendFinish: false,
@@ -80,19 +84,22 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
 
-            content: [{
-              type: 'text',
+            content: [
+              {
+                type: 'text',
 
-              text: `根据上面的对话历史,写出故事的第二段。写得短一点。
+                text: `根据上面的对话历史,写出故事的第二段。写得短一点。
                 这是第一段:
-                ${firstParagraph}`
-            }]
+                ${firstParagraph}`,
+              },
+            ],
           },
         ],
       });
 
       writer.merge(
-        secondParagraphResult.toUIMessageStream({
+        toUIMessageStream({
+          stream: secondParagraphResult.stream,
           // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
           // sendFinish: false,
@@ -110,21 +117,24 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'user',
 
-            content: [{
-              type: 'text',
+            content: [
+              {
+                type: 'text',
 
-              text: `根据上面的对话历史,写出故事的第三段。写得短一点。
+                text: `根据上面的对话历史,写出故事的第三段。写得短一点。
                 这是第一段:
                 ${firstParagraph}
                 这是第二段:
-                ${secondParagraph}`
-            }]
+                ${secondParagraph}`,
+              },
+            ],
           },
         ],
       });
 
       writer.merge(
-        thirdParagraphResult.toUIMessageStream({
+        toUIMessageStream({
+          stream: thirdParagraphResult.stream,
           // TODO:试着取消注释,看看会发生什么
           // sendStart: false,
         }),

@@ -1,7 +1,10 @@
 import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
+  createUIMessageStreamResponse,
   streamText,
+  toUIMessageStream,
+  type ToolSet,
   type UIMessage,
 } from 'ai';
 
@@ -20,15 +23,18 @@ export const POST = async (req: Request): Promise<Response> => {
 
   const startTime = Date.now();
 
-  return result.toUIMessageStreamResponse<MyUIMessage>({
-    messageMetadata({ part }) {
-      if (part.type === 'finish') {
-        return {
-          duration: Date.now() - startTime,
-        };
-      }
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream<ToolSet, MyUIMessage>({
+      stream: result.stream,
+      messageMetadata({ part }) {
+        if (part.type === 'finish') {
+          return {
+            duration: Date.now() - startTime,
+          };
+        }
 
-      return undefined;
-    },
+        return undefined;
+      },
+    }),
   });
 };

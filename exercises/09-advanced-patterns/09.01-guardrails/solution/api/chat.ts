@@ -7,6 +7,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 import { GUARDRAIL_SYSTEM } from './guardrail-prompt.ts';
 
@@ -61,7 +62,9 @@ export const POST = async (req: Request): Promise<Response> => {
         messages: modelMessages,
       });
 
-      writer.merge(streamTextResult.toUIMessageStream());
+      writer.merge(
+        toUIMessageStream({ stream: streamTextResult.stream }),
+      );
     },
   });
 

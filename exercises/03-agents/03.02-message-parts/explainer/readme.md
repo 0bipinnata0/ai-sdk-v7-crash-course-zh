@@ -13,7 +13,8 @@ const result = streamText({
   stopWhen: [isStepCount(10)],
 });
 
-const stream = result.toUIMessageStream({
+const stream = toUIMessageStream({
+  stream: result.stream,
   onEnd: ({ messages }) => {
     console.log('--- ON FINISH ---');
     console.dir(messages, { depth: null });

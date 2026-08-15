@@ -7,6 +7,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 const ADVANCED_MODEL = openai.chat('gpt-5.5');
@@ -69,7 +70,8 @@ export const POST = async (req: Request): Promise<Response> => {
       });
 
       writer.merge(
-        streamTextResult.toUIMessageStream({
+        toUIMessageStream({
+          stream: streamTextResult.stream,
           messageMetadata: ({ part }) => {
             if (part.type === 'start') {
               return {

@@ -29,7 +29,8 @@ const streamTextResult = streamText({
 ```ts
 let totalLength = 0;
 
-const stream = streamTextResult.toUIMessageStream<MyMessage>({
+const stream = toUIMessageStream<ToolSet, MyMessage>({
+  stream: streamTextResult.stream,
   messageMetadata: ({ part }) => {
     if (part.type === 'text-delta') {
       totalLength += part.text.length;

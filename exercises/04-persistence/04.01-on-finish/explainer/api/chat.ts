@@ -3,6 +3,8 @@ import {
   convertToModelMessages,
   streamText,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 
 export const POST = async (req: Request): Promise<Response> => {
@@ -22,19 +24,22 @@ export const POST = async (req: Request): Promise<Response> => {
     },
   });
 
-  return result.toUIMessageStreamResponse({
-    originalMessages: messages,
-    onEnd: ({ messages, responseMessage }) => {
-      // 'messages' 是完整的消息历史,包括你通过
-      // originalMessages 传入的原始消息。
-      console.log('toUIMessageStreamResponse.onEnd');
-      console.log('  messages');
-      console.dir(messages, { depth: null });
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: result.stream,
+      originalMessages: messages,
+      onEnd: ({ messages, responseMessage }) => {
+        // 'messages' 是完整的消息历史,包括你通过
+        // originalMessages 传入的原始消息。
+        console.log('toUIMessageStreamResponse.onEnd');
+        console.log('  messages');
+        console.dir(messages, { depth: null });
 
-      // 'responseMessage' 是消息历史中的最后一条消息。
-      console.log('toUIMessageStreamResponse.onEnd');
-      console.log('  responseMessage');
-      console.dir(responseMessage, { depth: null });
-    },
+        // 'responseMessage' 是消息历史中的最后一条消息。
+        console.log('toUIMessageStreamResponse.onEnd');
+        console.log('  responseMessage');
+        console.dir(responseMessage, { depth: null });
+      },
+    }),
   });
 };

@@ -1,5 +1,10 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, type UIMessage } from 'ai';
+import {
+  streamText,
+  toUIMessageStream,
+  type ToolSet,
+  type UIMessage,
+} from 'ai';
 
 type MyMetadata = {
   // 生成消息的长度
@@ -15,7 +20,8 @@ const streamTextResult = streamText({
 
 let totalLength = 0;
 
-const stream = streamTextResult.toUIMessageStream<MyMessage>({
+const stream = toUIMessageStream<ToolSet, MyMessage>({
+  stream: streamTextResult.stream,
   messageMetadata: ({ part }) => {
     if (part.type === 'text-delta') {
       totalLength += part.text.length;

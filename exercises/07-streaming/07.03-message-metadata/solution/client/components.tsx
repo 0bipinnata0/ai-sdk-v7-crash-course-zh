@@ -82,9 +82,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled
-          ? '请先处理工具调用...'
-          : '说点什么...'
+        disabled ? '请先处理工具调用...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

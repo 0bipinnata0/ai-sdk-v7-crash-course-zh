@@ -7,6 +7,7 @@ import {
   wrapLanguageModel,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 // 用 DevTools 中间件包装模型
@@ -31,6 +32,6 @@ export const POST = async (req: Request): Promise<Response> => {
   });
 
   return createUIMessageStreamResponse({
-    stream: result.toUIMessageStream(),
+    stream: toUIMessageStream({ stream: result.stream }),
   });
 };

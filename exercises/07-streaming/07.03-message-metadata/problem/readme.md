@@ -14,17 +14,20 @@ export type MyUIMessage = UIMessage<TODO>;
 
 ## 实现消息 Metadata 函数
 
-完成之后，我们将在 `result.toUIMessageStreamResponse` 中实现 `messageMetadata` 函数。
+完成之后，我们将在 `toUIMessageStream` 的选项中实现 `messageMetadata` 函数。
 
 ```ts
 // TODO:计算流的开始时间
 const startTime = TODO;
 
-return result.toUIMessageStreamResponse<MyUIMessage>({
-  // TODO:在这里添加 messageMetadata 函数
-  // 如果遇到 'finish' 部件,它应该返回
-  // 流的持续时间(毫秒)
-  messageMetadata: TODO,
+return createUIMessageStreamResponse({
+  stream: toUIMessageStream<ToolSet, MyUIMessage>({
+    stream: result.stream,
+    // TODO:在这里添加 messageMetadata 函数
+    // 如果遇到 'finish' 部件,它应该返回
+    // 流的持续时间(毫秒)
+    messageMetadata: TODO,
+  }),
 });
 ```
 

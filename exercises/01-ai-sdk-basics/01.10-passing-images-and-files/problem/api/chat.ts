@@ -5,6 +5,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 export const POST = async (req: Request): Promise<Response> => {
@@ -20,7 +21,9 @@ export const POST = async (req: Request): Promise<Response> => {
     messages: modelMessages,
   });
 
-  const stream = streamTextResult.toUIMessageStream();
+  const stream = toUIMessageStream({
+    stream: streamTextResult.stream,
+  });
 
   return createUIMessageStreamResponse({
     stream,

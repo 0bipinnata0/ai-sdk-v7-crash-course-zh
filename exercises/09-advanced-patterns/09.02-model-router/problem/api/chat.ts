@@ -7,6 +7,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 const ADVANCED_MODEL = openai.chat('gpt-5.5');
@@ -50,7 +51,8 @@ export const POST = async (req: Request): Promise<Response> => {
       });
 
       writer.merge(
-        streamTextResult.toUIMessageStream({
+        toUIMessageStream({
+          stream: streamTextResult.stream,
           // TODO:把模型添加到消息 metadata 中,
           // 让前端可以显示它。
           messageMetadata: TODO,

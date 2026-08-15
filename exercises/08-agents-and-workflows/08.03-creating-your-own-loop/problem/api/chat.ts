@@ -4,6 +4,7 @@ import {
   createUIMessageStreamResponse,
   streamText,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 export type MyMessage = UIMessage<
@@ -133,7 +134,8 @@ export const POST = async (req: Request): Promise<Response> => {
       });
 
       writer.merge(
-        finalSlackAttempt.toUIMessageStream({
+        toUIMessageStream({
+          stream: finalSlackAttempt.stream,
           sendStart: false,
         }),
       );

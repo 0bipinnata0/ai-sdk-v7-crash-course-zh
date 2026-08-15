@@ -23,7 +23,9 @@ export const POST = async (req: Request): Promise<Response> => {
     },
   });
 
-  return stream.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: stream.stream }),
+  });
 };
 ```
 

@@ -1,5 +1,11 @@
 import { openai } from '@ai-sdk/openai';
-import { generateText, streamText, type UIMessage } from 'ai';
+import {
+  generateText,
+  streamText,
+  type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
+} from 'ai';
 
 const formatMessageHistory = (messages: UIMessage[]) => {
   return messages
@@ -72,5 +78,9 @@ export const POST = async (req: Request): Promise<Response> => {
     `,
   });
 
-  return finalSlackAttempt.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: finalSlackAttempt.stream,
+    }),
+  });
 };

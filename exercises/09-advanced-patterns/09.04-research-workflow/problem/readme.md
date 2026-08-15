@@ -135,7 +135,10 @@ const streamFinalSummary = async (
     // 注意:我们传入 sendStart: false,因为我们已经
     // 向前端发送过 'start' 消息部件了。
     // 否则,我们最终会在前端得到两条助手消息。
-    answerResult.toUIMessageStream({ sendStart: false }),
+    toUIMessageStream({
+      stream: answerResult.stream,
+      sendStart: false,
+    }),
   );
 };
 ```

@@ -6,6 +6,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 export type MyMessage = UIMessage<
@@ -32,7 +33,9 @@ export const POST = async (req: Request): Promise<Response> => {
         messages: modelMessages,
       });
 
-      writer.merge(streamTextResult.toUIMessageStream());
+      writer.merge(
+        toUIMessageStream({ stream: streamTextResult.stream }),
+      );
 
       await streamTextResult.consumeStream();
 
@@ -48,21 +51,26 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'assistant',
 
-            content: [{
-              type: 'text',
-              text: await streamTextResult.text
-            }]
+            content: [
+              {
+                type: 'text',
+                text: await streamTextResult.text,
+              },
+            ],
           },
           {
             role: 'user',
 
-            content: [{
-              type: 'text',
+            content: [
+              {
+                type: 'text',
 
-              text: // TODO:修改提示词,告诉 LLM
-              // 返回一个建议数组
-              '我接下来应该问什么问题?只返回问题文本。'
-            }]
+                // TODO:修改提示词,告诉 LLM
+                text:
+                  // 返回一个建议数组
+                  '我接下来应该问什么问题?只返回问题文本。',
+              },
+            ],
           },
         ],
       });

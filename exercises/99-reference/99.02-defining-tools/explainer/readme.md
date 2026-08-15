@@ -58,10 +58,12 @@ execute: async ({ message }) => {
 
 ## 流式输出结果
 
-在底部这里，我们遍历 `result.toUIMessageStream()` 的每个 chunk，所以我们应该能看到流中的所有块：
+在底部这里，我们遍历 `toUIMessageStream` 转换后的每个 chunk，所以我们应该能看到流中的所有块：
 
 ```ts
-for await (const chunk of result.toUIMessageStream()) {
+for await (const chunk of toUIMessageStream({
+  stream: result.stream,
+})) {
   console.log(chunk);
 }
 ```

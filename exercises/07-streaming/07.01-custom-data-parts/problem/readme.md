@@ -49,7 +49,9 @@ const stream = createUIMessageStream<MyMessage>({
       messages: modelMessages,
     });
 
-    writer.merge(streamTextResult.toUIMessageStream());
+    writer.merge(
+      toUIMessageStream({ stream: streamTextResult.stream }),
+    );
 
     await streamTextResult.consumeStream();
 

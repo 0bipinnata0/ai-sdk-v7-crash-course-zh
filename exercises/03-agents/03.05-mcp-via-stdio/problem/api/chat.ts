@@ -4,6 +4,8 @@ import {
   isStepCount,
   streamText,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { createMCPClient } from '@ai-sdk/mcp';
@@ -31,9 +33,12 @@ export const POST = async (req: Request): Promise<Response> => {
     stopWhen: [isStepCount(10)],
   });
 
-  return result.toUIMessageStreamResponse({
-    // TODO - 使用 mcpClient.close() 方法在流结束时关闭
-    // MCP 客户端。这也会关闭运行 GitHub MCP 服务器的进程。
-    onEnd: TODO,
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: result.stream,
+      // TODO - 使用 mcpClient.close() 方法在流结束时关闭
+      // MCP 客户端。这也会关闭运行 GitHub MCP 服务器的进程。
+      onEnd: TODO,
+    }),
   });
 };

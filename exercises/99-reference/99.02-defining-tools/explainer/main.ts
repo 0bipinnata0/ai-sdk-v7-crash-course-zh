@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, tool } from 'ai';
+import { streamText, tool, toUIMessageStream } from 'ai';
 import { styleText } from 'node:util';
 import { z } from 'zod';
 
@@ -10,9 +10,7 @@ const result = streamText({
     logToConsole: tool({
       description: '把一条消息打印到控制台',
       inputSchema: z.object({
-        message: z
-          .string()
-          .describe('要打印到控制台的消息'),
+        message: z.string().describe('要打印到控制台的消息'),
       }),
       execute: async ({ message }) => {
         console.log(styleText(['green', 'bold'], message));
@@ -23,6 +21,8 @@ const result = streamText({
   },
 });
 
-for await (const chunk of result.toUIMessageStream()) {
+for await (const chunk of toUIMessageStream({
+  stream: result.stream,
+})) {
   console.log(chunk);
 }

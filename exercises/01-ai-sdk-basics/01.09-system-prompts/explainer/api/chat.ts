@@ -5,6 +5,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 
 const SYSTEM_PROMPT = `
@@ -29,7 +30,9 @@ export const POST = async (req: Request): Promise<Response> => {
     instructions: SYSTEM_PROMPT,
   });
 
-  const stream = streamTextResult.toUIMessageStream();
+  const stream = toUIMessageStream({
+    stream: streamTextResult.stream,
+  });
 
   return createUIMessageStreamResponse({
     stream,

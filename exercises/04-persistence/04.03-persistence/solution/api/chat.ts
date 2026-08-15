@@ -2,6 +2,8 @@ import {
   convertToModelMessages,
   streamText,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import {
@@ -40,10 +42,13 @@ export const POST = async (req: Request): Promise<Response> => {
     messages: await convertToModelMessages(messages),
   });
 
-  return result.toUIMessageStreamResponse({
-    onEnd: async ({ responseMessage }) => {
-      await appendToChatMessages(id, [responseMessage]);
-    },
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: result.stream,
+      onEnd: async ({ responseMessage }) => {
+        await appendToChatMessages(id, [responseMessage]);
+      },
+    }),
   });
 };
 

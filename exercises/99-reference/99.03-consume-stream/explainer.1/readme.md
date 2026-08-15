@@ -131,7 +131,7 @@ const streamTextResult = streamText({
 
 // 使用顶层的 consumeStream 函数
 await consumeStream({
-  stream: streamTextResult.toUIMessageStream(),
+  stream: toUIMessageStream({ stream: streamTextResult.stream }),
 });
 
 console.log('进程退出中...');

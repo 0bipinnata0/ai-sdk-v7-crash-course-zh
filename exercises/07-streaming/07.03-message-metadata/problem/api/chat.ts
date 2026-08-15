@@ -1,7 +1,10 @@
 import { openai } from '@ai-sdk/openai';
 import {
   convertToModelMessages,
+  createUIMessageStreamResponse,
   streamText,
+  toUIMessageStream,
+  type ToolSet,
   type UIMessage,
 } from 'ai';
 
@@ -21,10 +24,13 @@ export const POST = async (req: Request): Promise<Response> => {
   // TODO:计算流的开始时间
   const startTime = TODO;
 
-  return result.toUIMessageStreamResponse<MyUIMessage>({
-    // TODO:在这里添加 messageMetadata 函数
-    // 如果遇到 'finish' 部件,它应该返回
-    // 流的持续时间(毫秒)
-    messageMetadata: TODO,
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream<ToolSet, MyUIMessage>({
+      stream: result.stream,
+      // TODO:在这里添加 messageMetadata 函数
+      // 如果遇到 'finish' 部件,它应该返回
+      // 流的持续时间(毫秒)
+      messageMetadata: TODO,
+    }),
   });
 };

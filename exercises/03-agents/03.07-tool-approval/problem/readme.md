@@ -8,7 +8,7 @@
 
 ### 设置后端
 
-- [ ] 在 `api/chat.ts` 中给 `sendEmail` 工具定义添加 `needsApproval: true`
+- [ ] 在 `api/chat.ts` 的 `streamText` 调用中添加 `toolApproval: { sendEmail: 'user-approval' }`
 
 这告诉 AI SDK，这个工具在执行前需要用户批准。
 
@@ -23,8 +23,6 @@ const tools = {
       subject: z.string().describe('邮件的主题'),
       body: z.string().describe('邮件的正文'),
     }),
-    needsApproval: true,
-    // TODO:添加 needsApproval: true,在发送前要求用户批准
     execute: async ({ to, subject, body }) => {
       // 在真实应用中,这里会发送邮件
       console.log(`正在发送邮件给 ${to}:${subject}`);
@@ -32,6 +30,18 @@ const tools = {
     },
   }),
 };
+```
+
+然后在 `streamText` 调用中添加 `toolApproval` 选项，把审批策略放在生成配置旁边（AI SDK v7 的新写法，取代了工具定义里的 `needsApproval`):
+
+```ts
+const result = streamText({
+  // ...
+  tools,
+  // TODO:添加 toolApproval 选项,要求发送前由用户批准:
+  // toolApproval: { sendEmail: 'user-approval' }
+  stopWhen: [isStepCount(10)],
+});
 ```
 
 ### 构建前端 UI

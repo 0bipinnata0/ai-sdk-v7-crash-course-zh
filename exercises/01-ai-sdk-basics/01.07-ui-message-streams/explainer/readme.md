@@ -14,7 +14,9 @@ const stream = streamText({
   prompt: '给我写一首关于一只叫 Steven 的猫的十四行诗。',
 });
 
-for await (const chunk of stream.toUIMessageStream()) {
+for await (const chunk of toUIMessageStream({
+  stream: result.stream,
+})) {
   console.log(chunk);
 }
 ```

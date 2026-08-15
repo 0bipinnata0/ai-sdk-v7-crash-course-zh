@@ -1,5 +1,9 @@
 import { openai } from '@ai-sdk/openai';
-import { consumeStream, streamText } from 'ai';
+import {
+  consumeStream,
+  streamText,
+  toUIMessageStream,
+} from 'ai';
 
 console.log('进程启动中...');
 
@@ -13,7 +17,7 @@ const streamTextResult = streamText({
 
 // 试着把这段注释掉,看看会发生什么!
 await consumeStream({
-  stream: streamTextResult.toUIMessageStream(),
+  stream: toUIMessageStream({ stream: streamTextResult.stream }),
 });
 
 console.log('进程退出中...');

@@ -7,6 +7,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 import { z } from 'zod';
 
@@ -32,7 +33,9 @@ export const POST = async (req: Request): Promise<Response> => {
         messages: modelMessages,
       });
 
-      writer.merge(streamTextResult.toUIMessageStream());
+      writer.merge(
+        toUIMessageStream({ stream: streamTextResult.stream }),
+      );
 
       await streamTextResult.consumeStream();
 
@@ -46,18 +49,22 @@ export const POST = async (req: Request): Promise<Response> => {
           {
             role: 'assistant',
 
-            content: [{
-              type: 'text',
-              text: await streamTextResult.text
-            }]
+            content: [
+              {
+                type: 'text',
+                text: await streamTextResult.text,
+              },
+            ],
           },
           {
             role: 'user',
 
-            content: [{
-              type: 'text',
-              text: '我接下来应该问什么问题?返回一个建议问题的数组。'
-            }]
+            content: [
+              {
+                type: 'text',
+                text: '我接下来应该问什么问题?返回一个建议问题的数组。',
+              },
+            ],
           },
         ],
       });

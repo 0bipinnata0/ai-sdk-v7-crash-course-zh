@@ -6,6 +6,7 @@ import {
   streamText,
   type ModelMessage,
   type UIMessage,
+  toUIMessageStream,
 } from 'ai';
 import { langfuseSpanProcessor } from './langfuse.ts';
 
@@ -72,7 +73,8 @@ export const POST = async (req: Request): Promise<Response> => {
     telemetry: TODO,
   });
 
-  const stream = streamTextResult.toUIMessageStream({
+  const stream = toUIMessageStream({
+    stream: streamTextResult.stream,
     onEnd: async () => {
       const title = await titleResult;
 

@@ -50,7 +50,8 @@ const modelSelected: 'advanced' | 'basic' = TODO;
 
 ```ts
 writer.merge(
-  streamTextResult.toUIMessageStream({
+  toUIMessageStream({
+    stream: streamTextResult.stream,
     // TODO:把模型添加到消息 metadata 中,
     // 让前端可以显示它。
     messageMetadata: TODO,

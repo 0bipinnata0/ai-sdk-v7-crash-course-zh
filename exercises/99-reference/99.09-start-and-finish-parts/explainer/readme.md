@@ -57,7 +57,9 @@ const firstParagraphResult = streamText({
   ],
 });
 
-writer.merge(firstParagraphResult.toUIMessageStream());
+writer.merge(
+  toUIMessageStream({ stream: firstParagraphResult.stream }),
+);
 ```
 
 ## 奇怪的错误
@@ -104,7 +106,8 @@ writer.merge(firstParagraphResult.toUIMessageStream());
 
 ```ts
 writer.merge(
-  firstParagraphResult.toUIMessageStream({
+  toUIMessageStream({
+    stream: firstParagraphResult.stream,
     // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
     // sendFinish: false,
@@ -116,7 +119,8 @@ writer.merge(
 
 ```ts
 writer.merge(
-  secondParagraphResult.toUIMessageStream({
+  toUIMessageStream({
+    stream: secondParagraphResult.stream,
     // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
     // sendFinish: false,
@@ -128,7 +132,8 @@ writer.merge(
 
 ```ts
 writer.merge(
-  thirdParagraphResult.toUIMessageStream({
+  toUIMessageStream({
+    stream: thirdParagraphResult.stream,
     // TODO:试着取消注释,看看会发生什么
     // sendStart: false,
   }),

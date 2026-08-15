@@ -8,6 +8,7 @@ import {
   type ModelMessage,
   type UIMessage,
   type UIMessageStreamWriter,
+  toUIMessageStream,
 } from 'ai';
 import { tavily } from '@tavily/core';
 import { z } from 'zod';
@@ -88,7 +89,10 @@ const streamFinalSummary = async (
   writer.merge(
     // 注意:我们传入 sendStart: false,因为我们已经
     // 向前端发送过 'start' 消息部件了。
-    answerResult.toUIMessageStream({ sendStart: false }),
+    toUIMessageStream({
+      stream: answerResult.stream,
+      sendStart: false,
+    }),
   );
 };
 

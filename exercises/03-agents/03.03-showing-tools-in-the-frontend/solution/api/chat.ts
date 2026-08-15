@@ -7,6 +7,8 @@ import {
   type InferUITool,
   type InferUITools,
   type UIMessage,
+  toUIMessageStream,
+  createUIMessageStreamResponse,
 } from 'ai';
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
@@ -21,12 +23,8 @@ const tools = {
   writeFile: tool({
     description: '写入文件',
     inputSchema: z.object({
-      path: z
-        .string()
-        .describe('要创建的文件的路径'),
-      content: z
-        .string()
-        .describe('要创建的文件的内容'),
+      path: z.string().describe('要创建的文件的路径'),
+      content: z.string().describe('要创建的文件的内容'),
     }),
     execute: async ({ path, content }) => {
       return fsTools.writeFile(path, content);
@@ -44,9 +42,7 @@ const tools = {
   deletePath: tool({
     description: '删除文件或目录',
     inputSchema: z.object({
-      path: z
-        .string()
-        .describe('要删除的文件或目录的路径'),
+      path: z.string().describe('要删除的文件或目录的路径'),
     }),
     execute: async ({ path }) => {
       return fsTools.deletePath(path);
@@ -55,9 +51,7 @@ const tools = {
   listDirectory: tool({
     description: '列出目录',
     inputSchema: z.object({
-      path: z
-        .string()
-        .describe('要列出的目录的路径'),
+      path: z.string().describe('要列出的目录的路径'),
     }),
     execute: async ({ path }) => {
       return fsTools.listDirectory(path);
@@ -66,9 +60,7 @@ const tools = {
   createDirectory: tool({
     description: '创建目录',
     inputSchema: z.object({
-      path: z
-        .string()
-        .describe('要创建的目录的路径'),
+      path: z.string().describe('要创建的目录的路径'),
     }),
     execute: async ({ path }) => {
       return fsTools.createDirectory(path);
@@ -77,9 +69,7 @@ const tools = {
   exists: tool({
     description: '检查文件或目录是否存在',
     inputSchema: z.object({
-      path: z
-        .string()
-        .describe('要检查的文件或目录的路径'),
+      path: z.string().describe('要检查的文件或目录的路径'),
     }),
     execute: async ({ path }) => {
       return fsTools.exists(path);
@@ -123,5 +113,7 @@ export const POST = async (req: Request): Promise<Response> => {
     stopWhen: [isStepCount(10)],
   });
 
-  return result.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: result.stream }),
+  });
 };

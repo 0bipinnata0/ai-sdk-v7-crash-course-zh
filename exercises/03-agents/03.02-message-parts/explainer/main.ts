@@ -1,5 +1,10 @@
 import { openai } from '@ai-sdk/openai';
-import { isStepCount, streamText, tool } from 'ai';
+import {
+  isStepCount,
+  streamText,
+  tool,
+  toUIMessageStream,
+} from 'ai';
 import { z } from 'zod';
 import * as fsTools from './file-system-functionality.ts';
 
@@ -30,12 +35,8 @@ const result = streamText({
     writeFile: tool({
       description: '写入文件',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe('要创建的文件的路径'),
-        content: z
-          .string()
-          .describe('要创建的文件的内容'),
+        path: z.string().describe('要创建的文件的路径'),
+        content: z.string().describe('要创建的文件的内容'),
       }),
       execute: async ({ path, content }) => {
         return fsTools.writeFile(path, content);
@@ -44,9 +45,7 @@ const result = streamText({
     readFile: tool({
       description: '读取文件',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe('要读取的文件的路径'),
+        path: z.string().describe('要读取的文件的路径'),
       }),
       execute: async ({ path }) => {
         return fsTools.readFile(path);
@@ -55,11 +54,7 @@ const result = streamText({
     deletePath: tool({
       description: '删除文件或目录',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe(
-            '要删除的文件或目录的路径',
-          ),
+        path: z.string().describe('要删除的文件或目录的路径'),
       }),
       execute: async ({ path }) => {
         return fsTools.deletePath(path);
@@ -68,9 +63,7 @@ const result = streamText({
     listDirectory: tool({
       description: '列出目录',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe('要列出的目录的路径'),
+        path: z.string().describe('要列出的目录的路径'),
       }),
       execute: async ({ path }) => {
         return fsTools.listDirectory(path);
@@ -79,9 +72,7 @@ const result = streamText({
     createDirectory: tool({
       description: '创建目录',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe('要创建的目录的路径'),
+        path: z.string().describe('要创建的目录的路径'),
       }),
       execute: async ({ path }) => {
         return fsTools.createDirectory(path);
@@ -90,11 +81,7 @@ const result = streamText({
     exists: tool({
       description: '检查文件或目录是否存在',
       inputSchema: z.object({
-        path: z
-          .string()
-          .describe(
-            '要检查的文件或目录的路径',
-          ),
+        path: z.string().describe('要检查的文件或目录的路径'),
       }),
       execute: async ({ path }) => {
         return fsTools.exists(path);
@@ -103,9 +90,7 @@ const result = streamText({
     searchFiles: tool({
       description: '搜索文件',
       inputSchema: z.object({
-        pattern: z
-          .string()
-          .describe('要搜索的模式'),
+        pattern: z.string().describe('要搜索的模式'),
       }),
       execute: async ({ pattern }) => {
         return fsTools.searchFiles(pattern);
@@ -115,7 +100,8 @@ const result = streamText({
   stopWhen: [isStepCount(10)],
 });
 
-const stream = result.toUIMessageStream({
+const stream = toUIMessageStream({
+  stream: result.stream,
   onEnd: ({ messages }) => {
     console.log('--- ON FINISH ---');
     console.dir(messages, { depth: null });

@@ -27,7 +27,9 @@ export const POST = async (req: Request): Promise<Response> => {
 
   const finalSlackAttempt = TODO; // 写最终版 Slack 消息
 
-  return finalSlackAttempt.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: finalSlackAttempt.stream }),
+  });
 };
 ```
 
@@ -83,7 +85,7 @@ const formatMessageHistory = (messages: UIMessage[]) => {
 
 - [ ] 实现 `evaluateSlackResult` 函数，用评估系统提示词进行另一次 LLM 调用来评估初稿——同样使用 [`generateText`](/exercises/01-ai-sdk-basics/01.05-generating-text/problem/readme.md)。
 
-- [ ] 实现 `finalSlackAttempt` 函数，基于对话、初稿和反馈流式输出最终 Slack 消息。你需要在这里使用 [`streamText`](/exercises/01-ai-sdk-basics/01.06-stream-text-to-terminal/problem/readme.md)，然后用 [`.toUIMessageStreamResponse()`](/exercises/01-ai-sdk-basics/01.08-stream-text-to-ui/problem/readme.md) 传递最终响应。
+- [ ] 实现 `finalSlackAttempt` 函数，基于对话、初稿和反馈流式输出最终 Slack 消息。你需要在这里使用 [`streamText`](/exercises/01-ai-sdk-basics/01.06-stream-text-to-terminal/problem/readme.md)，然后用 [`toUIMessageStream` + `createUIMessageStreamResponse`](/exercises/01-ai-sdk-basics/01.08-stream-text-to-ui/problem/readme.md) 传递最终响应。
 
 - [ ] 通过运行本地开发服务器并在 UI 中提交预填的提示词来测试你的实现。虽然你看不到初稿或评估过程，但你应该能看到最终结果。
 

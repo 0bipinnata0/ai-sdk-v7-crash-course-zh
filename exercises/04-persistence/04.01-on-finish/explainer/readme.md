@@ -31,9 +31,11 @@ export const POST = async (req: Request): Promise<Response> => {
 2. 另一个在 [`toUIMessageStreamResponse`](./api/chat.ts) 内部，打印 `messages` 和 `responseMessage`
 
 ```ts
-return result.toUIMessageStreamResponse({
-  originalMessages: messages,
-  onEnd: ({ messages, responseMessage }) => {
+return createUIMessageStreamResponse({
+  stream: toUIMessageStream({
+    stream: result.stream,
+    originalMessages: messages,
+    onEnd: ({ messages, responseMessage }) => {
     console.log('toUIMessageStreamResponse.onEnd');
     console.log('  messages');
     console.dir(messages, { depth: null });

@@ -35,7 +35,9 @@ export const POST = async (req: Request): Promise<Response> => {
     stopWhen: TODO,
   });
 
-  return result.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: result.stream }),
+  });
 };
 ```
 

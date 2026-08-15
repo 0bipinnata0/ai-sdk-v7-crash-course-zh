@@ -130,7 +130,9 @@ export const POST = async (req: Request): Promise<Response> => {
     messages: await convertToModelMessages(messages),
   });
 
-  return result.toUIMessageStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: result.stream }),
+  });
 };
 ```
 
@@ -139,7 +141,7 @@ export const POST = async (req: Request): Promise<Response> => {
 - 用 `getChat(id)` 实现获取现有聊天
 - 如果聊天不存在，用 `createChat(id, messages)` 创建新聊天
 - 如果聊天存在，追加最新消息
-- 修改 `result.toUIMessageStreamResponse()` 来保存 AI 的响应消息
+- 修改 `toUIMessageStream` 的选项来保存 AI 的响应消息
 
 ## 表单提交更新
 
