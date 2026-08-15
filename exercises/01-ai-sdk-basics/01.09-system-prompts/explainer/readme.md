@@ -14,7 +14,7 @@ const SYSTEM_PROMPT = `
 `;
 ```
 
-然后我们在 [`streamText`](./api/chat.ts) 中通过 system 属性传入系统提示词：
+然后我们在 [`streamText`](./api/chat.ts) 中通过 `instructions` 属性传入系统提示词：
 
 ```ts
 const streamTextResult = streamText({
@@ -24,7 +24,7 @@ const streamTextResult = streamText({
 });
 ```
 
-我们不需要做任何花哨的操作，比如把它拼接到 `modelMessages` 前面来确保它出现在开头。AI SDK 直接给了我们一个叫做 `system` 的便捷属性，我们可以直接传入。
+我们不需要做任何花哨的操作，比如把它拼接到 `modelMessages` 前面来确保它出现在开头。AI SDK 直接给了我们一个叫做 `instructions` 的便捷属性，我们可以直接传入（在 v7 之前的版本中它叫 `system`）。
 
 我们将在未来的练习中使用这个系统提示词来定制我们对话的 LLM 并配置它的行为。所以，现在就来试试吧。
 
