@@ -1,5 +1,6 @@
 import type { UIDataTypes, UIMessagePart, UITools } from 'ai';
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, FormEvent, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
   FileIcon,
@@ -8,9 +9,7 @@ import {
   XIcon,
 } from 'lucide-react';
 
-export const Wrapper = (props: {
-  children: React.ReactNode;
-}) => {
+export const Wrapper = (props: { children: ReactNode }) => {
   return (
     <div className="flex flex-col w-full max-w-xl py-24 mx-auto stretch">
       {props.children}
@@ -50,17 +49,15 @@ export const ChatInput = ({
   onSubmit,
 }: {
   input: string;
-  onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onFileSelect: (file: File | null) => void;
   selectedFile: File | null;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: FormEvent) => void;
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0] || null;
     onFileSelect(file);

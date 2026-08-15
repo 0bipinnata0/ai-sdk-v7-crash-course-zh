@@ -4,7 +4,7 @@ import {
   QueryClientProvider,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import React, { startTransition, useState } from 'react';
+import { startTransition, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, useSearchParams } from 'react-router';
 import type { DB } from '../api/persistence-layer.ts';
@@ -39,9 +39,8 @@ const App = () => {
   // 任何已存在消息
   const { messages, sendMessage } = useChat({});
 
-  const [input, setInput] = useState(
-    `谁是世界上最棒的足球运动员?`,
-  );
+  const [input, setInput] =
+    useState(`谁是世界上最棒的足球运动员?`);
 
   return (
     <Wrapper>

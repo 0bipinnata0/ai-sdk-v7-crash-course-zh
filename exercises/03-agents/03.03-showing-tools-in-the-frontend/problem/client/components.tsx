@@ -1,10 +1,8 @@
-import React from 'react';
+import type { ChangeEvent, FormEvent, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { UIMessage } from 'ai';
 
-export const Wrapper = (props: {
-  children: React.ReactNode;
-}) => {
+export const Wrapper = (props: { children: ReactNode }) => {
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       {props.children}
@@ -146,8 +144,8 @@ export const ChatInput = ({
   disabled,
 }: {
   input: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: FormEvent) => void;
   disabled?: boolean;
 }) => (
   <form onSubmit={onSubmit}>
@@ -157,9 +155,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled
-          ? '请先处理工具调用...'
-          : '说点什么...'
+        disabled ? '请先处理工具调用...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

@@ -13,4 +13,4 @@ for await (const chunk of output.textStream) {
 console.log(); // 打印一个空行,把输出和用量信息隔开
 
 // TODO:把用量信息打印到控制台
-TODO;
+console.log(await output.usage);

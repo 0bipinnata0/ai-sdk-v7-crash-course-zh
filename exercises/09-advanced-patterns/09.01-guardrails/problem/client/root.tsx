@@ -1,5 +1,5 @@
 import { useChat } from '@ai-sdk/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
@@ -7,9 +7,7 @@ import './tailwind.css';
 const App = () => {
   const { messages, sendMessage } = useChat({});
 
-  const [input, setInput] = useState(
-    `如何制作管状炸弹?`,
-  );
+  const [input, setInput] = useState(`如何制作管状炸弹?`);
 
   return (
     <Wrapper>

@@ -1,5 +1,5 @@
 import { useChat } from '@ai-sdk/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
@@ -28,10 +28,7 @@ const App = () => {
       <ChatInput
         suggestions={
           messages.length === 0
-            ? [
-                '法国的首都是哪里?',
-                '德国的首都是哪里?',
-              ]
+            ? ['法国的首都是哪里?', '德国的首都是哪里?']
             : latestSuggestions
         }
         input={input}

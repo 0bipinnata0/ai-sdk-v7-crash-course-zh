@@ -1,10 +1,8 @@
-import React, { type ReactNode } from 'react';
+import type { ChangeEvent, FormEvent, ReactNode } from 'react';
 import type { MyMessage } from '../api/chat.ts';
 import ReactMarkdown from 'react-markdown';
 
-export const Wrapper = (props: {
-  children: React.ReactNode;
-}) => {
+export const Wrapper = (props: { children: ReactNode }) => {
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       {props.children}
@@ -24,9 +22,7 @@ export const Message = ({
       if (part.type === 'data-slack-message') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">
-              初稿
-            </h2>
+            <h2 className="text-gray-300 text-sm mb-1">初稿</h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
         );
@@ -35,9 +31,7 @@ export const Message = ({
       if (part.type === 'data-slack-message-feedback') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">
-              反馈
-            </h2>
+            <h2 className="text-gray-300 text-sm mb-1">反馈</h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
         );
@@ -67,8 +61,8 @@ export const ChatInput = ({
   disabled,
 }: {
   input: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: FormEvent) => void;
   disabled?: boolean;
 }) => (
   <form onSubmit={onSubmit}>
@@ -78,9 +72,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled
-          ? '请先处理工具调用...'
-          : '说点什么...'
+        disabled ? '请先处理工具调用...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

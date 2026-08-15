@@ -4,7 +4,7 @@ import {
   QueryClientProvider,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import React, { startTransition, useState } from 'react';
+import { startTransition, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { DB } from '../api/persistence-layer.ts';
 import { ChatInput, Message, Wrapper } from './components.tsx';
@@ -37,9 +37,8 @@ const App = () => {
     messages: data?.messages ?? [],
   });
 
-  const [input, setInput] = useState(
-    `谁是世界上最棒的足球运动员?`,
-  );
+  const [input, setInput] =
+    useState(`谁是世界上最棒的足球运动员?`);
 
   return (
     <Wrapper>

@@ -1,12 +1,14 @@
 import { useChat } from '@ai-sdk/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
 import type { MyAgentUIMessage } from '../api/chat.ts';
 
 const App = () => {
-  const { messages, sendMessage } = useChat<MyAgentUIMessage>({});
+  const { messages, sendMessage } = useChat<MyAgentUIMessage>(
+    {},
+  );
 
   const [input, setInput] = useState(
     '创建一个包含今天三项待办事项的 todo.md 文件。',

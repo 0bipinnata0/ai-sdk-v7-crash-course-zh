@@ -1,10 +1,8 @@
-import React from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import type { MyMessage } from '../api/chat.ts';
 
-export const Wrapper = (props: {
-  children: React.ReactNode;
-}) => {
+export const Wrapper = (props: { children: ReactNode }) => {
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch pb-48">
       {props.children}
@@ -44,7 +42,7 @@ export const ChatInput = ({
 }: {
   input: string;
   onChange: (text: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: FormEvent) => void;
   suggestions: string[] | undefined;
 }) => (
   <form

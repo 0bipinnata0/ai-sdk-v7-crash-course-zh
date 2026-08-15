@@ -1,5 +1,5 @@
 import { useChat } from '@ai-sdk/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AlertCircle } from 'lucide-react';
 import { ChatInput, Message, Wrapper } from './components.tsx';
@@ -8,9 +8,7 @@ import './tailwind.css';
 const App = () => {
   const { messages, sendMessage, error } = useChat({});
 
-  const [input, setInput] = useState(
-    `法国的首都是哪里?`,
-  );
+  const [input, setInput] = useState(`法国的首都是哪里?`);
 
   return (
     <Wrapper>

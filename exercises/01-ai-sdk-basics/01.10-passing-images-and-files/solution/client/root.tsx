@@ -1,5 +1,5 @@
 import { useChat } from '@ai-sdk/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChatInput, Message, Wrapper } from './components.tsx';
 import './tailwind.css';
@@ -8,9 +8,7 @@ import type { FileUIPart } from 'ai';
 const App = () => {
   const { messages, sendMessage } = useChat({});
 
-  const [input, setInput] = useState(
-    '你能描述一下这张图片吗?',
-  );
+  const [input, setInput] = useState('你能描述一下这张图片吗?');
   const [selectedFile, setSelectedFile] = useState<File | null>(
     null,
   );
