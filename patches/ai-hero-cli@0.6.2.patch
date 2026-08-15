@@ -1,5 +1,5 @@
 diff --git a/bin.cjs b/bin.cjs
-index a82114a08d6ff7f9e51f7df87ee543636da83c20..06f9a00102fdb93154095be920795649ac2ca86c 100755
+index a82114a08d6ff7f9e51f7df87ee543636da83c20..a6c0137761b9402913e4cf9671817e5f77c82518 100755
 --- a/bin.cjs
 +++ b/bin.cjs
 @@ -33117,7 +33117,7 @@ var require_select = __commonJS({
@@ -76,7 +76,80 @@ index a82114a08d6ff7f9e51f7df87ee543636da83c20..06f9a00102fdb93154095be920795649
            value: "finish"
          });
          const { action } = yield* runPrompt(
-@@ -70705,7 +70705,7 @@ var runLesson = Effect_exports.fn("runLesson")(function* (opts) {
+@@ -70642,14 +70642,64 @@ var runLesson = Effect_exports.fn("runLesson")(function* (opts) {
+     if (readmeFile) {
+       yield* logReadmeFile({ readmeFile });
+     }
+-    result = yield* Effect_exports.try({
+-      try: () => ChildProcess.execSync(
+-        `pnpm tsx --env-file="${envFilePath}" "${mainFile}"`,
+-        {
+-          stdio: "inherit",
+-          cwd
+-        }
+-      ),
++    yield* Console_exports.log(
++      util.styleText(
++        "dim",
++        "提示:练习运行期间按 q 结束练习并返回菜单 (Ctrl+C 退出整个 CLI)\n"
++      )
++    );
++    result = yield* Effect_exports.tryPromise({
++      try: () => new Promise((resolve, reject) => {
++        const child = ChildProcess.spawn(
++          `pnpm tsx --env-file="${envFilePath}" "${mainFile}"`,
++          {
++            stdio: "inherit",
++            cwd,
++            shell: true,
++            detached: true
++          }
++        );
++        let quitByUser = false;
++        const stdin2 = process.stdin;
++        const killChild = () => {
++          try {
++            process.kill(-child.pid, "SIGINT");
++          } catch {
++            try {
++              child.kill("SIGINT");
++            } catch {
++            }
++          }
++        };
++        const onData = (buf) => {
++          const s = buf.toString();
++          if (s === "q" || s === "Q") {
++            quitByUser = true;
++            killChild();
++          } else if (s === "\x03") {
++            killChild();
++            process.exit(130);
++          }
++        };
++        if (stdin2.isTTY) {
++          stdin2.setRawMode(true);
++          stdin2.resume();
++          stdin2.on("data", onData);
++        }
++        child.on("exit", (code) => {
++          if (stdin2.isTTY) {
++            stdin2.off("data", onData);
++            stdin2.setRawMode(false);
++            stdin2.pause();
++          }
++          if (quitByUser || code === 0) {
++            resolve();
++          } else {
++            reject(new Error(`Exercise exited with code ${code}`));
++          }
++        });
++        child.on("error", reject);
++      }),
+       catch: (error4) => new RunLessonSimpleError({ cause: error4 })
+     }).pipe(
+       Effect_exports.map(() => "success"),
+@@ -70705,7 +70755,7 @@ var runLesson = Effect_exports.fn("runLesson")(function* (opts) {
  var logReadmeFile = Effect_exports.fn("logReadmeFile")(
    function* (opts) {
      yield* Console_exports.log(

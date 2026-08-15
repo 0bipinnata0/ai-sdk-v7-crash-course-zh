@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  ai-hero-cli@0.6.2: 8fcfc691caea65db7cd24306134d0f70d050aa9935b96d0ef4b1b4cc65231abe
+  ai-hero-cli@0.6.2: b7aa29e53c3039ed3db1e4355b6094a63abd7e7462a7475c4e3957b32f7218b5
 
 importers:
 
@@ -140,7 +140,7 @@ importers:
         version: 5.5.2
       ai-hero-cli:
         specifier: ^0.6.2
-        version: 0.6.2(patch_hash=8fcfc691caea65db7cd24306134d0f70d050aa9935b96d0ef4b1b4cc65231abe)
+        version: 0.6.2(patch_hash=b7aa29e53c3039ed3db1e4355b6094a63abd7e7462a7475c4e3957b32f7218b5)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -4642,7 +4642,7 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  ai-hero-cli@0.6.2(patch_hash=8fcfc691caea65db7cd24306134d0f70d050aa9935b96d0ef4b1b4cc65231abe): {}
+  ai-hero-cli@0.6.2(patch_hash=b7aa29e53c3039ed3db1e4355b6094a63abd7e7462a7475c4e3957b32f7218b5): {}
 
   ai@7.0.64(zod@4.4.3):
     dependencies:
