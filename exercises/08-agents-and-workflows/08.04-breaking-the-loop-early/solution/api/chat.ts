@@ -3,7 +3,7 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
   generateText,
-  streamObject,
+  Output,
   streamText,
   type UIMessage,
 } from 'ai';
@@ -89,7 +89,7 @@ export const POST = async (req: Request): Promise<Response> => {
         mostRecentDraft = firstDraft;
 
         // 评估 Slack 消息
-        const evaluateSlackResult = streamObject({
+        const evaluateSlackResult = streamText({
           model: openai.chat('gpt-5.5'),
           instructions: EVALUATE_SLACK_MESSAGE_SYSTEM,
           prompt: `
@@ -102,24 +102,24 @@ export const POST = async (req: Request): Promise<Response> => {
             之前的反馈(如有):
             ${mostRecentFeedback}
           `,
-          schema: z.object({
-            feedback: z
-              .string()
-              .optional()
-              .describe(
-                '关于最近草稿的反馈。仅在草稿不够好时返回。',
-              ),
-            isGoodEnough: z
-              .boolean()
-              .describe(
-                '最近的草稿是否足够好,可以停止循环。',
-              ),
+          output: Output.object({
+            schema: z.object({
+              feedback: z
+                .string()
+                .optional()
+                .describe(
+                  '关于最近草稿的反馈。仅在草稿不够好时返回。',
+                ),
+              isGoodEnough: z
+                .boolean()
+                .describe('最近的草稿是否足够好,可以停止循环。'),
+            }),
           }),
         });
 
         const feedbackId = crypto.randomUUID();
 
-        for await (const part of evaluateSlackResult.partialObjectStream) {
+        for await (const part of evaluateSlackResult.partialOutputStream) {
           if (part.feedback) {
             writer.write({
               type: 'data-slack-message-feedback',
@@ -130,7 +130,7 @@ export const POST = async (req: Request): Promise<Response> => {
         }
 
         const finalEvaluationObject =
-          await evaluateSlackResult.object;
+          await evaluateSlackResult.output;
 
         // 如果草稿足够好,跳出循环
         if (finalEvaluationObject.isGoodEnough) {

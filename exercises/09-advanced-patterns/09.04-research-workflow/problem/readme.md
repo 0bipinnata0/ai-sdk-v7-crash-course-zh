@@ -26,7 +26,7 @@ const stream = createUIMessageStream<MyMessage>({
     await displayQueriesInFrontend(queriesResult, writer);
 
     const scrapedPages = await callTavilyToGetSearchResults(
-      (await queriesResult.object).queries,
+      (await queriesResult.output).queries,
     );
 
     await streamFinalSummary(
@@ -40,13 +40,13 @@ const stream = createUIMessageStream<MyMessage>({
 
 ## `generateQueriesForTavily`
 
-第一个函数需要使用 `streamObject`，基于对话历史生成一个计划和查询：
+第一个函数需要使用 `streamText` 配合 `Output.object`，基于对话历史生成一个计划和查询：
 
 ```ts
 const generateQueriesForTavily = (
   modelMessages: ModelMessage[],
 ) => {
-  // TODO:使用 streamObject 生成搜索计划,
+  // TODO:使用 streamText + Output.object 生成搜索计划,
   // 以及用于在网上搜索信息的查询。
   // 计划应该识别出回答问题所需的信息分组。
   // 计划应该列出回答问题所需的信息点,
@@ -60,7 +60,7 @@ const generateQueriesForTavily = (
   return queriesResult;
 ```
 
-你需要用 `streamObject` 生成一个带有 `plan` 和 `queries` 属性的对象来替换 `TODO`。
+你需要用 `streamText` + `Output.object` 生成一个带有 `plan` 和 `queries` 属性的对象来替换 `TODO`。
 
 ## `displayQueriesInFrontend`
 
@@ -74,7 +74,7 @@ const displayQueriesInFrontend = async (
   const queriesPartId = crypto.randomUUID();
   const planPartId = crypto.randomUUID();
 
-  for await (const part of queriesResult.partialObjectStream) {
+  for await (const part of queriesResult.partialOutputStream) {
     // TODO:把查询和计划流式传输到前端
     TODO;
   }
@@ -166,7 +166,7 @@ const [input, setInput] = useState(
   - 把你的 API 密钥添加到环境变量 `TAVILY_API_KEY` 中
 
 - [ ] 实现 `generateQueriesForTavily` 函数
-  - 使用 `streamObject` 生成计划和查询
+  - 使用 `streamText` + `Output.object` 生成计划和查询
   - 对象应该有 `plan`（字符串）和 `queries`（字符串数组）属性
 
 - [ ] 实现 `displayQueriesInFrontend` 函数

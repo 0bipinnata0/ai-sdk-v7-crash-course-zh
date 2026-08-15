@@ -3,7 +3,7 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  streamObject,
+  Output,
   streamText,
   type ModelMessage,
   type UIMessage,
@@ -24,7 +24,7 @@ export type MyMessage = UIMessage<
 const generateQueriesForTavily = (
   modelMessages: ModelMessage[],
 ) => {
-  const queriesResult = streamObject({
+  const queriesResult = streamText({
     model: openai.chat('gpt-5.5'),
     instructions: `
       你是一个乐于助人的助手,负责生成用于在网上搜索信息的查询。
@@ -42,9 +42,11 @@ const generateQueriesForTavily = (
         - queries:字符串数组,每个元素代表一个查询。
       </output-format>
     `,
-    schema: z.object({
-      plan: z.string(),
-      queries: z.array(z.string()),
+    output: Output.object({
+      schema: z.object({
+        plan: z.string(),
+        queries: z.array(z.string()),
+      }),
     }),
     messages: modelMessages,
   });
@@ -59,7 +61,7 @@ const streamQueriesToFrontend = async (
   const queriesPartId = crypto.randomUUID();
   const planPartId = crypto.randomUUID();
 
-  for await (const part of queriesResult.partialObjectStream) {
+  for await (const part of queriesResult.partialOutputStream) {
     if (
       part.queries &&
       part.queries.every((query) => typeof query === 'string')
@@ -180,7 +182,7 @@ export const POST = async (req: Request): Promise<Response> => {
       await streamQueriesToFrontend(queriesResult, writer);
 
       const searchResults = await callTavilyToGetSearchResults(
-        (await queriesResult.object).queries,
+        (await queriesResult.output).queries,
       );
 
       await streamFinalSummary(

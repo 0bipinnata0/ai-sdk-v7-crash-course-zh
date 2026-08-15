@@ -24,9 +24,7 @@ export const Message = ({
       if (part.type === 'data-slack-message') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">
-              初稿
-            </h2>
+            <h2 className="text-gray-300 text-sm mb-1">初稿</h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
         );
@@ -35,9 +33,7 @@ export const Message = ({
       if (part.type === 'data-slack-message-feedback') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">
-              反馈
-            </h2>
+            <h2 className="text-gray-300 text-sm mb-1">反馈</h2>
             <p className="text-gray-400 text-xs">{part.data}</p>
           </div>
         );
@@ -78,9 +74,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled
-          ? '请先处理工具调用...'
-          : '说点什么...'
+        disabled ? '请先处理工具调用...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

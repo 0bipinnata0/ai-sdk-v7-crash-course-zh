@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { generateObject, generateText } from 'ai';
+import { generateText } from 'ai';
 import { evalite } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -19,8 +19,7 @@ evalite('Chain Of Thought Paper', {
       input: '什么是思维链提示?',
     },
     {
-      input:
-        '论文作者为什么认为思维链提示能带来改进?',
+      input: '论文作者为什么认为思维链提示能带来改进?',
     },
   ],
   task: async (input) => {
@@ -45,7 +44,7 @@ evalite('Chain Of Thought Paper', {
               data: chainOfThoughtPaper,
               mediaType: 'application/pdf',
             },
-          ]
+          ],
         },
       ],
     });

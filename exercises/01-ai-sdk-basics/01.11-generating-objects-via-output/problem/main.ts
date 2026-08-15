@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { generateText, Output, streamText } from 'ai';
 import { z } from 'zod';
 
 const model = openai.chat('gpt-5.5');
@@ -23,7 +23,15 @@ const finalText = await stream.text;
 //   schema: z.object({
 //     facts: z.array(z.string()).describe('关于这个假想星球的事实。以科学家的口吻来写。'),
 //   })
-const factsResult = TODO;
+const factsResult = await generateText({
+  model,
+  prompt: '给我写一个关于假想星球的故事的第一段。',
+  output: Output.object({
+    schema: z.object({
+        facts: z.array(z.string()).describe('关于这个假想星球的事实。以科学家的口吻来写。'),
+      })
+  })
+});
 
 // TODO:打印结果的输出
 console.log(factsResult.output);

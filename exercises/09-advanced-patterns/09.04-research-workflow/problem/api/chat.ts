@@ -3,7 +3,6 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  streamObject,
   streamText,
   type ModelMessage,
   type UIMessage,
@@ -24,7 +23,7 @@ export type MyMessage = UIMessage<
 const generateQueriesForTavily = (
   modelMessages: ModelMessage[],
 ) => {
-  // TODO:使用 streamObject 生成搜索计划,
+  // TODO:使用 streamText + Output.object 生成搜索计划,
   // 以及用于在网上搜索信息的查询。
   // 计划应该识别出回答问题所需的信息分组。
   // 计划应该列出回答问题所需的信息点,
@@ -45,7 +44,7 @@ const displayQueriesInFrontend = async (
   const queriesPartId = crypto.randomUUID();
   const planPartId = crypto.randomUUID();
 
-  for await (const part of queriesResult.partialObjectStream) {
+  for await (const part of queriesResult.partialOutputStream) {
     // TODO:把查询和计划流式传输到前端
     TODO;
   }

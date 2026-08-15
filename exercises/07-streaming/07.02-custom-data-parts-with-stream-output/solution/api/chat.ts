@@ -3,18 +3,18 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  Output,
   streamText,
   type ModelMessage,
   type UIMessage,
   toUIMessageStream,
 } from 'ai';
+import { z } from 'zod';
 
 export type MyMessage = UIMessage<
   never,
   {
-    // TODO:把类型改为 'suggestions',
-    // 并让它成为字符串数组
-    suggestion: string;
+    suggestions: string[];
   }
 >;
 
@@ -39,13 +39,13 @@ export const POST = async (req: Request): Promise<Response> => {
 
       await streamTextResult.consumeStream();
 
-      // TODO:把 streamText 调用改为 streamObject,
-      // 因为我们需要使用结构化输出来可靠地
-      // 生成多条建议
       const followupSuggestionsResult = streamText({
         model: openai.chat('gpt-5.5'),
-        // TODO:使用 zod 定义建议的 schema
-        schema: TODO,
+        output: Output.object({
+          schema: z.object({
+            suggestions: z.array(z.string()),
+          }),
+        }),
         messages: [
           ...modelMessages,
           {
@@ -64,11 +64,7 @@ export const POST = async (req: Request): Promise<Response> => {
             content: [
               {
                 type: 'text',
-
-                // TODO:修改提示词,告诉 LLM
-                text:
-                  // 返回一个建议数组
-                  '我接下来应该问什么问题?只返回问题文本。',
+                text: '我接下来应该问什么问题?返回一个建议问题的数组。',
               },
             ],
           },
@@ -77,18 +73,14 @@ export const POST = async (req: Request): Promise<Response> => {
 
       const dataPartId = crypto.randomUUID();
 
-      let fullSuggestion = '';
-
-      // TODO:改为遍历 partialObjectStream
-      for await (const chunk of followupSuggestionsResult.textStream) {
-        fullSuggestion += chunk;
-
-        // TODO:改为用建议数组写入数据部件。
-        // 你可能需要过滤掉 undefined 的建议。
+      for await (const chunk of followupSuggestionsResult.partialOutputStream) {
         writer.write({
           id: dataPartId,
-          type: 'data-suggestion',
-          data: fullSuggestion,
+          type: 'data-suggestions',
+          data:
+            chunk.suggestions?.filter(
+              (suggestion) => suggestion !== undefined,
+            ) ?? [],
         });
       }
     },

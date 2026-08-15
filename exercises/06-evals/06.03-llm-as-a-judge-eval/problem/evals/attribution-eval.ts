@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { generateObject } from 'ai';
+import { generateText, Output } from 'ai';
 import { createScorer } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -32,11 +32,11 @@ export const attributionToChainOfThoughtPaper = createScorer<
 >({
   name: 'Attribution',
   scorer: async ({ input, output }) => {
-    const result = await generateObject({
+    const result = await generateText({
       model: openai.chat('gpt-5.5'),
       instructions: ATTRIBUTION_PROMPT,
       messages: TODO, // TODO:传入思维链论文、问题和给出的答案
-      schema: TODO, // TODO:定义响应的 schema
+      output: TODO, // TODO:用 Output.object 定义响应的 schema
     });
 
     // 注意:对 LLM 使用基于字符串的分数很重要,
@@ -52,8 +52,8 @@ export const attributionToChainOfThoughtPaper = createScorer<
     };
 
     return {
-      score: scoreMap[result.object.score],
-      metadata: result.object.feedback,
+      score: scoreMap[result.output.score],
+      metadata: result.output.feedback,
     };
   },
 });

@@ -38,9 +38,9 @@ while (step < 2) {
 
 无论发生什么，我们总是回到循环顶部。这里没有办法跳出循环。我们要让 LLM 自己来选择是否应该提前跳出。
 
-换句话说，它不只需要返回推理和反馈，还需要返回一个"这是否足够好"的布尔值。我们无法从区区一个 `streamText` 调用中提取出这个信息：
+换句话说，它不只需要返回推理和反馈，还需要返回一个"这是否足够好"的布尔值。我们无法从区区一个自由文本响应中提取出这个信息：
 
-相反，我们应该使用 [`streamObject`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data#stream-object)。`streamObject` 将给我们带来两全其美的效果：
+相反，我们应该给 [`streamText`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data) 添加 `output` 选项，用 `Output.object` 开启结构化输出。这将给我们带来两全其美的效果：
 
 1. 它允许我们在反馈出现在对象流中时把它流式传输给用户，所以在反馈生成过程中用户仍然能看到东西
 2. 它还能锁定评估的输出结构，这样我们能在一个字段中得到反馈，在另一个字段中得到我们程序真正需要的布尔值。
@@ -49,18 +49,18 @@ while (step < 2) {
 
 我们需要：
 
-- 把 [`streamText`](./api/chat.ts) 调用替换为 `streamObject` 调用
-- 为输出定义一个 schema
-- 如果 `streamObject` 调用说我们应该跳出循环，我们就跳出
+- 给 [`streamText`](./api/chat.ts) 调用添加 `output` 选项
+- 用 zod 为输出定义一个 schema
+- 如果评估结果说我们应该跳出循环，我们就跳出
 - 在反馈出现时把它流式传输到前端
 
 祝你好运，我们解答部分见。
 
 ## 完成步骤
 
-- [ ] 把评估部分的 `streamText` 调用替换为 [`streamObject`](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data#stream-object) 调用
+- [ ] 给评估部分的 `streamText` 调用添加 [`output` 选项](https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data)
 
-- [ ] 从 'ai' 包导入 `streamObject` 函数
+- [ ] 从 'ai' 包导入 `Output`，用 `Output.object` 包裹 schema
 
 - [ ] 导入 [`zod`](https://zod.dev/) 包用于定义 schema
 
@@ -68,7 +68,7 @@ while (step < 2) {
   - 一个反馈字符串
   - 一个表示草稿是否足够好的布尔值
 
-- [ ] 更新代码，在反馈出现在 `partialObjectStream` 中时把它流式传输到前端。回到 [streamObject 练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
+- [ ] 更新代码，在反馈出现在 `partialOutputStream` 中时把它流式传输到前端。回到[结构化输出练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
 
 - [ ] 修改循环，当 LLM 表示草稿足够好时提前跳出
 

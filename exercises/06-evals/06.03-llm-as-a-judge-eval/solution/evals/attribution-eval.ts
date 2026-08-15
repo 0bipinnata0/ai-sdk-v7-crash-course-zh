@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { generateObject } from 'ai';
+import { generateText, Output } from 'ai';
 import { createScorer } from 'evalite';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -19,7 +19,7 @@ export const attributionToChainOfThoughtPaper = createScorer<
 >({
   name: 'Attribution',
   scorer: async ({ input, output, expected }) => {
-    const result = await generateObject({
+    const result = await generateText({
       model: openai.chat('gpt-5.5'),
       instructions: `
         你是一个乐于助人的助手,可以回答关于思维链提示论文的问题。
@@ -53,16 +53,16 @@ export const attributionToChainOfThoughtPaper = createScorer<
 
             ${input}`,
             },
-          ]
+          ],
         },
       ],
-      schema: z.object({
-        feedback: z
-          .string()
-          .describe(
-            '关于答案的简短反馈信息。',
-          ),
-        score: z.enum(['A', 'B', 'C', 'D']),
+      output: Output.object({
+        schema: z.object({
+          feedback: z
+            .string()
+            .describe('关于答案的简短反馈信息。'),
+          score: z.enum(['A', 'B', 'C', 'D']),
+        }),
       }),
     });
 
@@ -74,8 +74,8 @@ export const attributionToChainOfThoughtPaper = createScorer<
     };
 
     return {
-      score: scoreMap[result.object.score],
-      metadata: result.object.feedback,
+      score: scoreMap[result.output.score],
+      metadata: result.output.feedback,
     };
   },
 });

@@ -85,8 +85,8 @@ export const POST = async (req: Request): Promise<Response> => {
 
         mostRecentDraft = draft;
 
-        // TODO:把它改为 streamObject,让它返回
-        // 字符串形式的反馈,以及我们是否应该
+        // TODO:给它添加 output 选项(Output.object + zod),
+        // 让它返回字符串形式的反馈,以及我们是否应该
         // 提前跳出循环(即消息是否足够好)
         const evaluateSlackResult = streamText({
           model: openai.chat('gpt-5.5'),

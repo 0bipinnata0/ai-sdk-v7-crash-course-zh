@@ -96,11 +96,11 @@ export const attributionToChainOfThoughtPaper = createScorer<
 >({
   name: 'Attribution',
   scorer: async ({ input, output, expected }) => {
-    const result = await generateObject({
+    const result = await generateText({
       model: openai.chat('gpt-5.5'),
       instructions: ATTRIBUTION_PROMPT,
       messages: TODO, // TODO:传入思维链论文、问题和给出的答案
-      schema: TODO, // TODO:定义响应的 schema
+      output: TODO, // TODO:用 Output.object 定义响应的 schema
     });
 
     // 注意:对 LLM 使用基于字符串的分数很重要,
@@ -116,8 +116,8 @@ export const attributionToChainOfThoughtPaper = createScorer<
     };
 
     return {
-      score: scoreMap[result.object.score],
-      metadata: result.object.feedback,
+      score: scoreMap[result.output.score],
+      metadata: result.output.feedback,
     };
   },
 });
@@ -147,7 +147,7 @@ D:答案没有提供来自论文的来源。
 在实现上，我们需要完成两个 TODO:
 
 1. 把思维链论文、问题和答案传给 `messages` 对象
-2. 定义响应的 schema
+2. 用 `Output.object` 定义响应的 schema
 
 有一个有趣的说明：对 LLM 使用基于字符串的分数（A、B、C、D）而不是数字分数，因为 LLM 可能对某些数字有偏好。然后我们把这些字符串分数映射为数值。
 
@@ -155,8 +155,8 @@ D:答案没有提供来自论文的来源。
 
 ```ts
 return {
-  score: scoreMap[result.object.score],
-  metadata: result.object.feedback,
+  score: scoreMap[result.output.score],
+  metadata: result.output.feedback,
 };
 ```
 

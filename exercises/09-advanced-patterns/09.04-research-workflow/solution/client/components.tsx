@@ -24,9 +24,7 @@ export const Message = ({
       if (part.type === 'data-queries') {
         return (
           <div key={part.id} className="mb-4">
-            <h2 className="text-gray-300 text-sm mb-1">
-              查询
-            </h2>
+            <h2 className="text-gray-300 text-sm mb-1">查询</h2>
             <ul className="text-gray-400 text-xs monospace">
               {Object.values(part.data).map((query) => (
                 <li key={query}>{query}</li>
@@ -79,9 +77,7 @@ export const ChatInput = ({
       }`}
       value={input}
       placeholder={
-        disabled
-          ? '请先处理工具调用...'
-          : '说点什么...'
+        disabled ? '请先处理工具调用...' : '说点什么...'
       }
       onChange={onChange}
       disabled={disabled}

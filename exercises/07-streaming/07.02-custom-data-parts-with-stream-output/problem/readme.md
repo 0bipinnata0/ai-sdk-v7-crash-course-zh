@@ -19,20 +19,20 @@ export type MyMessage = UIMessage<
 >;
 ```
 
-## `streamText` -> `streamObject`
+## 给 `streamText` 添加结构化输出
 
-接下来，我们需要更新生成建议的方式。目前我们使用 `streamText`，它不太适合返回数组这样的结构化数据。更可靠的方式是改用 `streamObject` 的结构化输出。
+接下来，我们需要更新生成建议的方式。默认情况下 `streamText` 返回自由文本，不太适合返回数组这样的结构化数据。更可靠的方式是给它添加 `output` 选项，用 `Output.object` 开启结构化输出。
 
-我们还需要用 Zod 定义一个 schema，确保得到正确的数据结构：
+我们用 Zod 定义一个 schema，确保得到正确的数据结构：
 
 ```ts
-// TODO:把 streamText 调用改为 streamObject,
+// TODO:给 streamText 调用添加 output 选项,
 // 因为我们需要使用结构化输出来可靠地
 // 生成多条建议
 const followupSuggestionsResult = streamText({
   model: openai.chat('gpt-5.5'),
-  // TODO:使用 zod 定义建议的 schema
-  schema: TODO,
+  // TODO:使用 Output.object + zod 定义建议的 schema
+  output: TODO,
   messages: [
     ...modelMessages,
     {
@@ -52,10 +52,10 @@ const followupSuggestionsResult = streamText({
 
 ## 流式传输建议
 
-在处理响应时，我们需要更新流式传输逻辑。不再跟随 `textStream`，而是遍历 `partialObjectStream`。这让我们能在流式传输过程中访问部分对象，包括建议数组：
+在处理响应时，我们需要更新流式传输逻辑。不再跟随 `textStream`，而是遍历 `partialOutputStream`。这让我们能在流式传输过程中访问部分对象，包括建议数组：
 
 ```ts
-// TODO:改为遍历 partialObjectStream
+// TODO:改为遍历 partialOutputStream
 for await (const chunk of followupSuggestionsResult.textStream) {
   fullSuggestion += chunk;
 
@@ -69,7 +69,7 @@ for await (const chunk of followupSuggestionsResult.textStream) {
 }
 ```
 
-回到 [streamObject 练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
+回到[结构化输出练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
 
 ## 在前端显示建议
 
@@ -94,9 +94,9 @@ const latestSuggestion = messages[
 - [ ] 更新 `problem/api/chat.ts` 中的 `MyMessage` 类型，支持字符串数组
   - 把 `suggestion: string` 改为 `suggestions: string[]`
 
-- [ ] 把生成建议的 `streamText` 调用改为 `streamObject`
-  - 导入所需的函数：从 'ai' 导入 `streamObject`
-  - 把函数调用从 `streamText` 更新为 `streamObject`
+- [ ] 给生成建议的 `streamText` 调用添加 `output` 选项
+  - 导入所需的函数：从 'ai' 导入 `Output`
+  - 使用 `Output.object` 配合 zod schema 定义输出结构
 
 - [ ] 用 Zod 定义建议的 schema
   - 导入 zod:`import { z } from 'zod'`
@@ -105,10 +105,10 @@ const latestSuggestion = messages[
 - [ ] 更新提示词，告诉 LLM 返回建议数组
   - 修改提示词，明确要求多个后续问题
 
-- [ ] 更新流式传输逻辑，使用 `partialObjectStream`
-  - 把 `followupSuggestionsResult.textStream` 改为 `followupSuggestionsResult.partialObjectStream`
+- [ ] 更新流式传输逻辑，使用 `partialOutputStream`
+  - 把 `followupSuggestionsResult.textStream` 改为 `followupSuggestionsResult.partialOutputStream`
   - 移除不再需要的 `fullSuggestion` 变量
-  - 回到 [streamObject 练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
+  - 回到[结构化输出练习](/exercises/01-ai-sdk-basics/01.12-streaming-objects-via-output/problem/readme.md)复习一下。
 
 - [ ] 更新 `writer.write` 调用，处理建议数组
   - 把 data 字段改为使用来自 partial object stream 的 chunk

@@ -79,6 +79,3 @@ console.log(factsResult.output);
 2. 事实以带有字符串数组的结构化对象返回
 3. 事实读起来像是科学家写的
 
-- [ ] （可选）尝试替代方案
-
-完成练习后，看看你是否能用 [`generateObject()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-object) 代替 `generateText()` 加 `Output.object()` 来实现版本 6 的方案。两种方法都可行，但其中一种是更新的模式。

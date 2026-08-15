@@ -27,12 +27,12 @@ const factsResult = streamText({
 });
 ```
 
-- [ ] 用遍历 [`partialObjectStream`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) 的 [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of) 循环替换 console.log
+- [ ] 用遍历 [`partialOutputStream`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) 的 [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of) 循环替换 console.log
 
 不要只打印一次最终输出，而是在流式块到达时遍历它们。
 
 ```ts
-// TODO:将其替换为对 factsResult.partialObjectStream 的 for-await 循环
+// TODO:将其替换为对 factsResult.partialOutputStream 的 for-await 循环
 // 打印每个到达的部分对象
 console.log(factsResult.output);
 ```
@@ -42,7 +42,7 @@ console.log(factsResult.output);
 <Spoiler>
 
 ```ts
-for await (const chunk of factsResult.partialObjectStream) {
+for await (const chunk of factsResult.partialOutputStream) {
   console.log(chunk);
 }
 ```
