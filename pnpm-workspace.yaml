@@ -10,3 +10,5 @@ minimumReleaseAgeExclude:
   - '@ai-sdk/react@4.0.68'
   - '@hono/node-server@2.1.1'
   - ai@7.0.65
+patchedDependencies:
+  ai-hero-cli@0.6.2: patches/ai-hero-cli@0.6.2.patch

@@ -1,0 +1,87 @@
+diff --git a/bin.cjs b/bin.cjs
+index a82114a08d6ff7f9e51f7df87ee543636da83c20..06f9a00102fdb93154095be920795649ac2ca86c 100755
+--- a/bin.cjs
++++ b/bin.cjs
+@@ -33117,7 +33117,7 @@ var require_select = __commonJS({
+       constructor(opts = {}) {
+         super(opts);
+         this.msg = opts.message;
+-        this.hint = opts.hint || "- Use arrow-keys. Return to submit.";
++        this.hint = opts.hint || "- 使用方向键选择,回车确认。";
+         this.warn = opts.warn || "- This option is disabled";
+         this.cursor = opts.initial || 0;
+         this.choices = opts.choices.map((ch, idx) => {
+@@ -35504,7 +35504,7 @@ var require_select2 = __commonJS({
+       constructor(opts = {}) {
+         super(opts);
+         this.msg = opts.message;
+-        this.hint = opts.hint || "- Use arrow-keys. Return to submit.";
++        this.hint = opts.hint || "- 使用方向键选择,回车确认。";
+         this.warn = opts.warn || "- This option is disabled";
+         this.cursor = opts.initial || 0;
+         this.choices = opts.choices.map((ch, idx) => {
+@@ -69744,42 +69744,42 @@ var PromptService = class extends Effect_exports.Service()(
+         "selectExerciseAction"
+       )(function* (opts) {
+         const lessonNoun = opts.lessonType === "explainer" ? {
+-          successMessage: `Explainer executed! Once you've read the readme and understand the code, you can go to the next exercise.`,
+-          failureMessage: `Looks like the explainer errored! Want to try again?`,
+-          lowercase: "explainer",
+-          readmeMessage: `Once you've read the readme, you can go to the next exercise.`
++          successMessage: `讲解已运行!读完 readme 并理解代码后,就可以进入下一个练习。`,
++          failureMessage: `讲解运行出错了!要重试吗?`,
++          lowercase: "讲解",
++          readmeMessage: `读完 readme 后,就可以进入下一个练习。`
+         } : {
+-          successMessage: "Exercise complete! What's next?",
+-          failureMessage: `Looks like the exercise errored! Want to try again?`,
+-          lowercase: "exercise",
+-          readmeMessage: "Once you've read the readme, you can go to the next exercise."
++          successMessage: "练习完成!接下来做什么?",
++          failureMessage: `练习运行出错了!要重试吗?`,
++          lowercase: "练习",
++          readmeMessage: "读完 readme 后,就可以进入下一个练习。"
+         };
+         const message = opts.result === "success" ? lessonNoun.successMessage : opts.result === "readme-only" ? lessonNoun.readmeMessage : lessonNoun.failureMessage;
+         const choices = [];
+         if (opts.result !== "readme-only") {
+           choices.push({
+-            title: opts.result === "failed" ? `\u{1F504} Run the ${lessonNoun.lowercase} again` : `\u{1F504} Try the ${lessonNoun.lowercase} again`,
++            title: opts.result === "failed" ? `\u{1F504} 重新运行该${lessonNoun.lowercase}` : `\u{1F504} 重试该${lessonNoun.lowercase}`,
+             value: "run-again"
+           });
+         }
+         if (opts.hasNext && opts.nextLabel) {
+           choices.push({
+-            title: `\u27A1\uFE0F  Run the next exercise: ${opts.nextLabel}`,
++            title: `\u27A1\uFE0F  运行下一个练习:${opts.nextLabel}`,
+             value: "next-exercise"
+           });
+         }
+         if (opts.hasPrevious && opts.previousLabel) {
+           choices.push({
+-            title: `\u2B05\uFE0F  Run the previous exercise: ${opts.previousLabel}`,
++            title: `\u2B05\uFE0F  运行上一个练习:${opts.previousLabel}`,
+             value: "previous-exercise"
+           });
+         }
+         choices.push({
+-          title: "\u{1F4CB} Choose a new exercise",
++          title: "\u{1F4CB} 选择其他练习",
+           value: "choose-exercise"
+         });
+         choices.push({
+-          title: "\u2705 Finish",
++          title: "\u2705 完成",
+           value: "finish"
+         });
+         const { action } = yield* runPrompt(
+@@ -70705,7 +70705,7 @@ var runLesson = Effect_exports.fn("runLesson")(function* (opts) {
+ var logReadmeFile = Effect_exports.fn("logReadmeFile")(
+   function* (opts) {
+     yield* Console_exports.log(
+-      `${util.styleText([], "Instructions:")}
++      `${util.styleText([], "说明:")}
+   ${util.styleText(
+         "dim",
+         opts.readmeFile
