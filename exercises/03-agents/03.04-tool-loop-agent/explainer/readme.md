@@ -1,16 +1,14 @@
-AI SDK v6 引入了一种构建智能体的新方式——[`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 类。这种方式将智能体的定义与调用分离开来，让你的代码更模块化、更易于分发。
+[`ToolLoopAgent`](https://ai-sdk.dev/docs/reference/ai-sdk-core/tool-loop-agent) 类是 AI SDK 中构建智能体的方式——它将智能体的定义与调用分离开来，让你的代码更模块化、更易于分发。
 
-你不再直接带着工具调用 [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)，而是先创建一个智能体实例，然后使用 [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response) 来调用它。这看起来像是多了几步，但它开启了在整个代码库中共享智能体、甚至将它们发布为包的可能性。
+你不是直接带着工具调用 [`streamText()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text)，而是先创建一个智能体实例，然后使用 [`createAgentUIStreamResponse()`](https://ai-sdk.dev/docs/reference/ai-sdk-core/create-agent-ui-stream-response) 来调用它。这看起来像是多了几步，但它开启了在整个代码库中共享智能体、甚至将它们发布为包的可能性。
 
-让我们探索一下这种新语法的工作方式，并与传统方式进行比较。
+让我们探索一下这种语法的工作方式，并与直接使用 `streamText()` 的方式进行比较。
 
 ## 与 `streamText()` 的主要区别
 
-### 系统提示词的变化
+### 系统提示词:`instructions` 属性
 
-`system` 参数已更名为 `instructions`。这与 OpenAI 的术语更加一致。
-
-此外，`instructions` 可以接受消息部件数组，让你可以用不同的角色来组织系统提示词：
+`ToolLoopAgent` 通过 `instructions` 属性接收系统提示词。`instructions` 可以接受消息部件数组，让你可以用不同的角色来组织系统提示词：
 
 ```ts
 instructions: [

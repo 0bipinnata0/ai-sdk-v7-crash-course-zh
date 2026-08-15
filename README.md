@@ -1,4 +1,4 @@
-# AI SDK v6 速成课程(已升级至 v7)
+# AI SDK v7 速成课程
 
 > ⚡ **本仓库已全量升级**:所有依赖(含 AI SDK **v7**)、代码示例与教程文档均已适配最新版本。你可以把本仓库的升级提交(`4fab49b` 起)当作一份 **AI SDK v6 → v7 的升级教程** 来参考,主要变更包括:
 >
@@ -15,18 +15,18 @@
 >
 > 官方迁移指南见 `node_modules/ai/docs/08-migration-guides/23-migration-guide-7-0.mdx`。
 
-<img src="https://res.cloudinary.com/total-typescript/image/upload/v1770220978/ai-sdk-v5-crash-course-github-thumbnail_3x.jpg" alt="AI SDK 6 Crash Course" />
+<img src="https://res.cloudinary.com/total-typescript/image/upload/v1770220978/ai-sdk-v5-crash-course-github-thumbnail_3x.jpg" alt="AI SDK 速成课程" />
 
-🚀 **通过 AI Hero 的综合速成课程掌握 AI SDK v6。** 本仓库包含我们动手实践课程中的所有代码示例和练习，课程聚焦于 AI SDK v6——这个令人难以置信的 TypeScript 库正在成为 AI 应用开发的标准。
+🚀 **通过 AI Hero 的综合速成课程掌握 AI SDK v7。** 本仓库包含我们动手实践课程中的所有代码示例和练习，课程聚焦于 AI SDK v7——这个令人难以置信的 TypeScript 库正在成为 AI 应用开发的标准。
 
-学习使用 AI SDK v6 的强大功能和现代开发模式构建生产级 AI 应用。课程可在 [aihero.dev](https://aihero.dev) 上获取。
+学习使用 AI SDK v7 的强大功能和现代开发模式构建生产级 AI 应用。课程可在 [aihero.dev](https://aihero.dev) 上获取。
 
-## 🎯 你将掌握的 AI SDK v6 技能
+## 🎯 你将掌握的 AI SDK v7 技能
 
-本速成课程将带你从 AI SDK v6 基础一路学到高级生产模式：
+本速成课程将带你从 AI SDK v7 基础一路学到高级生产模式：
 
-- **AI SDK v6 核心概念** - 理解现代 AI 开发工具包
-- **AI SDK v6 流式输出** - 使用 `streamText` 构建实时、响应式的 AI 体验
+- **AI SDK v7 核心概念** - 理解现代 AI 开发工具包
+- **AI SDK v7 流式输出** - 使用 `streamText` 构建实时、响应式的 AI 体验
 - **工具调用与函数调用** - 创建能够使用外部工具和 API 的 AI 应用
 - **消息部件与数据** - 处理结构化的消息组件和自定义数据
 - **多提供商支持** - 在 OpenAI、Anthropic、Google 等之间无缝切换
@@ -50,8 +50,8 @@
 1. **克隆本仓库：**
 
 ```bash
-git clone https://github.com/ai-hero-dev/ai-sdk-v6-crash-course.git
-cd ai-sdk-v6-crash-course
+git clone https://github.com/0bipinnata0/ai-sdk-v6-crash-course-zh.git
+cd ai-sdk-v6-crash-course-zh
 ```
 
 2. **安装依赖：**
@@ -82,11 +82,11 @@ pnpm dev
 
 练习运行期间，按 `q` 可以结束当前练习并返回菜单（对长期运行的开发服务器练习特别有用），然后选择“➡️ 运行下一个练习”继续。按 `Ctrl+C` 则会退出整个 CLI。
 
-## 📁 AI SDK v6 课程模块
+## 📁 AI SDK v7 课程模块
 
 ```
 exercises/
-├── 01-basics/                    # AI SDK v6 基础
+├── 01-basics/                    # AI SDK v7 基础
 │   ├── 01.1-what-is-the-ai-sdk/
 │   ├── 01.2-choosing-a-model/
 │   ├── 01.3-stream-text-to-terminal/
@@ -126,4 +126,4 @@ exercises/
 2. **验证你的设置** - 确保 API 密钥和依赖项配置正确
 3. **观看课程** - 完整讲解可在 [aihero.dev](https://aihero.dev) 上获取
 
-准备好掌握 AI SDK v6 并成为 AI 开发专家了吗？让我们开始构建未来吧！🚀
+准备好掌握 AI SDK v7 并成为 AI 开发专家了吗？让我们开始构建未来吧！🚀

@@ -117,7 +117,11 @@ console.log('进程退出中...');
 
 ```ts
 import { openai } from '@ai-sdk/openai';
-import { consumeStream, streamText } from 'ai';
+import {
+  consumeStream,
+  streamText,
+  toUIMessageStream,
+} from 'ai';
 
 console.log('进程启动中...');
 

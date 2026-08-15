@@ -18,7 +18,7 @@ const indexHtmlTemplate = `<!doctype html>
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <title>AI SDK v6 速成课程</title>
+    <title>AI SDK v7 速成课程</title>
   </head>
   <body>
     <div id="root"></div>
