@@ -103,6 +103,10 @@ export const runLocalDevServer = async (opts: {
 }) => {
   const viteServer = await createServer({
     configFile: false,
+    esbuild: {
+      // 使用现代 JSX 自动转换(消除 React 19 的 outdated JSX transform 警告)
+      jsx: 'automatic',
+    },
     server: {
       port: 3000,
       proxy: {

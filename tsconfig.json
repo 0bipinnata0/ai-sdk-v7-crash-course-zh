@@ -19,7 +19,7 @@
     "module": "NodeNext",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
 
     "lib": ["ESNext", "DOM", "DOM.Iterable", "DOM.AsyncIterable"]
   }
