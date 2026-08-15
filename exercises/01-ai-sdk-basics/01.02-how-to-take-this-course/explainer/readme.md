@@ -7,11 +7,11 @@
 - [Node.js](https://nodejs.org/en/download) 22 或更高版本
 - [pnpm](https://pnpm.io/installation) 9.12.3 或更高版本
 
-所以你的第一项任务是把[仓库](https://github.com/0bipinnata0/ai-sdk-v6-crash-course-zh)克隆下来：
+所以你的第一项任务是把[仓库](https://github.com/0bipinnata0/ai-sdk-v7-crash-course-zh)克隆下来：
 
 ```bash
-git clone https://github.com/0bipinnata0/ai-sdk-v6-crash-course-zh.git
-cd ai-sdk-v6-crash-course-zh
+git clone https://github.com/0bipinnata0/ai-sdk-v7-crash-course-zh.git
+cd ai-sdk-v7-crash-course-zh
 ```
 
 接下来，通过 `pnpm install` 安装依赖：
@@ -64,7 +64,7 @@ pnpm dev --simple
 
 - [ ] 将 GitHub 仓库克隆到你的本地机器
   - 使用你偏好的方式在本地克隆
-  - [仓库](https://github.com/0bipinnata0/ai-sdk-v6-crash-course-zh)
+  - [仓库](https://github.com/0bipinnata0/ai-sdk-v7-crash-course-zh)
 
 - [ ] 运行 `pnpm install` 安装依赖
   - 如果你没有 pnpm，先按照[这个链接](https://pnpm.io/installation)安装

@@ -50,8 +50,8 @@
 1. **克隆本仓库：**
 
 ```bash
-git clone https://github.com/0bipinnata0/ai-sdk-v6-crash-course-zh.git
-cd ai-sdk-v6-crash-course-zh
+git clone https://github.com/0bipinnata0/ai-sdk-v7-crash-course-zh.git
+cd ai-sdk-v7-crash-course-zh
 ```
 
 2. **安装依赖：**
