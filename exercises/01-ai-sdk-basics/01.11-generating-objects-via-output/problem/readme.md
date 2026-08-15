@@ -79,3 +79,4 @@ console.log(factsResult.output);
 2. 事实以带有字符串数组的结构化对象返回
 3. 事实读起来像是科学家写的
 
+> 💡 **好奇为什么用 `output` 选项而不是独立的函数？** 在以前，`generateObject` / `streamObject` 是独立的 API,v7 把它们统一进了 `generateText` / `streamText`。背后的设计原因值得一读：[为什么 v7 废弃了 generateObject 和 streamObject?](/docs/why-no-more-stream-object.md)

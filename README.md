@@ -11,6 +11,9 @@
 > - `ModelMessage` 使用 `content`(而非 `parts`)
 > - UIMessage part 的 `providerOptions` → `providerMetadata`
 > - `usage.cachedInputTokens` → `usage.inputTokenDetails.cacheReadTokens`
+> - `generateObject` / `streamObject` → `generateText` / `streamText` + `output` 选项（[为什么这么改？](/docs/why-no-more-stream-object.md))
+> - `result.toUIMessageStream()` 等结果方法 → `toUIMessageStream` / `createUIMessageStreamResponse` 等顶层无状态函数
+> - 工具定义里的 `needsApproval` → 调用处的 `toolApproval`
 > - zod 统一使用 v4 导入
 >
 > 官方迁移指南见 `node_modules/ai/docs/08-migration-guides/23-migration-guide-7-0.mdx`。
